@@ -1,4 +1,4 @@
-package za.ac.uct.cs.ddd.lambda;
+package za.ac.uct.cs.ddd.lambda.gui;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
