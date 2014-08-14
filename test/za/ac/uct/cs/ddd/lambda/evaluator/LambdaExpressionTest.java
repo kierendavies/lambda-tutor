@@ -37,4 +37,11 @@ public class LambdaExpressionTest {
         assertEquals(LambdaExpression.stripOuterBrackets("((foo))"), "foo");
         assertEquals(LambdaExpression.stripOuterBrackets("((foo) (bar))"), "(foo) (bar)");
     }
+
+    // TODO test other helper methods
+
+    @Test
+    public void parsingExpressionDoesNotThrowExceptions() {
+        // TODO I can't understand this JUnit exception expecting
+    }
 }
