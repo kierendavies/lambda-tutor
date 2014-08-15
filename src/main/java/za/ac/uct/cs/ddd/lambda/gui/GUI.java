@@ -10,6 +10,9 @@ public class GUI extends JFrame implements ActionListener{
 
     MainMenu menu;
     Calculator calculator;
+    Tutor tutor;
+    Marker marker;
+
     // WindowListener idea found here: http://cs.nyu.edu/~yap/classes/visual/03s/lect/l7/
     private class windowHandler extends WindowAdapter{
         public void windowClosing(WindowEvent e){
@@ -28,16 +31,26 @@ public class GUI extends JFrame implements ActionListener{
 
         menu = new MainMenu(this);
         calculator = new Calculator(this);
+        tutor = new Tutor(this);
+        marker = new Marker(this);
         this.setContentPane(menu);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand() == "Main menu"){
+        String actionCommand = e.getActionCommand();
+
+        if (actionCommand == "Main menu"){
             this.setContentPane(menu);
         }
-        else if (e.getActionCommand() == "Calculator"){
+        else if (actionCommand == "Calculator"){
             this.setContentPane(calculator);
+        }
+        else if (actionCommand == "Tutor"){
+            this.setContentPane(tutor);
+        }
+        else if (actionCommand == "Marker"){
+            this.setContentPane(marker);
         }
     }
 }
