@@ -1,0 +1,4 @@
+#!/bin/bash
+
+java -cp target/lambda-0.1-SNAPSHOT.jar za.ac.uct.cs.ddd.lambda.Repl
+
