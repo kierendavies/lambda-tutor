@@ -6,6 +6,7 @@ import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.*;
 
 %public
 %class Lexer
+%function next
 %type Token
 %unicode
 %line
@@ -40,3 +41,4 @@ Identifier = [:jletter:] [:jletterdigit:]*
 {Lambda}        { return token(LAMBDA); }
 {Arrow}         { return token(ARROW); }
 {Identifier}    { return token(IDENTIFIER, yytext()); }
+<<EOF>>         { return token(EOF); }

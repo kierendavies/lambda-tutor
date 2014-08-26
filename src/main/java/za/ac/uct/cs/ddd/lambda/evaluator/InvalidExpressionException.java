@@ -2,11 +2,6 @@ package za.ac.uct.cs.ddd.lambda.evaluator;
 
 public class InvalidExpressionException extends Exception {
     public InvalidExpressionException() {
-        super();
-    }
-
-    public InvalidExpressionException(Throwable cause) {
-        super(cause);
     }
 
     public InvalidExpressionException(String message) {
@@ -15,5 +10,13 @@ public class InvalidExpressionException extends Exception {
 
     public InvalidExpressionException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public InvalidExpressionException(Throwable cause) {
+        super(cause);
+    }
+
+    public InvalidExpressionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

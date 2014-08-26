@@ -5,6 +5,9 @@ public class Token {
     private int line, column;
     private String content;
 
+    public Token() {
+    }
+
     public Token(TokenType type, int line, int column) {
         this.type = type;
         this.line = line;
@@ -30,6 +33,10 @@ public class Token {
 
     public String getContent() {
         return content;
+    }
+
+    public boolean isEOF() {
+        return type == TokenType.EOF;
     }
 
     public String toString() {

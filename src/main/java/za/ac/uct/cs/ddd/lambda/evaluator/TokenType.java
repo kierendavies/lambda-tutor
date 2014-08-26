@@ -5,5 +5,6 @@ public enum TokenType {
     ARROW,
     IDENTIFIER,
     LEFT_BRACKET,
-    RIGHT_BRACKET
+    RIGHT_BRACKET,
+    EOF
 }
