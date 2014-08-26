@@ -10,6 +10,6 @@ class LambdaAbstraction extends LambdaExpression {
     }
 
     public String toString() {
-        return String.format("\\%s.%s", var, body);
+        return String.format("(\\%s.%s)", var, body);
     }
 }
