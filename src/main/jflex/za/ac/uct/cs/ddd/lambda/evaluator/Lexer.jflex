@@ -29,9 +29,11 @@ LeftBracket = "("
 RightBracket = ")"
 
 Lambda = "\\" | "\u039b" | "\u03bb"
-Arrow = "->" | "."
+Arrow = "." | "->" | "\u2192"
 
-Identifier = [:jletter:] [:jletterdigit:]*
+IdentifierStart = [[:letter:]--[\\\u039b\u03bb]]
+IdentifierPart = {IdentifierStart} | [:digit:]
+Identifier = {IdentifierStart} {IdentifierPart}*
 
 %%
 
