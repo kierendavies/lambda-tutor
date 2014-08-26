@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.OPENING_BRACKET;
-import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.CLOSING_BRACKET;
+import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.*;
 
 class BracketedExpression extends Token {
     private List<Token> tokens;
@@ -52,10 +51,27 @@ class BracketedExpression extends Token {
         if (tokens.size() == 1 && tokens.get(0) instanceof BracketedExpression) {
             tokens = ((BracketedExpression) tokens.get(0)).tokens;
         }
+        // pull up singleton grandchildren
+        for (int i = 0; i < tokens.size(); i++) {
+            if (tokens.get(i) instanceof BracketedExpression) {
+                BracketedExpression bracketedExpression = (BracketedExpression) tokens.get(i);
+                if (bracketedExpression.getTokens().size() == 1) {
+                    tokens.set(i, bracketedExpression.getTokens().get(0));
+                }
+            }
+        }
     }
 
     public List<Token> getTokens() {
         return Collections.unmodifiableList(tokens);
+    }
+
+    public LambdaExpression parse() {
+        if (tokens.get(0).getType() == LAMBDA) {  // it's an abstraction
+
+        }
+
+        return null;
     }
 
     public String toString() {

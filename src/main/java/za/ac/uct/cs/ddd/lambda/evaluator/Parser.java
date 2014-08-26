@@ -6,7 +6,7 @@ import java.io.StringReader;
 public class Parser {
     public static LambdaExpression parse(Lexer lexer) throws IOException, InvalidExpressionException {
         // generate tree of bracketed expressions
-        BracketedExpression bracketedExpressions = new BracketedExpression(lexer);
+        BracketedExpression bracketedExpression = new BracketedExpression(lexer);
 
         // check that there are no extra closing brackets
         Token nextToken = lexer.next();
@@ -16,9 +16,9 @@ public class Parser {
                                                  ", found " + nextToken);
         }
 
-        System.out.println(bracketedExpressions.toString());
+        System.out.println(bracketedExpression);
 
-        return null;
+        return bracketedExpression.parse();
     }
 
     public static LambdaExpression parse(String expression) throws InvalidExpressionException {
