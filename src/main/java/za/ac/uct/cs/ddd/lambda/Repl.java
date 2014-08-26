@@ -1,12 +1,11 @@
 package za.ac.uct.cs.ddd.lambda;
 
-import za.ac.uct.cs.ddd.lambda.evaluator.InvalidExpressionException;
 import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
+import za.ac.uct.cs.ddd.lambda.evaluator.Parser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 
 public class Repl {
     public static void main(String[] args) {
@@ -17,10 +16,10 @@ public class Repl {
             line = reader.readLine();
             while (!line.toLowerCase().equals("exit")) {
                 try {
-                    LambdaExpression expression = new LambdaExpression(line);
+                    LambdaExpression expression = Parser.parse(line);
                     System.out.println(expression);
                 } catch (Exception e) {
-                    System.out.println("Invalid expression");
+                    e.printStackTrace();
                 }
                 System.out.print(">>> ");
                 line = reader.readLine();
