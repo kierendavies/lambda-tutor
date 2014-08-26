@@ -22,7 +22,7 @@ class BracketedExpression extends Token {
      *
      * @param lexer The lexer from which to consume tokens
      */
-    public BracketedExpression(Lexer lexer) throws IOException, MismatchedBracketException {
+    public BracketedExpression(Lexer lexer) throws IOException, InvalidExpressionException {
         this();
 
         Token nextToken = lexer.next();

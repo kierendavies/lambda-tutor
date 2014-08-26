@@ -8,6 +8,7 @@ import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.*;
 %class Lexer
 %function next
 %type Token
+%yylexthrow InvalidExpressionException
 %unicode
 %line
 %column
@@ -44,3 +45,7 @@ Identifier = {IdentifierStart} {IdentifierPart}*
 {Arrow}         { return token(ARROW); }
 {Identifier}    { return token(IDENTIFIER, yytext()); }
 <<EOF>>         { return token(END_OF_FILE); }
+
+/* error fallback */
+[^]             { throw new InvalidExpressionException("Unexpected character \"" + yytext() + "\"" +
+                                                       " at line " + yyline + " column " + yycolumn); }

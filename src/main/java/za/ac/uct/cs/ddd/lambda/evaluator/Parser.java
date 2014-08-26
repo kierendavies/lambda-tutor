@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 
 public class Parser {
-    public static LambdaExpression parse(Lexer lexer) throws IOException, MismatchedBracketException {
+    public static LambdaExpression parse(Lexer lexer) throws IOException, InvalidExpressionException {
         // generate tree of bracketed expressions
         BracketedExpression bracketedExpressions = new BracketedExpression(lexer);
 
@@ -21,7 +21,7 @@ public class Parser {
         return null;
     }
 
-    public static LambdaExpression parse(String expression) throws MismatchedBracketException {
+    public static LambdaExpression parse(String expression) throws InvalidExpressionException {
         try {
             return parse(new Lexer(new StringReader(expression)));
         } catch (IOException e) {  // shouldn't happen
