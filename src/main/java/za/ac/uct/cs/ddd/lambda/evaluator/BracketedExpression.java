@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.LEFT_BRACKET;
-import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.RIGHT_BRACKET;
+import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.OPENING_BRACKET;
+import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.CLOSING_BRACKET;
 
 class BracketedExpression extends Token {
     private List<Token> tokens;
@@ -28,13 +28,14 @@ class BracketedExpression extends Token {
         Token nextToken = lexer.next();
 
         // read until EOF or closing bracket, and add to tokens list
-        while (!nextToken.isEOF() && nextToken.getType() != RIGHT_BRACKET) {
-            if (nextToken.getType() == LEFT_BRACKET) {
+        while (!nextToken.isEOF() && nextToken.getType() != CLOSING_BRACKET) {
+            if (nextToken.getType() == OPENING_BRACKET) {
                 tokens.add(new BracketedExpression(lexer));
                 nextToken = lexer.next();
-                if (nextToken.getType() != RIGHT_BRACKET) {  // shouldn't happen
+                if (nextToken.getType() != CLOSING_BRACKET) {  // shouldn't happen
                     throw new MismatchedBracketException("Expected closing bracket at line " + nextToken.getLine() +
-                                                         " column " + nextToken.getColumn());
+                                                         " column " + nextToken.getColumn() +
+                                                         ", found " + nextToken);
                 }
             } else {
                 tokens.add(nextToken);
@@ -43,7 +44,7 @@ class BracketedExpression extends Token {
         }
 
         // put that closing bracket back to be consumed by parent
-        if (nextToken.getType() == RIGHT_BRACKET) {
+        if (nextToken.getType() == CLOSING_BRACKET) {
             lexer.yypushback(1);
         }
 

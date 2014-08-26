@@ -38,9 +38,9 @@ Identifier = {IdentifierStart} {IdentifierPart}*
 %%
 
 {WhiteSpace}    { /* ignore */ }
-{LeftBracket}   { return token(LEFT_BRACKET); }
-{RightBracket}  { return token(RIGHT_BRACKET); }
+{LeftBracket}   { return token(OPENING_BRACKET); }
+{RightBracket}  { return token(CLOSING_BRACKET); }
 {Lambda}        { return token(LAMBDA); }
 {Arrow}         { return token(ARROW); }
 {Identifier}    { return token(IDENTIFIER, yytext()); }
-<<EOF>>         { return token(EOF); }
+<<EOF>>         { return token(END_OF_FILE); }

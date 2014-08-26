@@ -36,7 +36,7 @@ public class Token {
     }
 
     public boolean isEOF() {
-        return type == TokenType.EOF;
+        return type == TokenType.END_OF_FILE;
     }
 
     public String toString() {
