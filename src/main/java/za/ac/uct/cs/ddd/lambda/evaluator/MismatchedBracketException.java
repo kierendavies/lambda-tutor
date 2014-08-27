@@ -8,15 +8,7 @@ public class MismatchedBracketException extends InvalidExpressionException {
         super(message);
     }
 
-    public MismatchedBracketException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public MismatchedBracketException(Throwable cause) {
-        super(cause);
-    }
-
-    public MismatchedBracketException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public MismatchedBracketException(String message, int line, int column) {
+        super(message, line, column);
     }
 }

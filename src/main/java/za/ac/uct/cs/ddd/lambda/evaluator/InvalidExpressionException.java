@@ -1,6 +1,8 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
 public class InvalidExpressionException extends Exception {
+    protected int line, column;
+
     public InvalidExpressionException() {
     }
 
@@ -8,15 +10,9 @@ public class InvalidExpressionException extends Exception {
         super(message);
     }
 
-    public InvalidExpressionException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public InvalidExpressionException(Throwable cause) {
-        super(cause);
-    }
-
-    public InvalidExpressionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public InvalidExpressionException(String message, int line, int column) {
+        super(String.format("%s at line %d column %d", message, line, column));
+        this.line = line;
+        this.column = column;
     }
 }

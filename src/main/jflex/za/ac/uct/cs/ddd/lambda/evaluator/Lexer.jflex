@@ -47,5 +47,4 @@ Identifier = {IdentifierStart} {IdentifierPart}*
 <<EOF>>         { return token(END_OF_FILE); }
 
 /* error fallback */
-[^]             { throw new InvalidExpressionException("Unexpected character \"" + yytext() + "\"" +
-                                                       " at line " + yyline + " column " + yycolumn); }
+[^]             { throw new InvalidExpressionException("Unexpected character \""+yytext()+"\"", yyline, yycolumn); }

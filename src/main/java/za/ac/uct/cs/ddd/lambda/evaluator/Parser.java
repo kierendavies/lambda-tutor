@@ -15,9 +15,8 @@ public class Parser {
         // check that there are no extra closing brackets
         Token nextToken = lexer.next();
         if (nextToken.getType() != TokenType.END_OF_FILE) {
-            throw new MismatchedBracketException("Expected end of expression at line " + nextToken.getLine() +
-                                                 " column " + nextToken.getColumn() +
-                                                 ", found " + nextToken);
+            throw new MismatchedBracketException("Expected end of expression, found " + nextToken,
+                    nextToken.getLine(), nextToken.getColumn());
         }
 
         // parse lambda forms
@@ -50,9 +49,8 @@ public class Parser {
                 be.addToken(parseBrackets(lexer));
                 token = lexer.next();
                 if (token.getType() != CLOSING_BRACKET) {  // shouldn't happen
-                    throw new MismatchedBracketException("Expected closing bracket at line " + token.getLine() +
-                            " column " + token.getColumn() +
-                            ", found " + token);
+                    throw new MismatchedBracketException("Expected closing bracket, found " + token,
+                            token.getLine(), token.getColumn());
                 }
             } else {
                 be.addToken(token);
@@ -85,17 +83,15 @@ public class Parser {
         if (token instanceof BracketedExpression) {
             BracketedExpression be = (BracketedExpression) token;
             if (be.getTokens().size() == 0) {
-                throw new InvalidExpressionException("Empty expression at line " + be.getLine() +
-                                                     " column " + be.getColumn());
+                throw new InvalidExpressionException("Empty expression", be.getLine(), be.getColumn());
             }
 
             return parseLambda(be.getTokens());
         } else {
             if (token.getType() != IDENTIFIER) {
                 // if a singleton was anything other than an identifier, it should have been hoisted
-                throw new InvalidExpressionException("Expected identifier at line " + token.getLine() +
-                                                     " column " + token.getColumn() +
-                                                     ", found " + token);
+                throw new InvalidExpressionException("Expected identifier, found " + token,
+                        token.getLine(), token.getColumn());
             }
             return new LambdaVariable(token.getContent());
         }
@@ -117,23 +113,21 @@ public class Parser {
                     if (arrowIndex == -1) {  // first arrow found
                         arrowIndex = i;
                     } else {  // arrow already found
-                        throw new InvalidExpressionException("Unexpected arrow at line " + token.getLine() +
-                                                             " column " + token.getColumn());
+                        throw new InvalidExpressionException("Unexpected arrow", token.getLine(), token.getColumn());
                     }
                 }
             }
             if (arrowIndex == -1) {
                 Token token = tokens.get(tokens.size() - 1);
-                throw new InvalidExpressionException("Missing abstraction body at line " + token.getLine() +
-                                                     " column " + (token.getColumn() + token.getLength()));
+                throw new InvalidExpressionException("Missing abstraction body",
+                        token.getLine(), (token.getColumn() + token.getLength()));
             }
 
             List<LambdaVariable> variables = new LinkedList<LambdaVariable>();
             for (Token token : tokens.subList(1, arrowIndex)) {
                 if (token.getType() != IDENTIFIER) {
-                    throw new InvalidExpressionException("Expected identifier at line " + token.getLine() +
-                                                         " column " + token.getColumn() +
-                                                         ", found " + token);
+                    throw new InvalidExpressionException("Expected identifier, found " + token,
+                            token.getLine(), token.getColumn());
                 }
                 variables.add(new LambdaVariable(token.getContent()));
             }
