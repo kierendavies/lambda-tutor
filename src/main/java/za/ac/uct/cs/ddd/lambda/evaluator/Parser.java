@@ -113,11 +113,8 @@ public class Parser {
             for (int i = 1; i < tokens.size()-1; i++) {
                 Token token = tokens.get(i);
                 if (token.getType() == ARROW) {
-                    if (arrowIndex == -1) {  // first arrow found
-                        arrowIndex = i;
-                    } else {  // arrow already found
-                        throw new InvalidExpressionException("Unexpected arrow", token.getLine(), token.getColumn());
-                    }
+                    arrowIndex = i;
+                    break;
                 }
             }
             if (arrowIndex == -1) {
