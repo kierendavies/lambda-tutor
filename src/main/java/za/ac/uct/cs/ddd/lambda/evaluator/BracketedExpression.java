@@ -14,64 +14,24 @@ class BracketedExpression extends Token {
         tokens = new ArrayList<Token>();
     }
 
-    /**
-     * Given a lexer, populate this bracketed expression by consuming tokens until the correct closing bracket is found
-     * or end of stream is reached.  Assumes the opening bracket (if any) has already been consumed, and replaces the
-     * closing bracket to be consumed by the caller.
-     *
-     * @param lexer The lexer from which to consume tokens
-     */
-    public BracketedExpression(Lexer lexer) throws IOException, InvalidExpressionException {
-        this();
-
-        Token nextToken = lexer.next();
-
-        // read until EOF or closing bracket, and add to tokens list
-        while (!nextToken.isEOF() && nextToken.getType() != CLOSING_BRACKET) {
-            if (nextToken.getType() == OPENING_BRACKET) {
-                tokens.add(new BracketedExpression(lexer));
-                nextToken = lexer.next();
-                if (nextToken.getType() != CLOSING_BRACKET) {  // shouldn't happen
-                    throw new MismatchedBracketException("Expected closing bracket at line " + nextToken.getLine() +
-                                                         " column " + nextToken.getColumn() +
-                                                         ", found " + nextToken);
-                }
-            } else {
-                tokens.add(nextToken);
-            }
-            nextToken = lexer.next();
-        }
-
-        // put that closing bracket back to be consumed by parent
-        if (nextToken.getType() == CLOSING_BRACKET) {
-            lexer.yypushback(1);
-        }
-
-        // remove pointless nesting
-        if (tokens.size() == 1 && tokens.get(0) instanceof BracketedExpression) {
-            tokens = ((BracketedExpression) tokens.get(0)).tokens;
-        }
-        // pull up singleton grandchildren
-        for (int i = 0; i < tokens.size(); i++) {
-            if (tokens.get(i) instanceof BracketedExpression) {
-                BracketedExpression bracketedExpression = (BracketedExpression) tokens.get(i);
-                if (bracketedExpression.getTokens().size() == 1) {
-                    tokens.set(i, bracketedExpression.getTokens().get(0));
-                }
-            }
-        }
+    void addToken(Token token) {
+        tokens.add(token);
     }
 
     public List<Token> getTokens() {
         return Collections.unmodifiableList(tokens);
     }
 
-    public LambdaExpression parse() {
-        if (tokens.get(0).getType() == LAMBDA) {  // it's an abstraction
+    void hoistOnlyChild() {
+        tokens = ((BracketedExpression) tokens.get(0)).tokens;
+    }
 
+    void hoistSingletonChild(int index) {
+        if (!(tokens.get(index) instanceof BracketedExpression)) {
+            // let's try not to reach this
+            throw new RuntimeException("Child is not a bracketed expression");
         }
-
-        return null;
+        tokens.set(index, ((BracketedExpression) tokens.get(index)).getTokens().get(0));
     }
 
     public String toString() {
