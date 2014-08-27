@@ -9,4 +9,6 @@ public abstract class LambdaExpression {
     void resolveScope() {
         resolveScope(new Scope());
     }
+
+    public abstract Scope getFreeVariables();
 }

@@ -40,4 +40,11 @@ class LambdaAbstraction extends LambdaExpression {
             body.resolveScope(newScope);
         }
     }
+
+    @Override
+    public Scope getFreeVariables() {
+        Scope freeVariables = body.getFreeVariables();
+        freeVariables.remove(var.getName());
+        return  freeVariables;
+    }
 }

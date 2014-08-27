@@ -47,4 +47,11 @@ class LambdaApplication extends LambdaExpression {
             body.resolveScope(scope);
         }
     }
+
+    @Override
+    public Scope getFreeVariables() {
+        Scope freeVariables = fn.getFreeVariables();
+        freeVariables.addAll(body.getFreeVariables());
+        return freeVariables;
+    }
 }

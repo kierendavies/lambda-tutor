@@ -1,8 +1,10 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
-class Scope {
+public class Scope {
     private HashMap<String, LambdaVariable> map;
 
     public Scope() {
@@ -18,6 +20,10 @@ class Scope {
         map.put(variable.getName(), variable);
     }
 
+    public void addAll(Scope scope) {
+        map.putAll(scope.map);
+    }
+
     public void remove(String variableName) {
         map.remove(variableName);
     }
@@ -28,5 +34,14 @@ class Scope {
 
     public boolean contains(String variableName) {
         return map.containsKey(variableName);
+    }
+
+    public Collection<LambdaVariable> toCollection() {
+        return map.values();
+    }
+
+    @Override
+    public String toString() {
+        return map.values().toString();
     }
 }

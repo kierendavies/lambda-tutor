@@ -18,6 +18,7 @@ public class Repl {
                 try {
                     LambdaExpression expression = Parser.parse(line);
                     System.out.println(expression);
+                    System.out.println(expression.getFreeVariables());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

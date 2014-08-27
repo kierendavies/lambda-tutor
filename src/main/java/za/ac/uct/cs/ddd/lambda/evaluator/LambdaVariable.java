@@ -17,11 +17,19 @@ class LambdaVariable extends LambdaExpression {
         // do nothing
     }
 
+    @Override
+    public Scope getFreeVariables() {
+        Scope freeVariables = new Scope();
+        freeVariables.add(this);
+        return freeVariables;
+    }
+
     public String getName() {
         return name;
     }
 
-    public boolean equals(LambdaVariable other) {
-        return name.equals(other.name);
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof LambdaExpression && ((LambdaVariable) obj).getName().equals(name);
     }
 }
