@@ -20,7 +20,10 @@ public class Parser {
         }
 
         // parse lambda forms
-        return parseLambda(bracketedExpression);
+        LambdaExpression lambdaExpression = parseLambda(bracketedExpression);
+        lambdaExpression.resolveScope();
+
+        return lambdaExpression;
     }
 
     public static LambdaExpression parse(String expression) throws InvalidExpressionException {

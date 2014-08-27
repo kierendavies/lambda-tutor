@@ -1,8 +1,12 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 public abstract class LambdaExpression {
+    @Override
     public abstract String toString();
+
+    abstract void resolveScope(Scope scope);
+
+    void resolveScope() {
+        resolveScope(new Scope());
+    }
 }

@@ -21,7 +21,23 @@ class LambdaAbstraction extends LambdaExpression {
         }
     }
 
+    @Override
     public String toString() {
         return String.format("(\\%s.%s)", var, body);
+    }
+
+    @Override
+    void resolveScope(Scope scope) {
+        Scope newScope = new Scope(scope);
+        newScope.add(var);
+
+        if (body instanceof LambdaVariable) {
+            String bodyName = ((LambdaVariable) body).getName();
+            if (newScope.contains(bodyName)) {
+                body = newScope.get(bodyName);
+            }
+        } else {
+            body.resolveScope(newScope);
+        }
     }
 }

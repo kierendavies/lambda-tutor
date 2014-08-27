@@ -7,7 +7,21 @@ class LambdaVariable extends LambdaExpression {
         this.name = name;
     }
 
+    @Override
     public String toString() {
+        return name + "@" + Integer.toHexString(hashCode());
+    }
+
+    @Override
+    void resolveScope(Scope scope) {
+        // do nothing
+    }
+
+    public String getName() {
         return name;
+    }
+
+    public boolean equals(LambdaVariable other) {
+        return name.equals(other.name);
     }
 }

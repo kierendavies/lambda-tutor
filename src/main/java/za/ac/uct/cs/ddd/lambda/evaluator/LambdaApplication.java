@@ -22,7 +22,29 @@ class LambdaApplication extends LambdaExpression {
         }
     }
 
+    @Override
     public String toString() {
         return String.format("(%s %s)", fn, body);
+    }
+
+    @Override
+    void resolveScope(Scope scope) {
+        // separately resolve fn and body
+        if (fn instanceof LambdaVariable) {
+            String fnName = ((LambdaVariable) fn).getName();
+            if (scope.contains(fnName)) {
+                fn = scope.get(fnName);
+            }
+        } else {
+            fn.resolveScope(scope);
+        }
+        if (body instanceof LambdaVariable) {
+            String bodyName = ((LambdaVariable) body).getName();
+            if (scope.contains(bodyName)) {
+                body = scope.get(bodyName);
+            }
+        } else {
+            body.resolveScope(scope);
+        }
     }
 }
