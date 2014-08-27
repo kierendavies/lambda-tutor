@@ -1,16 +1,16 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.BRACKETED_EXPRESSION;
 
 class BracketedExpression extends Token {
     private List<Token> tokens;
 
-    public BracketedExpression() {
+    public BracketedExpression(int line, int column) {
+        super(BRACKETED_EXPRESSION, line, column);
         tokens = new ArrayList<Token>();
     }
 

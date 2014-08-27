@@ -35,6 +35,14 @@ public class Token {
         return content;
     }
 
+    public int getLength() {
+        if (type == TokenType.IDENTIFIER) {
+            return content.length();
+        } else {
+            return 1;
+        }
+    }
+
     public boolean isEOF() {
         return type == TokenType.END_OF_FILE;
     }

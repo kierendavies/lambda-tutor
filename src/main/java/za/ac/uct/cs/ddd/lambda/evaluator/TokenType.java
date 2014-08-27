@@ -6,5 +6,6 @@ public enum TokenType {
     IDENTIFIER,
     OPENING_BRACKET,
     CLOSING_BRACKET,
-    END_OF_FILE
+    END_OF_FILE,
+    BRACKETED_EXPRESSION
 }
