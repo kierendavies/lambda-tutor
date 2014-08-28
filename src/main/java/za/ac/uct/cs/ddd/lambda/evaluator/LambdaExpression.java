@@ -4,6 +4,8 @@ public abstract class LambdaExpression {
     @Override
     public abstract String toString();
 
+    public abstract String toStringBracketed();
+
     abstract void resolveScope(Scope scope);
 
     void resolveScope() {

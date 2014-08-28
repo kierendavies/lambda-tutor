@@ -23,7 +23,12 @@ class LambdaAbstraction extends LambdaExpression {
 
     @Override
     public String toString() {
-        return String.format("(\\%s.%s)", var, body);
+        return String.format("\u03bb%s.%s", var, body);
+    }
+
+    @Override
+    public String toStringBracketed() {
+        return String.format("(\u03bb%s.%s)", var.toStringBracketed(), body.toStringBracketed());
     }
 
     @Override

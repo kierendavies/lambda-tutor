@@ -9,7 +9,12 @@ class LambdaVariable extends LambdaExpression {
 
     @Override
     public String toString() {
-        return name + "@" + Integer.toHexString(hashCode());
+        return name;
+    }
+
+    @Override
+    public String toStringBracketed() {
+        return name;
     }
 
     @Override

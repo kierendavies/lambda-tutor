@@ -24,7 +24,32 @@ class LambdaApplication extends LambdaExpression {
 
     @Override
     public String toString() {
-        return String.format("(%s %s)", fn, body);
+        StringBuilder builder = new StringBuilder();
+
+        if (fn instanceof LambdaAbstraction) {
+            builder.append('(');
+            builder.append(fn);
+            builder.append(')');
+        } else {
+            builder.append(fn);
+        }
+
+        builder.append(' ');
+
+        if (body instanceof LambdaApplication) {
+            builder.append('(');
+            builder.append(body);
+            builder.append(')');
+        } else {
+            builder.append(body);
+        }
+
+        return builder.toString();
+    }
+
+    @Override
+    public String toStringBracketed() {
+        return String.format("(%s %s)", fn.toStringBracketed(), body.toStringBracketed());
     }
 
     @Override

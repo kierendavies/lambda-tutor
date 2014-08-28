@@ -2,7 +2,6 @@ package za.ac.uct.cs.ddd.lambda.evaluator;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 
 public class Scope {
     private HashMap<String, LambdaVariable> map;

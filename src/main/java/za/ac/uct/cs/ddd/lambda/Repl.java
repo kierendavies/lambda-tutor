@@ -10,15 +10,16 @@ import java.io.InputStreamReader;
 public class Repl {
     public static void main(String[] args) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String line = "";
+        String line;
         try {
             System.out.print(">>> ");
             line = reader.readLine();
             while (!line.toLowerCase().equals("exit")) {
                 try {
                     LambdaExpression expression = Parser.parse(line);
-                    System.out.println(expression);
-                    System.out.println(expression.getFreeVariables());
+                    System.out.println("Parsed expression: " + expression.toString());
+                    System.out.println("Fully bracketed:   " + expression.toStringBracketed());
+                    System.out.println("Free variables:    " + expression.getFreeVariables());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
