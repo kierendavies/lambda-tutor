@@ -137,8 +137,15 @@ public class Parser {
 
         } else {  // parse abstraction
             List<LambdaExpression> expressions = new LinkedList<LambdaExpression>();
-            for (Token token : tokens) {
-                expressions.add(parseLambda(token));
+
+            for (int i = 0; i < tokens.size(); i++) {
+                Token token = tokens.get(i);
+                if (token.getType() == LAMBDA) {
+                    expressions.add(parseLambda(tokens.subList(i, tokens.size())));
+                    break;
+                } else {
+                    expressions.add(parseLambda(token));
+                }
             }
 
             return new LambdaApplication(expressions);
