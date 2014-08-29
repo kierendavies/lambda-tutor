@@ -21,7 +21,6 @@ public class Parser {
 
         // parse lambda forms
         LambdaExpression lambdaExpression = parseLambda(bracketedExpression);
-        lambdaExpression.resolveScope();
 
         return lambdaExpression;
     }
@@ -82,31 +81,34 @@ public class Parser {
         return be;
     }
 
-    private static LambdaExpression parseLambda(Token token) throws InvalidExpressionException {
+    private static LambdaExpression parseLambda(Token token, Scope scope) throws InvalidExpressionException {
         if (token instanceof BracketedExpression) {
             BracketedExpression be = (BracketedExpression) token;
             if (be.getTokens().size() == 0) {
                 throw new InvalidExpressionException("Empty expression", be.getLine(), be.getColumn());
             }
-
-            return parseLambda(be.getTokens());
+            return parseLambda(be.getTokens(), scope);
         } else {
             if (token.getType() != IDENTIFIER) {
                 // if a singleton was anything other than an identifier, it should have been hoisted
                 throw new InvalidExpressionException("Expected identifier, found " + token,
                         token.getLine(), token.getColumn());
             }
-            return new LambdaVariable(token.getContent());
+            return scope.getOrAddNew(token.getContent());
         }
     }
 
-    private static LambdaExpression parseLambda(List<Token> tokens) throws InvalidExpressionException {
+    private static LambdaExpression parseLambda(Token token) throws InvalidExpressionException {
+        return parseLambda(token, new Scope());
+    }
+
+    private static LambdaExpression parseLambda(List<Token> tokens, Scope scope) throws InvalidExpressionException {
         if (tokens.size() == 0) {
             throw new InvalidExpressionException("Empty expression");
         }
 
         if (tokens.size() == 1) {  // parse single identifier
-            return parseLambda(tokens.get(0));
+            return parseLambda(tokens.get(0), scope);
 
         } else if (tokens.get(0).getType() == LAMBDA) {  // parse abstraction
             int arrowIndex = -1;
@@ -129,26 +131,37 @@ public class Parser {
                     throw new InvalidExpressionException("Expected identifier, found " + token,
                             token.getLine(), token.getColumn());
                 }
-                variables.add(new LambdaVariable(token.getContent()));
+                LambdaVariable variable = new LambdaVariable(token.getContent());
+                variables.add(variable);
+                scope.add(variable);
             }
-            LambdaExpression body = parseLambda(tokens.subList(arrowIndex + 1, tokens.size()));
+            LambdaExpression body = parseLambda(tokens.subList(arrowIndex + 1, tokens.size()), scope);
+
+            // clean up scope
+            for (LambdaVariable variable : variables) {
+                scope.remove(variable);
+            }
 
             return new LambdaAbstraction(variables, body);
 
-        } else {  // parse abstraction
+        } else {  // parse application
             List<LambdaExpression> expressions = new LinkedList<LambdaExpression>();
 
             for (int i = 0; i < tokens.size(); i++) {
                 Token token = tokens.get(i);
                 if (token.getType() == LAMBDA) {
-                    expressions.add(parseLambda(tokens.subList(i, tokens.size())));
+                    expressions.add(parseLambda(tokens.subList(i, tokens.size()), scope));
                     break;
                 } else {
-                    expressions.add(parseLambda(token));
+                    expressions.add(parseLambda(token, scope));
                 }
             }
 
             return new LambdaApplication(expressions);
         }
+    }
+
+    private static LambdaExpression parseLambda(List<Token> tokens) throws InvalidExpressionException {
+        return parseLambda(tokens, new Scope());
     }
 }

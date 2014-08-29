@@ -7,8 +7,9 @@ class LambdaVariable extends LambdaExpression {
         this.name = name;
     }
 
-    public LambdaVariable clone() {
-        return new LambdaVariable(name);
+    @Override
+    public LambdaVariable clone(Scope scope) {
+        return scope.getOrAddNew(this.name);
     }
 
     @Override
@@ -19,11 +20,6 @@ class LambdaVariable extends LambdaExpression {
     @Override
     public String toStringBracketed() {
         return name;
-    }
-
-    @Override
-    void resolveScope(Scope scope) {
-        // do nothing
     }
 
     @Override

@@ -23,8 +23,8 @@ class LambdaApplication extends LambdaExpression {
     }
 
     @Override
-    public LambdaApplication clone() {
-        return new LambdaApplication(fn.clone(), body.clone());
+    public LambdaApplication clone(Scope scope) {
+        return new LambdaApplication(fn.clone(scope), body.clone(scope));
     }
 
     @Override
@@ -55,27 +55,6 @@ class LambdaApplication extends LambdaExpression {
     @Override
     public String toStringBracketed() {
         return String.format("(%s %s)", fn.toStringBracketed(), body.toStringBracketed());
-    }
-
-    @Override
-    void resolveScope(Scope scope) {
-        // separately resolve fn and body
-        if (fn instanceof LambdaVariable) {
-            String fnName = ((LambdaVariable) fn).getName();
-            if (scope.contains(fnName)) {
-                fn = scope.get(fnName);
-            }
-        } else {
-            fn.resolveScope(scope);
-        }
-        if (body instanceof LambdaVariable) {
-            String bodyName = ((LambdaVariable) body).getName();
-            if (scope.contains(bodyName)) {
-                body = scope.get(bodyName);
-            }
-        } else {
-            body.resolveScope(scope);
-        }
     }
 
     @Override

@@ -22,9 +22,10 @@ class LambdaAbstraction extends LambdaExpression {
     }
 
     @Override
-    public LambdaAbstraction clone() {
-        LambdaAbstraction cloned = new LambdaAbstraction(var.clone(), body.clone());
-        cloned.resolveScope();
+    public LambdaAbstraction clone(Scope scope) {
+        scope.add(var);
+        LambdaAbstraction cloned = new LambdaAbstraction(var.clone(scope), body.clone(scope));
+        scope.remove(var);
         return cloned;
     }
 
@@ -39,24 +40,9 @@ class LambdaAbstraction extends LambdaExpression {
     }
 
     @Override
-    void resolveScope(Scope scope) {
-        Scope newScope = new Scope(scope);
-        newScope.add(var);
-
-        if (body instanceof LambdaVariable) {
-            String bodyName = ((LambdaVariable) body).getName();
-            if (newScope.contains(bodyName)) {
-                body = newScope.get(bodyName);
-            }
-        } else {
-            body.resolveScope(newScope);
-        }
-    }
-
-    @Override
     public Scope getFreeVariables() {
         Scope freeVariables = body.getFreeVariables();
-        freeVariables.remove(var.getName());
-        return  freeVariables;
+        freeVariables.remove(var);
+        return freeVariables;
     }
 }
