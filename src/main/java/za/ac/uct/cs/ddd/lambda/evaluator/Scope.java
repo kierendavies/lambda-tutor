@@ -49,7 +49,9 @@ public class Scope {
      */
     public void addAll(Scope scope) {
         for (String name : scope.map.keySet()) {
-            add(scope.get(name));
+            if (!scope.map.get(name).isEmpty()) {
+                add(scope.get(name));
+            }
         }
     }
 
