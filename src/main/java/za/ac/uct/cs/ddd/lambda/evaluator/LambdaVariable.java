@@ -7,6 +7,10 @@ class LambdaVariable extends LambdaExpression {
         this.name = name;
     }
 
+    public LambdaVariable clone() {
+        return new LambdaVariable(name);
+    }
+
     @Override
     public String toString() {
         return name;

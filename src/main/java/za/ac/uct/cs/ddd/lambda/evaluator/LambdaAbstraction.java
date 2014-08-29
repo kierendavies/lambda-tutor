@@ -22,6 +22,13 @@ class LambdaAbstraction extends LambdaExpression {
     }
 
     @Override
+    public LambdaAbstraction clone() {
+        LambdaAbstraction cloned = new LambdaAbstraction(var.clone(), body.clone());
+        cloned.resolveScope();
+        return cloned;
+    }
+
+    @Override
     public String toString() {
         return String.format("\u03bb%s.%s", var, body);
     }

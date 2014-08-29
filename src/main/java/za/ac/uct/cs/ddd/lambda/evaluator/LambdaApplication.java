@@ -23,6 +23,11 @@ class LambdaApplication extends LambdaExpression {
     }
 
     @Override
+    public LambdaApplication clone() {
+        return new LambdaApplication(fn.clone(), body.clone());
+    }
+
+    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
