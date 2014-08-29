@@ -1,19 +1,21 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+/**
+ * Indicates that an expression is not valid in terms of the definition of lambda calculus.
+ */
 public class InvalidExpressionException extends Exception {
-    public InvalidExpressionException() {
-        super();
-    }
+    protected int line, column;
 
-    public InvalidExpressionException(Throwable cause) {
-        super(cause);
+    public InvalidExpressionException() {
     }
 
     public InvalidExpressionException(String message) {
         super(message);
     }
 
-    public InvalidExpressionException(String message, Throwable cause) {
-        super(message, cause);
+    public InvalidExpressionException(String message, int line, int column) {
+        super(String.format("%s at line %d column %d", message, line, column));
+        this.line = line;
+        this.column = column;
     }
 }

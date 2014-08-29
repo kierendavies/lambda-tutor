@@ -2,6 +2,7 @@ package za.ac.uct.cs.ddd.lambda.gui;
 
 import za.ac.uct.cs.ddd.lambda.evaluator.InvalidExpressionException;
 import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
+import za.ac.uct.cs.ddd.lambda.evaluator.Parser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,7 +59,7 @@ public class Calculator extends JPanel implements ActionListener{
         if(e.getActionCommand() == "Reduce"){
             //outputArea.setText("reduce pushed");
             try{
-                LambdaExpression expression = new LambdaExpression(lambdaInputField.getText());
+                LambdaExpression expression = Parser.parse(lambdaInputField.getText());
                 outputArea.setText(expression.toString());
             }catch (InvalidExpressionException ex){
                 ex.printStackTrace();
