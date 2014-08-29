@@ -2,15 +2,27 @@ package za.ac.uct.cs.ddd.lambda.evaluator;
 
 import java.util.List;
 
+/**
+ * A representation of an application.
+ */
 class LambdaApplication extends LambdaExpression {
     private LambdaExpression fn;
     private LambdaExpression body;
 
+    /**
+     * Creates a lambda expression with some function on the left applied to a body on the right.
+     * @param fn The left side
+     * @param body The right side
+     */
     public LambdaApplication(LambdaExpression fn, LambdaExpression body) {
         this.fn = fn;
         this.body = body;
     }
 
+    /**
+     * Creates a lambda expression from a chain of applications.
+     * @param expressions The expressions to be applied in sequence
+     */
     public LambdaApplication(List<LambdaExpression> expressions) {
         this.body = expressions.get(expressions.size()-1);
         expressions.remove(expressions.size() - 1);

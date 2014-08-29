@@ -2,15 +2,28 @@ package za.ac.uct.cs.ddd.lambda.evaluator;
 
 import java.util.List;
 
+/**
+ * A representation of a lambda abstraction.
+ */
 class LambdaAbstraction extends LambdaExpression {
     private LambdaVariable var;
     private LambdaExpression body;
 
+    /**
+     * Creates a lambda abstraction with a variable and body.
+     * @param var The variable
+     * @param body The body
+     */
     public LambdaAbstraction(LambdaVariable var, LambdaExpression body) {
         this.var = var;
         this.body = body;
     }
 
+    /**
+     * Creates a lambda abstraction of many variables.
+     * @param vars The list of variables
+     * @param body The body
+     */
     public LambdaAbstraction(List<LambdaVariable> vars, LambdaExpression body) {
         this.var = vars.get(0);
         if (vars.size() == 1) {

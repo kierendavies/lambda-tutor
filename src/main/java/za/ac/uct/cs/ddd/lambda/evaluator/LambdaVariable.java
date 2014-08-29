@@ -1,8 +1,15 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+/**
+ * A representation of a variable.
+ */
 class LambdaVariable extends LambdaExpression {
     private String name;
 
+    /**
+     * Creates a new variable with the given name.
+     * @param name The name of the variable
+     */
     public LambdaVariable(String name) {
         this.name = name;
     }
@@ -29,6 +36,10 @@ class LambdaVariable extends LambdaExpression {
         return freeVariables;
     }
 
+    /**
+     * Returns the name of the variable.
+     * @return The name of the variable
+     */
     public String getName() {
         return name;
     }

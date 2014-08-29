@@ -1,5 +1,8 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+/**
+ * The types of supported tokens.
+ */
 public enum TokenType {
     LAMBDA,
     ARROW,

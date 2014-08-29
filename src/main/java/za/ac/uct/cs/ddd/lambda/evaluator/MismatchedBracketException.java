@@ -1,5 +1,8 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+/**
+ * Indicates that an expression has mismatched brackets.
+ */
 public class MismatchedBracketException extends InvalidExpressionException {
     public MismatchedBracketException() {
     }

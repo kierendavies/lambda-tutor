@@ -8,6 +8,14 @@ import java.util.List;
 import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.*;
 
 public class Parser {
+    /**
+     * Consumes tokens from a lexer until EOF is reached, and parses them into a semantically structured lambda
+     * expression.
+     * @param lexer The lexer from which to consume tokens
+     * @return The lambda expression
+     * @throws IOException If the lexer encounters an IO error
+     * @throws InvalidExpressionException If the lexer does not produce a valid lambda expression
+     */
     public static LambdaExpression parse(Lexer lexer) throws IOException, InvalidExpressionException {
         // generate tree of bracketed expressions
         BracketedExpression bracketedExpression = parseBrackets(lexer);
@@ -25,6 +33,12 @@ public class Parser {
         return lambdaExpression;
     }
 
+    /**
+     * Parses a string into a semantically structured lambda expression.
+     * @param expression The string to parse
+     * @return The lambda expression
+     * @throws InvalidExpressionException If the string is not a valid lambda expression
+     */
     public static LambdaExpression parse(String expression) throws InvalidExpressionException {
         try {
             return parse(new Lexer(new StringReader(expression)));
@@ -35,11 +49,13 @@ public class Parser {
     }
 
     /**
-     * Given a lexer, produce a bracketed expression by consuming tokens until the correct closing bracket is found or
+     * Given a lexer, produces a bracketed expression by consuming tokens until the correct closing bracket is found or
      * end of stream is reached.  Assumes the opening bracket (if any) has already been consumed, and replaces the
      * closing bracket to be consumed by the caller.
-     *
      * @param lexer The lexer from which to consume tokens
+     * @return A nested sequence of tokens
+     * @throws IOException If the lexer encounters an IO error
+     * @throws InvalidExpressionException If the lexer does not produce a correctly bracketed expression
      */
     private static BracketedExpression parseBrackets(Lexer lexer) throws IOException, InvalidExpressionException {
         Token token = lexer.next();
@@ -81,6 +97,14 @@ public class Parser {
         return be;
     }
 
+    /**
+     * Parses a token, which may be a BracketedExpression, into a semantically structured lambda expression, where
+     * variables are taken from the given scope.
+     * @param token The token to parse
+     * @param scope The variables which are currently in scope
+     * @return The lambda expression
+     * @throws InvalidExpressionException If the token does not form a valid lambda expression
+     */
     private static LambdaExpression parseLambda(Token token, Scope scope) throws InvalidExpressionException {
         if (token instanceof BracketedExpression) {
             BracketedExpression be = (BracketedExpression) token;
@@ -98,10 +122,24 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a token, which may be a BracketedExpression, into a semantically structured lambda expression.
+     * @param token The token to parse
+     * @return The lambda expression
+     * @throws InvalidExpressionException If the token does not form a valid lambda expression
+     */
     private static LambdaExpression parseLambda(Token token) throws InvalidExpressionException {
         return parseLambda(token, new Scope());
     }
 
+    /**
+     * Parses a list of tokens into a semantically structured lambda expression, where variables are taken from the
+     * given scope.
+     * @param tokens The list of tokens to parse
+     * @param scope The variables which are currently in scope
+     * @return The lambda expression
+     * @throws InvalidExpressionException If the tokens do not form a valid lambda expression
+     */
     private static LambdaExpression parseLambda(List<Token> tokens, Scope scope) throws InvalidExpressionException {
         if (tokens.size() == 0) {
             throw new InvalidExpressionException("Empty expression");
@@ -161,6 +199,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a list of tokens into a semantically structured lambda expression.
+     * @param tokens The list of tokens to parse
+     * @return The lambda expression
+     * @throws InvalidExpressionException If the tokens do not form a valid lambda expression
+     */
     private static LambdaExpression parseLambda(List<Token> tokens) throws InvalidExpressionException {
         return parseLambda(tokens, new Scope());
     }

@@ -1,5 +1,8 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+/**
+ * Indicates that an expression is not valid in terms of the definition of lambda calculus.
+ */
 public class InvalidExpressionException extends Exception {
     protected int line, column;
 
