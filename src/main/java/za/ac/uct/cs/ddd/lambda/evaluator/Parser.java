@@ -62,7 +62,7 @@ public class Parser {
         BracketedExpression be = new BracketedExpression(token.getLine(), token.getColumn());
 
         // read until EOF or closing bracket, and add to tokens list
-        while (!token.isEOF() && token.getType() != CLOSING_BRACKET) {
+        while (token.getType() != END_OF_FILE && token.getType() != CLOSING_BRACKET) {
             if (token.getType() == OPENING_BRACKET) {
                 be.addToken(parseBrackets(lexer));
                 token = lexer.next();

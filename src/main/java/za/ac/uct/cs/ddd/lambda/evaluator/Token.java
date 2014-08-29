@@ -1,5 +1,7 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.*;
+
 /**
  * A token which stores its type, string content, and line and column in the original input.
  */
@@ -75,15 +77,13 @@ public class Token {
      * @return The length of the token
      */
     public int getLength() {
-        if (type == TokenType.IDENTIFIER) {
+        if (type == IDENTIFIER) {
             return content.length();
+        } else if (type == BRACKETED_EXPRESSION) {
+            throw new RuntimeException("Cannot get length of bracketed expression");
         } else {
             return 1;
         }
-    }
-
-    public boolean isEOF() {
-        return type == TokenType.END_OF_FILE;
     }
 
     /**

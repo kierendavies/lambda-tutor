@@ -66,6 +66,7 @@ class BracketedExpression extends Token {
      * Returns a string representation of this bracketed expression.
      * @return The string representation.
      */
+    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("( ");
