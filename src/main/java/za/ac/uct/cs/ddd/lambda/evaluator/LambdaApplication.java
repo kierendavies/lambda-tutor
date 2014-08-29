@@ -36,12 +36,12 @@ class LambdaApplication extends LambdaExpression {
 
         builder.append(' ');
 
-        if (body instanceof LambdaApplication) {
+        if (body instanceof LambdaVariable) {
+            builder.append(body);
+        } else {
             builder.append('(');
             builder.append(body);
             builder.append(')');
-        } else {
-            builder.append(body);
         }
 
         return builder.toString();
