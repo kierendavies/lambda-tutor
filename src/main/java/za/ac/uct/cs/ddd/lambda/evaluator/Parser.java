@@ -7,6 +7,9 @@ import java.util.List;
 
 import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.*;
 
+/**
+ * A collection of static methods for parsing lambda expressions.
+ */
 public class Parser {
     /**
      * Consumes tokens from a lexer until EOF is reached, and parses them into a semantically structured lambda
