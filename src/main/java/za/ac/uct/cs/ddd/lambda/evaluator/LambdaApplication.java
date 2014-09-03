@@ -88,6 +88,12 @@ class LambdaApplication extends LambdaExpression {
     }
 
     @Override
+    protected void renameShadowedVariables(Scope scope) {
+        fn.renameShadowedVariables(scope);
+        body.renameShadowedVariables(scope);
+    }
+
+    @Override
     protected void substitute(LambdaVariable variable, LambdaExpression expression) {
         if (fn == variable) {
             fn = expression;

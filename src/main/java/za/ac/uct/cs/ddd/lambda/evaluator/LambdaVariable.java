@@ -53,6 +53,11 @@ class LambdaVariable extends LambdaExpression {
     }
 
     @Override
+    protected void renameShadowedVariables(Scope scope) {
+        // do nothing
+    }
+
+    @Override
     protected void substitute(LambdaVariable variable, LambdaExpression expression) {
         // do nothing
     }
@@ -63,5 +68,13 @@ class LambdaVariable extends LambdaExpression {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Renames the variable.
+     * @param name The new name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 }

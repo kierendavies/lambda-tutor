@@ -73,6 +73,18 @@ class LambdaAbstraction extends LambdaExpression {
     }
 
     @Override
+    protected void renameShadowedVariables(Scope scope) {
+        String name = var.getName();
+        while (scope.contains(name)) {
+            name += "'";
+        }
+        var.setName(name);
+        scope.add(var);
+        body.renameShadowedVariables(scope);
+        scope.remove(var);
+    }
+
+    @Override
     protected void substitute(LambdaVariable variable, LambdaExpression expression) {
         if (body == variable) {
             body = expression;

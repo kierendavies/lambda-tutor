@@ -7,19 +7,19 @@ import java.util.HashMap;
  */
 public abstract class LambdaExpression {
     /**
-     * Creates a deep copy of this lambda expression, with variables taken from the given scope.
-     * @param scope The variable scope
-     * @return A new lambda expression
-     */
-    protected abstract LambdaExpression clone(Scope scope);
-
-    /**
      * Creates a deep copy of this lambda expression.
      * @return A new lambda expression
      */
     public LambdaExpression clone() {
         return clone(new Scope());
     }
+
+    /**
+     * Creates a deep copy of this lambda expression, with variables taken from the given scope.
+     * @param scope The variable scope
+     * @return A new lambda expression
+     */
+    protected abstract LambdaExpression clone(Scope scope);
 
     /**
      * Indicates whether some other lambda expression is equal to this one, up to alpha equivalence.
@@ -58,6 +58,20 @@ public abstract class LambdaExpression {
      * @return A Scope containing all the free variables
      */
     public abstract Scope getFreeVariables();
+
+    /**
+     * Renames all variables which shadow others with the same name so that there are no possible conflicts.  This is
+     * done by appending prime symbols to the names.
+     */
+    public void renameShadowedVariables() {
+        renameShadowedVariables(getFreeVariables());
+    }
+
+    /**
+     * Renames all variables which shadow others with the same name so that there are no possible conflicts.
+     * @param scope Variables that have already occurred.
+     */
+    protected abstract void renameShadowedVariables(Scope scope);
 
     /**
      * Substitute all occurences of a variable with another expression.
