@@ -1,7 +1,5 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
-import java.util.Collection;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 

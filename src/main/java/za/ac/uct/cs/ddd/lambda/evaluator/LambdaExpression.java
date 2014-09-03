@@ -1,5 +1,7 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+import java.util.HashMap;
+
 /**
  * A structured representation of a lambda expression.
  */
@@ -12,12 +14,31 @@ public abstract class LambdaExpression {
     protected abstract LambdaExpression clone(Scope scope);
 
     /**
-     * Create a deep copy of this lambda expression.
+     * Creates a deep copy of this lambda expression.
      * @return A new lambda expression
      */
     public LambdaExpression clone() {
         return clone(new Scope());
     }
+
+    /**
+     * Indicates whether some other lambda expression is equal to this one, up to alpha equivalence.
+     * @param expr The expression to compare
+     * @return {@code true} if this expression is equivalent to the argument; {@code false} otherwise
+     */
+    public boolean equivalentTo(LambdaExpression expr) {
+        return equivalentTo(expr, 0, new HashMap<LambdaVariable, Integer>());
+    }
+
+    /**
+     * Indicates whether some other lambda expression is equal to this one, up to alpha equivalence, when it occurs at
+     * the specified depth of abstractions.
+     * @param expr The expression to compare
+     * @param depth The current depth in the tree structure
+     * @param depths A map of the depths at which variables are declared in both this and the reference expression.
+     * @return {@code true} if this expression is equivalent to the argument; {@code false} otherwise
+     */
+    protected abstract boolean equivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths);
 
     /**
      * Returns the string representation, with brackets following the conventional shorthand.

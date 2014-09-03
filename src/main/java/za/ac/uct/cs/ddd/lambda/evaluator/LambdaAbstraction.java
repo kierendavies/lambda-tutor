@@ -1,5 +1,6 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -40,6 +41,18 @@ class LambdaAbstraction extends LambdaExpression {
         LambdaAbstraction cloned = new LambdaAbstraction(var.clone(scope), body.clone(scope));
         scope.remove(var);
         return cloned;
+    }
+
+    @Override
+    protected boolean equivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
+        if (expr instanceof LambdaAbstraction) {
+            LambdaAbstraction abstraction = (LambdaAbstraction) expr;
+            depths.put(var, depth);
+            depths.put(abstraction.var, depth);
+            return body.equivalentTo(abstraction.body, depth+1, depths);
+        } else {
+            return false;
+        }
     }
 
     @Override

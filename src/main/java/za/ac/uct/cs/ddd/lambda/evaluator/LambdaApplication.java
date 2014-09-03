@@ -1,5 +1,6 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -37,6 +38,16 @@ class LambdaApplication extends LambdaExpression {
     @Override
     public LambdaApplication clone(Scope scope) {
         return new LambdaApplication(fn.clone(scope), body.clone(scope));
+    }
+
+    @Override
+    protected boolean equivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
+        if (expr instanceof LambdaApplication) {
+            LambdaApplication application = (LambdaApplication) expr;
+            return application.fn.equivalentTo(fn, depth, depths) && application.body.equivalentTo(body, depth, depths);
+        } else {
+            return false;
+        }
     }
 
     @Override

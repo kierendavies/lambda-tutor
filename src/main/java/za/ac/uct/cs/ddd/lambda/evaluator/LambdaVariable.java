@@ -1,5 +1,7 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+import java.util.HashMap;
+
 /**
  * A representation of a variable.
  */
@@ -17,6 +19,20 @@ class LambdaVariable extends LambdaExpression {
     @Override
     public LambdaVariable clone(Scope scope) {
         return scope.getOrAddNew(this.name);
+    }
+
+    @Override
+    protected boolean equivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
+        if (expr instanceof LambdaVariable) {
+            LambdaVariable variable = (LambdaVariable) expr;
+            if (depths.containsKey(this)) {
+                return depths.containsKey(variable) && depths.get(this).equals(depths.get(variable));
+            } else {
+                return !depths.containsKey(variable) && variable.name.equals(name);
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -42,10 +58,5 @@ class LambdaVariable extends LambdaExpression {
      */
     public String getName() {
         return name;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof LambdaExpression && ((LambdaVariable) obj).getName().equals(name);
     }
 }
