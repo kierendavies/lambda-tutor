@@ -52,6 +52,11 @@ class LambdaVariable extends LambdaExpression {
         return freeVariables;
     }
 
+    @Override
+    protected void substitute(LambdaVariable variable, LambdaExpression expression) {
+        // do nothing
+    }
+
     /**
      * Returns the name of the variable.
      * @return The name of the variable

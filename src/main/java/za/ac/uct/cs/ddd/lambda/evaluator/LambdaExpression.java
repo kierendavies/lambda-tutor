@@ -59,6 +59,13 @@ public abstract class LambdaExpression {
      */
     public abstract Scope getFreeVariables();
 
+    /**
+     * Substitute all occurences of a variable with another expression.
+     * @param variable The variable to substitute
+     * @param expression The expression with which to substitute the variable
+     */
+    protected abstract void substitute(LambdaVariable variable, LambdaExpression expression);
+
 //    public abstract boolean reduceApplicativeOrder();
 //    public abstract boolean reduceOnceApplicativeOrder();
 //    public abstract boolean reduceNormalOrder();

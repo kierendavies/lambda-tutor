@@ -86,4 +86,18 @@ class LambdaApplication extends LambdaExpression {
         freeVariables.addAll(body.getFreeVariables());
         return freeVariables;
     }
+
+    @Override
+    protected void substitute(LambdaVariable variable, LambdaExpression expression) {
+        if (fn == variable) {
+            fn = expression;
+        } else {
+            fn.substitute(variable, expression);
+        }
+        if (body == variable) {
+            body = expression;
+        } else {
+            body.substitute(variable, expression);
+        }
+    }
 }

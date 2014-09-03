@@ -71,4 +71,13 @@ class LambdaAbstraction extends LambdaExpression {
         freeVariables.remove(var);
         return freeVariables;
     }
+
+    @Override
+    protected void substitute(LambdaVariable variable, LambdaExpression expression) {
+        if (body == variable) {
+            body = expression;
+        } else {
+            body.substitute(variable, expression);
+        }
+    }
 }
