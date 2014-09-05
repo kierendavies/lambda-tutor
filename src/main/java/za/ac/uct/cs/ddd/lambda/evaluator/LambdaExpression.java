@@ -176,14 +176,6 @@ public abstract class LambdaExpression {
             last = expression;
             expression = expression.reduceOnce(order);
             iterations++;
-
-            LambdaExpression withRenaming = expression.renameDuplicateVariables();
-            if (withRenaming != expression) {
-                results.add(expression);
-                last = expression;
-                expression = withRenaming;
-                iterations++;
-            }
         }
         return results;
     }
