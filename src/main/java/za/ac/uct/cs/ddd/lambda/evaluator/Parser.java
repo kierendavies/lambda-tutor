@@ -160,7 +160,11 @@ public class Parser {
                     break;
                 }
             }
-            if (arrowIndex == -1) {
+            if (arrowIndex == 1) {
+                Token token = tokens.get(1);
+                throw new InvalidExpressionException("Missing variable binding",
+                        token.getLine(), token.getColumn());
+            } else if (arrowIndex == -1) {
                 Token token = tokens.get(tokens.size() - 1);
                 throw new InvalidExpressionException("Missing abstraction body",
                         token.getLine(), (token.getColumn() + token.getLength()));
