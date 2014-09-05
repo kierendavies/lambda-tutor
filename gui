@@ -1,4 +1,4 @@
 #!/bin/bash
 
-java -cp target/lambda-0.2-SNAPSHOT.jar za.ac.uct.cs.ddd.lambda.gui.Driver
+java -cp target/lambda-0.2-SNAPSHOT-jar-with-dependencies.jar za.ac.uct.cs.ddd.lambda.gui.Driver
 

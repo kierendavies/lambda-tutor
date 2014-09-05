@@ -114,6 +114,6 @@ public class Scope {
 
     @Override
     public String toString() {
-        return map.values().toString();
+        return map.keySet().toString();
     }
 }
