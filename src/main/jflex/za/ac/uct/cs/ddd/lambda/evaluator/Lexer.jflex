@@ -32,9 +32,10 @@ ClosingBracket = ")"
 Lambda = "\\" | "\u03bb"
 Arrow = "." | "->" | "\u2192"
 
-IdentifierStart = [[:letter:]--[\u03bb]] | "_" | "'"
+IdentifierStart = [[:letter:]--[\u03bb]] | "_"
 IdentifierPart = {IdentifierStart} | [:digit:]
-Identifier = {IdentifierStart} {IdentifierPart}*
+IdentifierEnd = "\u2034"* ("\u2033" | "\u2032")?
+Identifier = {IdentifierStart} {IdentifierPart}* {IdentifierEnd}?
 
 %%
 

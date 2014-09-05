@@ -6,7 +6,7 @@ import java.util.HashMap;
  * A representation of a variable.
  */
 class LambdaVariable extends LambdaExpression {
-    private String name;
+    String name;
 
     /**
      * Creates a new variable with the given name.
@@ -53,28 +53,22 @@ class LambdaVariable extends LambdaExpression {
     }
 
     @Override
-    protected void renameShadowedVariables(Scope scope) {
-        // do nothing
+    public LambdaExpression renameDuplicateVariables(Scope scope) {
+        return this;
     }
 
     @Override
-    protected void substitute(LambdaVariable variable, LambdaExpression expression) {
-        // do nothing
+    public LambdaExpression substitute(LambdaVariable variable, LambdaExpression expression) {
+        if (this == variable) {
+            return expression;
+        } else {
+            return this;
+        }
     }
 
-    /**
-     * Returns the name of the variable.
-     * @return The name of the variable
-     */
-    public String getName() {
-        return name;
+    @Override
+    public LambdaExpression reduceOnce(ReductionOrder order) {
+        return this;
     }
 
-    /**
-     * Renames the variable.
-     * @param name The new name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
 }

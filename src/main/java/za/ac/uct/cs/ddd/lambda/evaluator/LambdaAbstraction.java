@@ -3,12 +3,14 @@ package za.ac.uct.cs.ddd.lambda.evaluator;
 import java.util.HashMap;
 import java.util.List;
 
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
+
 /**
  * A representation of a lambda abstraction.
  */
 class LambdaAbstraction extends LambdaExpression {
-    private LambdaVariable var;
-    private LambdaExpression body;
+    LambdaVariable var;
+    LambdaExpression body;
 
     /**
      * Creates a lambda abstraction with a variable and body.
@@ -73,23 +75,88 @@ class LambdaAbstraction extends LambdaExpression {
     }
 
     @Override
-    protected void renameShadowedVariables(Scope scope) {
-        String name = var.getName();
-        while (scope.contains(name)) {
-            name += "'";
+    public LambdaExpression renameDuplicateVariables(Scope scope) {
+        LambdaVariable newVar;
+        LambdaExpression newBody;
+        if (scope.contains(var.name)) {
+            String newName = Util.nextVariableName(var.name);
+            while (scope.contains(newName)) {
+                newName = Util.nextVariableName(newName);
+            }
+            newVar = new LambdaVariable(newName);
+            newBody = body.substitute(var, newVar);
+        } else {
+            newVar = var;
+            newBody = body;
         }
-        var.setName(name);
-        scope.add(var);
-        body.renameShadowedVariables(scope);
-        scope.remove(var);
+
+        scope.add(newVar);
+        newBody = newBody.renameDuplicateVariables(scope);
+
+        if (newVar == var && newBody == body) {
+            return this;
+        } else {
+            return new LambdaAbstraction(newVar, newBody);
+        }
     }
 
     @Override
-    protected void substitute(LambdaVariable variable, LambdaExpression expression) {
-        if (body == variable) {
-            body = expression;
+    public LambdaExpression substitute(LambdaVariable variable, LambdaExpression expression) {
+       Scope freeVariables = expression.getFreeVariables();
+        if (freeVariables.contains(var.name)) {
+            // rename this variable to avoid capture
+            String newName = Util.nextVariableName(var.name);
+            freeVariables.addAll(body.getFreeVariables());
+            while (freeVariables.contains(newName)) {
+                newName = Util.nextVariableName(newName);
+            }
+            LambdaVariable newVar = new LambdaVariable(newName);
+            return new LambdaAbstraction(newVar, body.substitute(var, newVar).substitute(variable, expression));
         } else {
-            body.substitute(variable, expression);
+            LambdaExpression newBody = body.substitute(variable, expression);
+            if (newBody == body) {
+                return this;
+            } else {
+                return new LambdaAbstraction(var, newBody);
+            }
         }
+    }
+
+    /**
+     * Checks if this abstraction is eta-reducible.
+     * @return {@code true} if it is eta-reducible; {@code false} otherwise
+     */
+    private boolean etaReducible() {
+        if (body instanceof LambdaApplication) {
+            LambdaApplication application = (LambdaApplication) body;
+            return application.body == var && !application.fn.getFreeVariables().contains(var);
+        }
+        return false;
+    }
+
+    /**
+     * Returns the eta reduction of this abstraction, assuming it is eta-reducible.
+     * @return The reduced expression
+     */
+    private LambdaExpression etaReduce() {
+        return ((LambdaApplication) body).fn;
+    }
+
+    @Override
+    public LambdaExpression reduceOnce(ReductionOrder order) {
+        if (order == NORMAL && etaReducible()) {
+            return etaReduce();
+        }
+
+        LambdaExpression newBody = body.reduceOnce(order);
+        if (newBody != body) {
+            return new LambdaAbstraction(var, newBody);
+        }
+
+        if (order == APPLICATIVE && etaReducible()) {
+            return etaReduce();
+        }
+
+        return this;
     }
 }
