@@ -5,10 +5,7 @@ import za.ac.uct.cs.ddd.lambda.evaluator.InvalidExpressionException;
 import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
 import za.ac.uct.cs.ddd.lambda.evaluator.Parser;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashMap;
 
 import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
