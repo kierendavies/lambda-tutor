@@ -46,12 +46,12 @@ class LambdaAbstraction extends LambdaExpression {
     }
 
     @Override
-    protected boolean equivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
+    protected boolean alphaEquivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
         if (expr instanceof LambdaAbstraction) {
             LambdaAbstraction abstraction = (LambdaAbstraction) expr;
             depths.put(var, depth);
             depths.put(abstraction.var, depth);
-            return body.equivalentTo(abstraction.body, depth+1, depths);
+            return body.alphaEquivalentTo(abstraction.body, depth + 1, depths);
         } else {
             return false;
         }

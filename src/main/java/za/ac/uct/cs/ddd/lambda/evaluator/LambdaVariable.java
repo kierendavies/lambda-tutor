@@ -22,7 +22,7 @@ class LambdaVariable extends LambdaExpression {
     }
 
     @Override
-    protected boolean equivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
+    protected boolean alphaEquivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
         if (expr instanceof LambdaVariable) {
             LambdaVariable variable = (LambdaVariable) expr;
             if (depths.containsKey(this)) {

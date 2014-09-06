@@ -43,10 +43,10 @@ class LambdaApplication extends LambdaExpression {
     }
 
     @Override
-    protected boolean equivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
+    protected boolean alphaEquivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
         if (expr instanceof LambdaApplication) {
             LambdaApplication application = (LambdaApplication) expr;
-            return application.fn.equivalentTo(fn, depth, depths) && application.body.equivalentTo(body, depth, depths);
+            return application.fn.alphaEquivalentTo(fn, depth, depths) && application.body.alphaEquivalentTo(body, depth, depths);
         } else {
             return false;
         }

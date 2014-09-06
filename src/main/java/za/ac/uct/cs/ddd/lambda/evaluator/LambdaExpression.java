@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
+
 /**
  * A structured representation of a lambda expression.
  */
@@ -27,12 +29,12 @@ public abstract class LambdaExpression {
     protected abstract LambdaExpression clone(Scope scope);
 
     /**
-     * Indicates whether some other lambda expression is equal to this one, up to alpha equivalence.
+     * Indicates whether some other lambda expression is alpha-equivalent to this one.
      * @param expr The expression to compare
      * @return {@code true} if this expression is equivalent to the argument; {@code false} otherwise
      */
-    public boolean equivalentTo(LambdaExpression expr) {
-        return equivalentTo(expr, 0, new HashMap<LambdaVariable, Integer>());
+    public boolean alphaEquivalentTo(LambdaExpression expr) {
+        return alphaEquivalentTo(expr, 0, new HashMap<LambdaVariable, Integer>());
     }
 
     /**
@@ -43,7 +45,7 @@ public abstract class LambdaExpression {
      * @param depths A map of the depths at which variables are declared in both this and the reference expression.
      * @return {@code true} if this expression is equivalent to the argument; {@code false} otherwise
      */
-    protected abstract boolean equivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths);
+    protected abstract boolean alphaEquivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths);
 
     /**
      * Returns the string representation, with brackets following the conventional shorthand.
@@ -178,5 +180,35 @@ public abstract class LambdaExpression {
             iterations++;
         }
         return results;
+    }
+
+    /**
+     * Checks if another lambda expression if extensionally equivalent to this one.  May produce false negatives.
+     * @param expr The expression to compare
+     * @return {@code true} if this expression is equivalent to the argument; {@code false} otherwise
+     */
+    public boolean equivalentTo(LambdaExpression expr) {
+        // try the easiest approach first
+        if (this.alphaEquivalentTo(expr)) {
+            return true;
+        }
+
+        for (LambdaExpression thisReduction : this.reductions(NORMAL)) {
+            for (LambdaExpression thatReduction : expr.reductions(NORMAL)) {
+                if (thisReduction.alphaEquivalentTo(thatReduction)) {
+                    return true;
+                }
+            }
+        }
+
+        for (LambdaExpression thisReduction : this.reductions(APPLICATIVE)) {
+            for (LambdaExpression thatReduction : expr.reductions(APPLICATIVE)) {
+                if (thisReduction.alphaEquivalentTo(thatReduction)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
