@@ -9,8 +9,8 @@ import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
  * A representation of a lambda abstraction.
  */
 class LambdaAbstraction extends LambdaExpression {
-    LambdaVariable var;
-    LambdaExpression body;
+    final LambdaVariable var;
+    final LambdaExpression body;
 
     /**
      * Creates a lambda abstraction with a variable and body.

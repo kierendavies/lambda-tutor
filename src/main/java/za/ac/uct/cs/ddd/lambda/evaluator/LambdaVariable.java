@@ -6,7 +6,7 @@ import java.util.HashMap;
  * A representation of a variable.
  */
 class LambdaVariable extends LambdaExpression {
-    String name;
+    final String name;
 
     /**
      * Creates a new variable with the given name.

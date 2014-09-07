@@ -9,8 +9,8 @@ import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
  * A representation of an application.
  */
 class LambdaApplication extends LambdaExpression {
-    LambdaExpression fn;
-    LambdaExpression body;
+    final LambdaExpression fn;
+    final LambdaExpression body;
 
     /**
      * Creates a lambda expression with some function on the left applied to a body on the right.
