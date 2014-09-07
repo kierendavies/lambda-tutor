@@ -30,7 +30,7 @@ OpeningBracket = "("
 ClosingBracket = ")"
 
 Lambda = "\\" | "\u03bb"
-Arrow = "." | "->" | "\u2192"
+Dot = "." | "->" | "\u2192"
 
 IdentifierStart = [[:letter:]--[\u03bb]] | "_"
 IdentifierPart = {IdentifierStart} | [:digit:]
@@ -43,7 +43,7 @@ Identifier = {IdentifierStart} {IdentifierPart}* {IdentifierEnd}?
 {OpeningBracket}    { return token(OPENING_BRACKET); }
 {ClosingBracket}    { return token(CLOSING_BRACKET); }
 {Lambda}            { return token(LAMBDA); }
-{Arrow}             { return token(ARROW); }
+{Dot}             { return token(DOT); }
 {Identifier}        { return token(IDENTIFIER, yytext()); }
 <<EOF>>             { return token(END_OF_FILE); }
 

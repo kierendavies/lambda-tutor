@@ -155,7 +155,7 @@ public class Parser {
             int arrowIndex = -1;
             for (int i = 1; i < tokens.size()-1; i++) {
                 Token token = tokens.get(i);
-                if (token.getType() == ARROW) {
+                if (token.getType() == DOT) {
                     arrowIndex = i;
                     break;
                 }
