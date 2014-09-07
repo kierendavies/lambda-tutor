@@ -9,8 +9,8 @@ import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
  * A representation of an application.
  */
 class LambdaApplication extends LambdaExpression {
-    LambdaExpression fn;
-    LambdaExpression body;
+    final LambdaExpression fn;
+    final LambdaExpression body;
 
     /**
      * Creates a lambda expression with some function on the left applied to a body on the right.
@@ -43,10 +43,10 @@ class LambdaApplication extends LambdaExpression {
     }
 
     @Override
-    protected boolean equivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
+    protected boolean alphaEquivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
         if (expr instanceof LambdaApplication) {
             LambdaApplication application = (LambdaApplication) expr;
-            return application.fn.equivalentTo(fn, depth, depths) && application.body.equivalentTo(body, depth, depths);
+            return application.fn.alphaEquivalentTo(fn, depth, depths) && application.body.alphaEquivalentTo(body, depth, depths);
         } else {
             return false;
         }

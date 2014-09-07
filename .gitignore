@@ -1,5 +1,13 @@
 # All taken from https://github.com/github/gitignore
 
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -17,7 +25,7 @@ hs_err_pid*
 
 ## Directory-based project format
 .idea/
-/*.iml
+*.iml
 # if you remove the above rule, at least ignore user-specific stuff:
 # .idea/workspace.xml
 # .idea/tasks.xml

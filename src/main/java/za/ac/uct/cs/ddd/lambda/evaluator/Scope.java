@@ -7,7 +7,7 @@ import java.util.LinkedList;
  * A set of variables which allows shadowing.
  */
 public class Scope {
-    private HashMap<String, LinkedList<LambdaVariable>> map;
+    private final HashMap<String, LinkedList<LambdaVariable>> map;
 
     /**
      * Creates a new empty scope.

@@ -9,8 +9,8 @@ import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
  * A representation of a lambda abstraction.
  */
 class LambdaAbstraction extends LambdaExpression {
-    LambdaVariable var;
-    LambdaExpression body;
+    final LambdaVariable var;
+    final LambdaExpression body;
 
     /**
      * Creates a lambda abstraction with a variable and body.
@@ -46,12 +46,12 @@ class LambdaAbstraction extends LambdaExpression {
     }
 
     @Override
-    protected boolean equivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
+    protected boolean alphaEquivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
         if (expr instanceof LambdaAbstraction) {
             LambdaAbstraction abstraction = (LambdaAbstraction) expr;
             depths.put(var, depth);
             depths.put(abstraction.var, depth);
-            return body.equivalentTo(abstraction.body, depth+1, depths);
+            return body.alphaEquivalentTo(abstraction.body, depth + 1, depths);
         } else {
             return false;
         }
@@ -102,7 +102,7 @@ class LambdaAbstraction extends LambdaExpression {
 
     @Override
     public LambdaExpression substitute(LambdaVariable variable, LambdaExpression expression) {
-        Scope freeVariables = expression.getFreeVariables();
+       Scope freeVariables = expression.getFreeVariables();
         if (freeVariables.contains(var.name)) {
             // rename this variable to avoid capture
             String newName = Util.nextVariableName(var.name);
