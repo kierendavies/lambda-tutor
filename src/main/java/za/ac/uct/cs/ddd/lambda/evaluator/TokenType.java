@@ -5,7 +5,7 @@ package za.ac.uct.cs.ddd.lambda.evaluator;
  */
 public enum TokenType {
     LAMBDA,
-    ARROW,
+    DOT,
     IDENTIFIER,
     OPENING_BRACKET,
     CLOSING_BRACKET,
