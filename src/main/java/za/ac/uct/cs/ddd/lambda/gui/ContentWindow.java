@@ -2,16 +2,16 @@ package za.ac.uct.cs.ddd.lambda.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class ContentWindow extends SizeablePanel {
     GridBagConstraints gbc;
     JButton menuButton;
-    GUI parent;
+    String mode;
+    Window parent;
 
-    public ContentWindow( GUI par) {
+    public ContentWindow( Window par) {
         parent = par;
         setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -26,21 +26,16 @@ public class ContentWindow extends SizeablePanel {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weighty = 1;
         gbc.insets = new Insets(0, 10, 10, 0);
-        menuButton.addActionListener(new menuListener());
+        //menuButton.addActionListener(parentFrame);
         menuButton.setFont(new Font("Serif", Font.PLAIN, 14));
         add(menuButton, gbc);
 
 
     }
 
-
-    class menuListener  implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            parent.setPane(parent.menu);
-        }
-    }
+     void addMenuButtonListener( ActionListener actionListener){
+         menuButton.addActionListener(actionListener);
+     }
 
 
 

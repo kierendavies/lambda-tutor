@@ -18,23 +18,24 @@ public class MarkController {
     JFileChooser fileChooser;
 
 
-   public MarkController(MarkView v){
-       view = v;
-       v.addBrowseListener(new BrowseListener());
+    public MarkController(MarkView v){
+        view = v;
+        v.addBrowseListener(new BrowseListener());
 
-   }
+    }
 
     class BrowseListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-           fileChooser = new JFileChooser();
-           int returnValue = fileChooser.showOpenDialog(null);
+            fileChooser = new JFileChooser();
+            int returnValue = fileChooser.showOpenDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION){
 
                 view.setFileName(fileChooser.getName(fileChooser.getSelectedFile()));
+               // System.out.println(fileChooser.getName(fileChooser.getSelectedFile()));
 
-          }
+            }
 
         }
 
@@ -49,7 +50,7 @@ public class MarkController {
                 List<String> steps = new ArrayList<String>();
                 String line = null;
                 while ((line = input.readLine()) != null){
-                   steps.add(line);
+                    steps.add(line);
 
                 }
                 //Pass arrayList to marker backend

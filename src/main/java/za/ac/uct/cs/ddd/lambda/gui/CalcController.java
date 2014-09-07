@@ -5,7 +5,6 @@ import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
 import za.ac.uct.cs.ddd.lambda.evaluator.Parser;
 import za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -37,23 +36,6 @@ public class CalcController {
             }
 
         }
-
-        //Not happy with this
-
-       class RadioListener implements ActionListener{
-
-           @Override
-           public void actionPerformed(ActionEvent e) {
-              JRadioButton button =  (JRadioButton) e.getSource();
-               if (button.getText().equals("Normal")){
-                   view.setOrder(ReductionOrder.NORMAL);
-               }
-               else   if (button.getText().equals("Applicative")){
-                   view.setOrder(ReductionOrder.APPLICATIVE);
-               }
-
-           }
-       }
     }
 
 }

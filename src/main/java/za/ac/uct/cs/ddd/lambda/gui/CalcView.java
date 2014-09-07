@@ -22,7 +22,7 @@ import java.util.List;
     JRadioButton normalButton, applicativeButton;
     JScrollPane scrollPane;
 
-     public CalcView( GUI parent) {
+     public CalcView( Window parent) {
          super(parent);
 
          //==========================================================
@@ -112,11 +112,6 @@ import java.util.List;
     }
      void addReduceListener(ActionListener actionListener){
          reduceButton.addActionListener(actionListener);
-     }
-
-     void addRadioListener(ActionListener actionListener) {
-         normalButton.addActionListener(actionListener);
-         applicativeButton.addActionListener(actionListener);
      }
 
     /* applicativeButton.putClientProperty("ORDER", ReductionOrder.APPLICATIVE);

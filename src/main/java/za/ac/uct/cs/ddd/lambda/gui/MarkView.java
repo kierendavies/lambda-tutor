@@ -7,7 +7,6 @@ package za.ac.uct.cs.ddd.lambda.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MarkView extends ContentWindow {
@@ -21,7 +20,7 @@ public class MarkView extends ContentWindow {
     String fileName;
 
 
-    public MarkView(GUI parent) {
+    public MarkView(Window parent) {
         super(parent);
         //super(parentFrame);
 
@@ -44,7 +43,6 @@ public class MarkView extends ContentWindow {
 
         //Create the JTextArea
         feedbackArea = new JTextArea(5, 20);
-
         //GridBag constraints for JTextArea
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -111,7 +109,7 @@ public class MarkView extends ContentWindow {
 
         //Create "mark" JButton
         browseButton = new JButton("Browse");
-       // browseButton.addActionListener(this);
+        // browseButton.addActionListener(this);
 
 
         //GridBag constraints for JButton
@@ -129,11 +127,11 @@ public class MarkView extends ContentWindow {
     }
 
     void setFileName(String file){
-        locationField.setText(fileName);
+        locationField.setText(file);
 
     }
 
-     String getFileName  (){
+    String getFileName  (){
         return locationField.getText();
     }
 
@@ -154,5 +152,4 @@ public class MarkView extends ContentWindow {
 
     }*/
 }
-
 
