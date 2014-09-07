@@ -59,6 +59,9 @@ class BracketedExpression extends Token {
         if (!(tokens.get(index) instanceof BracketedExpression)) {
             throw new RuntimeException("Child is not a bracketed expression");
         }
+        if (((BracketedExpression) tokens.get(index)).getTokens().size() != 1) {
+            throw new RuntimeException("Child is not a singleton");
+        }
         tokens.set(index, ((BracketedExpression) tokens.get(index)).getTokens().get(0));
     }
 
