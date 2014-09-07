@@ -1,13 +1,16 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+import java.util.HashMap;
 import java.util.List;
+
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
 
 /**
  * A representation of an application.
  */
 class LambdaApplication extends LambdaExpression {
-    private LambdaExpression fn;
-    private LambdaExpression body;
+    LambdaExpression fn;
+    LambdaExpression body;
 
     /**
      * Creates a lambda expression with some function on the left applied to a body on the right.
@@ -37,6 +40,16 @@ class LambdaApplication extends LambdaExpression {
     @Override
     public LambdaApplication clone(Scope scope) {
         return new LambdaApplication(fn.clone(scope), body.clone(scope));
+    }
+
+    @Override
+    protected boolean alphaEquivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
+        if (expr instanceof LambdaApplication) {
+            LambdaApplication application = (LambdaApplication) expr;
+            return application.fn.alphaEquivalentTo(fn, depth, depths) && application.body.alphaEquivalentTo(body, depth, depths);
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -74,5 +87,68 @@ class LambdaApplication extends LambdaExpression {
         Scope freeVariables = fn.getFreeVariables();
         freeVariables.addAll(body.getFreeVariables());
         return freeVariables;
+    }
+
+    @Override
+    public LambdaExpression renameDuplicateVariables(Scope scope) {
+        LambdaExpression newFn = fn.renameDuplicateVariables(scope);
+        LambdaExpression newBody = body.renameDuplicateVariables(scope);
+
+        if (newFn == fn && newBody == body) {
+            return this;
+        } else {
+            return new LambdaApplication(newFn, newBody);
+        }
+    }
+
+    @Override
+    public LambdaExpression substitute(LambdaVariable variable, LambdaExpression expression) {
+        LambdaExpression newFn = fn.substitute(variable, expression);
+        LambdaExpression newBody = body.substitute(variable, expression);
+        if (newFn == fn && newBody == body) {
+            return this;
+        } else {
+            return new LambdaApplication(newFn, newBody);
+        }
+    }
+
+    /**
+     * Checks if this application is beta-reducible.
+     * @return {@code true} if it is beta-reducible; {@code false} otherwise
+     */
+    private boolean betaReducible() {
+        return fn instanceof LambdaAbstraction;
+    }
+
+    /**
+     * Returns the beta reduction of this abstraction, assuming it is beta-reducible.
+     * @return The reduced expression
+     */
+    private LambdaExpression betaReduce() {
+        LambdaAbstraction abstraction = (LambdaAbstraction) fn;
+        return abstraction.body.substitute(abstraction.var, body);
+    }
+
+    @Override
+    public LambdaExpression reduceOnce(ReductionOrder order) {
+        if (order == NORMAL && betaReducible()) {
+            return betaReduce();
+        }
+
+        LambdaExpression newFn = fn.reduceOnce(order);
+        if (newFn != fn) {
+            return new LambdaApplication(newFn, body);
+        }
+
+        LambdaExpression newBody = body.reduceOnce(order);
+        if (newBody != body) {
+            return new LambdaApplication(fn, newBody);
+        }
+
+        if (order == APPLICATIVE && betaReducible()) {
+            return betaReduce();
+        }
+
+        return this;
     }
 }

@@ -1,7 +1,5 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
-import java.util.Collection;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -34,13 +32,12 @@ public class Scope {
      * @param variable The variable to add
      */
     public void add(LambdaVariable variable) {
-        String name = variable.getName();
-        if (!map.containsKey(variable.getName())) {
-            map.put(name, new LinkedList<LambdaVariable>());
-        } else if (map.get(name).contains(variable)) {
+        if (!map.containsKey(variable.name)) {
+            map.put(variable.name, new LinkedList<LambdaVariable>());
+        } else if (map.get(variable.name).contains(variable)) {
             return;  // don't add it twice
         }
-        map.get(name).push(variable);
+        map.get(variable.name).push(variable);
     }
 
     /**
@@ -60,8 +57,8 @@ public class Scope {
      * @param variable The variable to remove
      */
     public void remove(LambdaVariable variable) {
-        if (contains(variable.getName())) {
-            LinkedList<LambdaVariable> list = map.get(variable.getName());
+        if (contains(variable.name)) {
+            LinkedList<LambdaVariable> list = map.get(variable.name);
             if (!list.isEmpty() && list.peek() == variable) {
                 list.pop();
             }
@@ -71,10 +68,14 @@ public class Scope {
     /**
      * Gets a variable instance by its name.
      * @param variableName The name of the variable
-     * @return The instance of the variable
+     * @return The instance of the variable, or {@code null} if is not in the scope
      */
     public LambdaVariable get(String variableName) {
-        return map.get(variableName).peek();
+        if (contains(variableName)) {
+            return map.get(variableName).peek();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -84,6 +85,15 @@ public class Scope {
      */
     public boolean contains(String variableName) {
         return map.containsKey(variableName) && !map.get(variableName).isEmpty();
+    }
+
+    /**
+     * Checks if the scope contains the given variable.
+     * @param variable The variable
+     * @return {@code true} if it exists in this scope, {@code false} otherwise
+     */
+    public boolean contains(LambdaVariable variable) {
+        return map.containsKey(variable.name) && map.get(variable.name).contains(variable);
     }
 
     /**
@@ -104,6 +114,6 @@ public class Scope {
 
     @Override
     public String toString() {
-        return map.values().toString();
+        return map.keySet().toString();
     }
 }

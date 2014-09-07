@@ -1,10 +1,12 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
+import java.util.HashMap;
+
 /**
  * A representation of a variable.
  */
 class LambdaVariable extends LambdaExpression {
-    private String name;
+    String name;
 
     /**
      * Creates a new variable with the given name.
@@ -17,6 +19,20 @@ class LambdaVariable extends LambdaExpression {
     @Override
     public LambdaVariable clone(Scope scope) {
         return scope.getOrAddNew(this.name);
+    }
+
+    @Override
+    protected boolean alphaEquivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths) {
+        if (expr instanceof LambdaVariable) {
+            LambdaVariable variable = (LambdaVariable) expr;
+            if (depths.containsKey(this)) {
+                return depths.containsKey(variable) && depths.get(this).equals(depths.get(variable));
+            } else {
+                return !depths.containsKey(variable) && variable.name.equals(name);
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -36,16 +52,23 @@ class LambdaVariable extends LambdaExpression {
         return freeVariables;
     }
 
-    /**
-     * Returns the name of the variable.
-     * @return The name of the variable
-     */
-    public String getName() {
-        return name;
+    @Override
+    public LambdaExpression renameDuplicateVariables(Scope scope) {
+        return this;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof LambdaExpression && ((LambdaVariable) obj).getName().equals(name);
+    public LambdaExpression substitute(LambdaVariable variable, LambdaExpression expression) {
+        if (this == variable) {
+            return expression;
+        } else {
+            return this;
+        }
     }
+
+    @Override
+    public LambdaExpression reduceOnce(ReductionOrder order) {
+        return this;
+    }
+
 }
