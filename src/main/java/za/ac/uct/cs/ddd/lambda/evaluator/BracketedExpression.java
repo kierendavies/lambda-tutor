@@ -53,7 +53,7 @@ class BracketedExpression extends Token {
     /**
      * Replaces a token which is a BracketedExpression with its contents.  This flattens the tree structure to make it
      * more efficient when the nested expression contains only one token.
-     * @param index
+     * @param index The index of the token
      */
     void hoistSingletonChild(int index) {
         if (!(tokens.get(index) instanceof BracketedExpression)) {
