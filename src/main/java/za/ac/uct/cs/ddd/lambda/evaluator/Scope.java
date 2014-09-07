@@ -1,6 +1,7 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -58,10 +59,7 @@ public class Scope {
      */
     public void remove(LambdaVariable variable) {
         if (contains(variable.name)) {
-            LinkedList<LambdaVariable> list = map.get(variable.name);
-            if (!list.isEmpty() && list.peek() == variable) {
-                list.pop();
-            }
+            map.get(variable.name).remove(variable);
         }
     }
 
@@ -114,6 +112,28 @@ public class Scope {
 
     @Override
     public String toString() {
-        return map.keySet().toString();
+        if (map.isEmpty()) {
+            return "{}";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append('{');
+
+        Iterator<String> iterator = map.keySet().iterator();
+
+        String key = iterator.next();
+        if (!map.get(key).isEmpty()) {
+            builder.append(key);
+        }
+        while (iterator.hasNext()) {
+            key = iterator.next();
+            if (!map.get(key).isEmpty()) {
+                builder.append(", ");
+                builder.append(key);
+            }
+        }
+
+        builder.append('}');
+        return builder.toString();
     }
 }
