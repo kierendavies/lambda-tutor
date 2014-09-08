@@ -6,7 +6,7 @@
 
     <groupId>za.ac.uct.cs.ddd.lambda</groupId>
     <artifactId>lambda</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <packaging>jar</packaging>
 
     <name>CSC3003S Capstone Lambda Tutor</name>
