@@ -1,142 +1,214 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class LambdaExpression {
-    private LambdaExpression body;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
 
-    public LambdaExpression() {
+/**
+ * A structured representation of a lambda expression.
+ */
+public abstract class LambdaExpression {
+    private static final int defaultMaxIterations = 50;
+
+    /**
+     * Creates a deep copy of this lambda expression.
+     * @return A new lambda expression
+     */
+    public LambdaExpression clone() {
+        return clone(new Scope());
     }
 
-    public LambdaExpression(String expr) throws InvalidExpressionException {
-        this();
+    /**
+     * Creates a deep copy of this lambda expression, with variables taken from the given scope.
+     * @param scope The variable scope
+     * @return A new lambda expression
+     */
+    protected abstract LambdaExpression clone(Scope scope);
 
-        // parse the given expression string
+    /**
+     * Indicates whether some other lambda expression is alpha-equivalent to this one.
+     * @param expr The expression to compare
+     * @return {@code true} if this expression is equivalent to the argument; {@code false} otherwise
+     */
+    public boolean alphaEquivalentTo(LambdaExpression expr) {
+        return alphaEquivalentTo(expr, 0, new HashMap<LambdaVariable, Integer>());
+    }
 
-        if (!hasMatchedBrackets(expr)) {
-            throw new InvalidExpressionException("Unmatched brackets");
+    /**
+     * Indicates whether some other lambda expression is equal to this one, up to alpha equivalence, when it occurs at
+     * the specified depth of abstractions.
+     * @param expr The expression to compare
+     * @param depth The current depth in the tree structure
+     * @param depths A map of the depths at which variables are declared in both this and the reference expression.
+     * @return {@code true} if this expression is equivalent to the argument; {@code false} otherwise
+     */
+    protected abstract boolean alphaEquivalentTo(LambdaExpression expr, int depth, HashMap<LambdaVariable, Integer> depths);
+
+    /**
+     * Returns the string representation, with brackets following the conventional shorthand.
+     * @return The string representation
+     */
+    @Override
+    public abstract String toString();
+
+    /**
+     * Returns the string representation, with all optional brackets.
+     * @return The string representation
+     */
+    public abstract String toStringBracketed();
+
+    /**
+     * Finds all free variables in this expression.
+     * @return A Scope containing all the free variables
+     */
+    public abstract Scope getFreeVariables();
+
+    /**
+     * Renames all variables which shadow others with the same name so that there are no possible conflicts.  This is
+     * done by appending prime symbols to the names.
+     */
+    public LambdaExpression renameDuplicateVariables() {
+        return renameDuplicateVariables(getFreeVariables());
+    }
+
+    /**
+     * Renames all variables which shadow others with the same name so that there are no possible conflicts.
+     * @param scope Variables that have already occurred.
+     */
+    public abstract LambdaExpression renameDuplicateVariables(Scope scope);
+
+    /**
+     * Substitute all occurrences of a variable with another expression.
+     * @param variable The variable to substitute
+     * @param expression The expression with which to substitute the variable
+     * @return The new expression
+     */
+    public abstract LambdaExpression substitute(LambdaVariable variable, LambdaExpression expression);
+
+    /**
+     * Substitute all occurrences of a named variable with another expression.
+     * @param variableName The name of the variable to substitute
+     * @param expression The expression with which to substitute the variable
+     * @return The new expression
+     */
+    public LambdaExpression substitute(String variableName, LambdaExpression expression) {
+        return substitute(getFreeVariables().get(variableName), expression);
+    }
+
+    /**
+     * Substitute all occurrences of some named variables with corresponding expressions.
+     * @param substitutions A map from variable names to expressions with which to substitute
+     * @return The new expression
+     */
+    public LambdaExpression substituteAll(Map<String, LambdaExpression> substitutions) {
+        Scope freeVariables = getFreeVariables();
+        LambdaExpression newExpr = this;
+        for (String name : substitutions.keySet()) {
+            if (freeVariables.contains(name)) {
+                newExpr = newExpr.substitute(freeVariables.get(name), substitutions.get(name));
+            }
+        }
+        return newExpr;
+    }
+
+    /**
+     * Performs one reduction, if possible, according to the specified order.
+     * @param order The reduction order
+     * @return The reduced expression
+     */
+    public abstract LambdaExpression reduceOnce(ReductionOrder order);
+
+    /**
+     * Reduces the lambda expression as much as possible.
+     * @param order The reduction order
+     * @return The reduced expression
+     */
+    public LambdaExpression reduce(ReductionOrder order) {
+        return reduce(order, defaultMaxIterations);
+    }
+
+    /**
+     * Reduces the lambda expression as much as possible according to the specified order, not iterating more than the
+     * specified number of times.
+     * @param order The reduction order
+     * @param maxIterations The maximum number of iterations
+     * @return The reduced expression
+     */
+    public LambdaExpression reduce(ReductionOrder order, int maxIterations) {
+        int iterations = 0;
+        LambdaExpression expression = this;
+        LambdaExpression last = null;
+        while (expression != last) {
+            if (iterations == maxIterations) {
+                return this;
+            }
+            last = expression;
+            expression = expression.reduceOnce(order);
+            iterations++;
+        }
+        return expression;
+    }
+
+    /**
+     * Returns a list of iterations of reduction according to the specified order.
+     * @param order The reduction order
+     * @return The list of expressions, beginning with the original and ending with the fully reduced expression
+     */
+    public List<LambdaExpression> reductions(ReductionOrder order) {
+        return reductions(order, defaultMaxIterations);
+    }
+
+    /**
+     * Returns a list of iterations of reduction according to the specified order, not iterating more than the
+     * specified number of times.
+     * @param order The reduction order
+     * @param maxIterations The maximum number of iterations
+     * @return The list of expressions, beginning with the original and ending with the fully reduced expression
+     */
+    public List<LambdaExpression> reductions(ReductionOrder order, int maxIterations) {
+        ArrayList<LambdaExpression> results = new ArrayList<LambdaExpression>();
+        int iterations = 0;
+        LambdaExpression expression = this;
+        LambdaExpression last = null;
+        while (expression != last && iterations < maxIterations) {
+            results.add(expression);
+            last = expression;
+            expression = expression.reduceOnce(order);
+            iterations++;
+        }
+        return results;
+    }
+
+    /**
+     * Checks if another lambda expression if extensionally equivalent to this one.  May produce false negatives.
+     * @param expr The expression to compare
+     * @return {@code true} if this expression is equivalent to the argument; {@code false} otherwise
+     */
+    public boolean equivalentTo(LambdaExpression expr) {
+        // try the easiest approach first
+        if (this.alphaEquivalentTo(expr)) {
+            return true;
         }
 
-        // clean up the string
-        expr = normalizeWhitespace(expr);
-        expr = stripOuterBrackets(expr);
-
-        if (expr.charAt(0) == '\\') {  // first check if it's an abstraction
-            int dotIndex = expr.indexOf('.');
-            // TODO check it's not inside any brackets or anything
-            LambdaVariable var = new LambdaVariable(expr.substring(1, dotIndex));
-            LambdaExpression body = new LambdaExpression(expr.substring(dotIndex + 1));
-            this.body = new LambdaAbstraction(var, body);
-        } else if (isVariableName(expr)) {  // then check if it's a variable
-            this.body = new LambdaVariable(expr);
-            // TODO detect scope
-        } else {  // finally it must be an application
-            int lastTermStart = -1;  // flag for not found
-            if (expr.charAt(expr.length()-1) == ')') {
-                int bracketLevel = 1;  // counting the last bracket
-                // scanning backwards
-                for (int i = expr.length()-2; i >= 0; i++) {
-                    if (expr.charAt(i) == ')') {
-                        bracketLevel++;
-                    } else if (expr.charAt(i) == '(') {
-                        bracketLevel--;
-                        if (bracketLevel == 0) {
-                            lastTermStart = i;
-                            break;
-                        }
-                    }
+        for (LambdaExpression thisReduction : this.reductions(NORMAL)) {
+            for (LambdaExpression thatReduction : expr.reductions(NORMAL)) {
+                if (thisReduction.alphaEquivalentTo(thatReduction)) {
+                    return true;
                 }
-            } else {
-                lastTermStart = expr.lastIndexOf(' ');
             }
-            if (lastTermStart == -1) {
-                throw new InvalidExpressionException("Not a valid application");
-            }
-            LambdaExpression fn = new LambdaExpression(expr.substring(0, lastTermStart));
-            LambdaExpression body = new LambdaExpression(expr.substring(lastTermStart, expr.length()));
-            this.body = new LambdaApplication(fn, body);
         }
-    }
 
-    static boolean hasMatchedBrackets(String expr) {
-        Deque<Character> stack = new ArrayDeque<Character>();
-
-        for (int i = 0; i < expr.length(); i++) {
-            if (expr.charAt(i) == '(') {
-                stack.push('(');
-            } else if (expr.charAt(i) == ')') {
-                if (stack.isEmpty() || stack.pop() != '(') {
-                    return false;
+        for (LambdaExpression thisReduction : this.reductions(APPLICATIVE)) {
+            for (LambdaExpression thatReduction : expr.reductions(APPLICATIVE)) {
+                if (thisReduction.alphaEquivalentTo(thatReduction)) {
+                    return true;
                 }
             }
         }
 
-        return stack.isEmpty();
-    }
-
-    static boolean isAllBracketed(String expr) {
-        expr = expr.trim();
-        if (expr.charAt(0) != '(' || expr.charAt(expr.length()-1) != ')') {
-            return false;
-        }
-        int bracketLevel = 1;  // already counting the first opening bracket and last closing bracket
-        for (int i = 1; i < expr.length() - 1; i++) {
-            if (expr.charAt(i) == '(') {
-                bracketLevel++;
-            } else if (expr.charAt(i) == ')') {
-                bracketLevel--;
-            }
-            if (bracketLevel < 1) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    static String stripOuterBrackets(String expr) {
-        expr = expr.trim();
-        while (isAllBracketed(expr)) {
-            expr = expr.substring(1, expr.length()-1).trim();
-        }
-        return expr;
-    }
-
-    static String normalizeWhitespace(String expr) {
-        expr = expr.replace("\t", " ");
-        expr = expr.replace("\n", " ");
-        while (expr.contains("  ")) {
-            expr = expr.replace("  ", " ");
-        }
-        return expr;
-    }
-
-    static boolean isVariableName(String expr) {
-        for (int i = 0; i < expr.length(); i++) {
-            if (Character.isWhitespace(expr.charAt(i))
-                    || expr.charAt(i) == '\\'
-                    || expr.charAt(i) == '.'
-                    || expr.charAt(i) == '('
-                    || expr.charAt(i) == ')') {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public String toString() {
-        if (body == null) {
-            return "";
-        }
-        return body.toString();
-    }
-
-    public static void main(String[] args) {
-        try {
-            LambdaExpression expr = new LambdaExpression("\\f.(\\x.((f x)))");
-            System.out.println(expr);
-        } catch (InvalidExpressionException e) {
-            e.printStackTrace();
-        }
+        return false;
     }
 }

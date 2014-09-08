@@ -1,42 +1,68 @@
 package za.ac.uct.cs.ddd.lambda.gui;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class MainMenu extends JPanel{
+public class MainMenu extends SizeablePanel {
+    ActionListener parentFrame;
 
-    public MainMenu(ActionListener parentFrame){
-        setSize(800, 600);
-        setLayout(null); //new BorderLayout(5, 10)
 
-        JLabel title = new JLabel("\\ambda");
-        title.setLocation(350, 50);
-        title.setSize(100, 50);
-        title.setFont(new Font("Serif", Font.PLAIN, 26));
-        add(title);
+    public MainMenu(ActionListener l) {
 
-        JButton calculatorButton = new JButton("Calculator");
-        calculatorButton.setLocation(250, 150);
-        calculatorButton.setSize(300, 100);
-        calculatorButton.setFont(new Font("Serif", Font.PLAIN, 20));
-        calculatorButton.addActionListener(parentFrame);
-        add(calculatorButton);
+        this.parentFrame = l;
 
-        JButton tutorButton = new JButton("Tutor");
-        tutorButton.setLocation(250, 275);
-        tutorButton.setSize(300, 100);
-        tutorButton.setFont(new Font("Serif", Font.PLAIN, 20));
-        tutorButton.addActionListener(parentFrame);
-        add(tutorButton);
+        //Add title
+        addTitle("\u03bbambda");
 
-        /*JButton markerButton = new JButton("Marker");
-        markerButton.setLocation(250, 400);
-        markerButton.setSize(300, 100);
-        markerButton.setFont(new Font("Serif", Font.PLAIN, 20));
-        markerButton.addActionListener(parentFrame);
-        add(markerButton);*/
+        //Add Border
+        setBorder(new EmptyBorder(0, width / 4, height / 8, width / 4));
+
+        //Create and add button pane:
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.PAGE_AXIS));
+
+
+        // System.out.println(();
+
+        //buttonPane.setBackground(Color.darkGray);
+
+        buttonPane.add(Box.createRigidArea(new Dimension(0, width / 50)));
+
+
+        //Adding  buttons to the pane
+        addButton("Calculator", buttonPane);
+        addButton("Tutor", buttonPane);
+        addButton("Marker", buttonPane);
+        add(buttonPane);
+
 
         setVisible(true);
     }
+
+
+    private void addButton(String text, Container container) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Serif", Font.PLAIN, 20));
+        button.setMaximumSize(new Dimension((2 * width) / 3, height / 3));
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.addActionListener(parentFrame);
+        container.add(button);
+        container.add(Box.createRigidArea(new Dimension(0, width / 70)));
+
+
+    }
+
+
 }
+
+       /* addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                repaint();
+            }
+
+    });*/
+
+// setBorder(new EmptyBorder(0,width/4,height/6,width/4));
