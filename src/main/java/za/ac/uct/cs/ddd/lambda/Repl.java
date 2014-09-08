@@ -11,7 +11,6 @@ import java.util.HashMap;
 import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
 
 public class Repl {
-
     public static void main(String[] args) {
         HashMap<String, LambdaExpression> builtins = new HashMap<>();
         try {
@@ -50,9 +49,9 @@ public class Repl {
                     continue;
                 }
                 try {
-                    while (hasUnclosedBrackets(line)) {
-                        line += "\n" + reader.readLine("... ");
-                    }
+//                    while (hasUnclosedBrackets(line)) {
+//                        line += "\n" + reader.readLine("... ");
+//                    }
                     expression = Parser.parse(line);
                     expression = expression.substituteAll(builtins);
                     System.out.println("Parsed expression: " + expression.toString());
@@ -82,7 +81,7 @@ public class Repl {
                         System.out.print(' ');
                     }
                     System.out.println('^');
-                    e.printStackTrace();
+                    System.out.println("Syntax error: " + e.getMessage());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

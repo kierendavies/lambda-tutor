@@ -14,7 +14,7 @@ public class InvalidExpressionException extends Exception {
     }
 
     public InvalidExpressionException(String message, int line, int column) {
-        super(String.format("%s at line %d column %d", message, line, column));
+        super(message);
         this.line = line;
         this.column = column;
     }
