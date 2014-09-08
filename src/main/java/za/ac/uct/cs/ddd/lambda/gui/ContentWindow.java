@@ -11,7 +11,7 @@ public class ContentWindow extends SizeablePanel {
     String mode;
     Window parent;
 
-    public ContentWindow( Window par) {
+    public ContentWindow(Window par) {
         parent = par;
         setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();

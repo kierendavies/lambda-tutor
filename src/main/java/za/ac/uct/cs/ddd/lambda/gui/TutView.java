@@ -23,7 +23,7 @@ public class TutView extends ContentWindow {
     JTextArea inputArea;
     JButton menuButton;
 
-    public TutView( GUI  parent , String file  ) {
+    public TutView(Window parent, String file) {
         super(parent);
         inputArea = new JTextArea(5, 20);
         gbc = new GridBagConstraints();
@@ -63,7 +63,7 @@ public class TutView extends ContentWindow {
             }
             String[] probSetArr = set.toArray(new String[]{});
             problemList = new JComboBox(probSetArr);
-            input.close();;
+            input.close();
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
