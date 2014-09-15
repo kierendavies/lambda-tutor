@@ -1,4 +1,6 @@
 #!/bin/bash
 
-java -cp target/lambda-0.3-SNAPSHOT-jar-with-dependencies.jar za.ac.uct.cs.ddd.lambda.gui.Driver
+source $(dirname $0)/getversion.sh
+
+java -cp target/lambda-${version}-jar-with-dependencies.jar za.ac.uct.cs.ddd.lambda.gui.Driver
 
