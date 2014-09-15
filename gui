@@ -2,5 +2,5 @@
 
 source $(dirname $0)/getversion.sh
 
-java -cp target/lambda-${version}-jar-with-dependencies.jar za.ac.uct.cs.ddd.lambda.gui.Driver
+java -cp $(dirname $0)/target/lambda-${version}-jar-with-dependencies.jar za.ac.uct.cs.ddd.lambda.gui.Driver
 
