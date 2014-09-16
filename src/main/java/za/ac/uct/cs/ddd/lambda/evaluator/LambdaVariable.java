@@ -2,6 +2,8 @@ package za.ac.uct.cs.ddd.lambda.evaluator;
 
 import java.util.HashMap;
 
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
+
 /**
  * A representation of a variable.
  */
@@ -67,8 +69,17 @@ class LambdaVariable extends LambdaExpression {
     }
 
     @Override
-    public LambdaExpression reduceOnce(ReductionOrder order) {
-        return this;
+    protected ReductionResult reduceSubstitute(LambdaVariable variable, LambdaExpression expression) {
+        if (this == variable) {
+            ReductionType type = (expression instanceof LambdaVariable) ? ALPHA : BETA;
+            return new ReductionResult(this, this, expression, type);
+        } else {
+            return new ReductionResult(this, null, this, NONE);
+        }
     }
 
+    @Override
+    public ReductionResult reduceOnce(ReductionOrder order) {
+        return new ReductionResult(this, null, this, NONE);
+    }
 }

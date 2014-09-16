@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 
 /**
  * A representation of an application.
@@ -112,6 +113,35 @@ class LambdaApplication extends LambdaExpression {
         }
     }
 
+    @Override
+    protected ReductionResult reduceSubstitute(LambdaVariable variable, LambdaExpression expression) {
+        ReductionResult fnResult = fn.reduceSubstitute(variable, expression);
+        if (fnResult.type == ALPHA_CA) {
+            LambdaApplication reduced = new LambdaApplication(fnResult.reduced, body);
+            return new ReductionResult(this, fnResult.redex, reduced, ALPHA_CA);
+        }
+
+        ReductionResult bodyResult = body.reduceSubstitute(variable, expression);
+        if (bodyResult.type == ALPHA_CA) {
+            LambdaApplication reduced = new LambdaApplication(fn, bodyResult.reduced);
+            return new ReductionResult(this, bodyResult.redex, reduced, ALPHA_CA);
+        }
+
+        if (fnResult.type != NONE && bodyResult.type != NONE) {
+            assert fnResult.type == bodyResult.type;
+            LambdaApplication reduced = new LambdaApplication(fnResult.reduced, bodyResult.reduced);
+            return new ReductionResult(this, this, reduced, fnResult.type);
+        } else if (fnResult.type != NONE) {
+            LambdaApplication reduced = new LambdaApplication(fnResult.reduced, body);
+            return new ReductionResult(this, fnResult.redex, reduced, fnResult.type);
+        } else if (bodyResult.type != NONE) {
+            LambdaApplication reduced = new LambdaApplication(fn, bodyResult.reduced);
+            return new ReductionResult(this, bodyResult.redex, reduced, bodyResult.type);
+        }
+
+        return new ReductionResult(this, null, this, NONE);
+    }
+
     /**
      * Checks if this application is beta-reducible.
      * @return {@code true} if it is beta-reducible; {@code false} otherwise
@@ -124,31 +154,40 @@ class LambdaApplication extends LambdaExpression {
      * Returns the beta reduction of this abstraction, assuming it is beta-reducible.
      * @return The reduced expression
      */
-    private LambdaExpression betaReduce() {
+    private ReductionResult betaReduce() {
         LambdaAbstraction abstraction = (LambdaAbstraction) fn;
-        return abstraction.body.substitute(abstraction.var, body);
+        ReductionResult result = abstraction.body.reduceSubstitute(abstraction.var, body);
+        if (result.type == ALPHA_CA) {
+            LambdaAbstraction newFn = new LambdaAbstraction(abstraction.var, result.reduced);
+            LambdaApplication reduced = new LambdaApplication(newFn, body);
+            return new ReductionResult(this, result.redex, reduced, ALPHA_CA);
+        }
+
+        return new ReductionResult(this, this, result.reduced, BETA);
     }
 
     @Override
-    public LambdaExpression reduceOnce(ReductionOrder order) {
+    public ReductionResult reduceOnce(ReductionOrder order) {
         if (order == NORMAL && betaReducible()) {
             return betaReduce();
         }
 
-        LambdaExpression newFn = fn.reduceOnce(order);
-        if (newFn != fn) {
-            return new LambdaApplication(newFn, body);
+        ReductionResult fnResult = fn.reduceOnce(order);
+        if (fnResult.type != NONE) {
+            LambdaExpression reducedExpression = new LambdaApplication(fnResult.reduced, body);
+            return new ReductionResult(this, fnResult.redex, reducedExpression, fnResult.type);
         }
 
-        LambdaExpression newBody = body.reduceOnce(order);
-        if (newBody != body) {
-            return new LambdaApplication(fn, newBody);
+        ReductionResult bodyResult = body.reduceOnce(order);
+        if (bodyResult.type != NONE) {
+            LambdaExpression reducedExpression = new LambdaApplication(fn, bodyResult.reduced);
+            return new ReductionResult(this, fnResult.redex, reducedExpression, bodyResult.type);
         }
 
         if (order == APPLICATIVE && betaReducible()) {
             return betaReduce();
         }
 
-        return this;
+        return new ReductionResult(this, null, this, NONE);
     }
 }

@@ -2,6 +2,7 @@ package za.ac.uct.cs.ddd.lambda.gui;
 
 import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
 import za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder;
+import za.ac.uct.cs.ddd.lambda.evaluator.ReductionResult;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
@@ -101,9 +102,9 @@ import java.util.List;
         order = ord;
     }
 
-     void setReductionSteps(List<LambdaExpression> reductionSteps){
+     void setReductionSteps(List<ReductionResult> reductionSteps){
       String output = "";
-      for(LambdaExpression step : reductionSteps){
+      for(ReductionResult step : reductionSteps){
           output +=step.toString() +"\n";
 
 

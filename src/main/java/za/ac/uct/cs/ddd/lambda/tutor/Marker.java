@@ -1,9 +1,6 @@
 package za.ac.uct.cs.ddd.lambda.tutor;
 
-import za.ac.uct.cs.ddd.lambda.evaluator.InvalidExpressionException;
-import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
-import za.ac.uct.cs.ddd.lambda.evaluator.Parser;
-import za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder;
+import za.ac.uct.cs.ddd.lambda.evaluator.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +22,10 @@ public class Marker {
         userReductions[0].get(0);
 
         for (List<LambdaExpression> l : userReductions) {
-            List<LambdaExpression> calculatedReductions = l.get(0).reductions(ReductionOrder.NORMAL);
+            List<ReductionResult> calculatedReductions = l.get(0).reductions(ReductionOrder.NORMAL);
 
             for (int i = 0; i < l.size() && i < calculatedReductions.size(); i++) {
-                if(!l.get(i).alphaEquivalentTo(calculatedReductions.get(i))){
+                if(!l.get(i).alphaEquivalentTo(calculatedReductions.get(i).getReducedExpression())){
                     return String.format("Reduction error found in reduction for expression %s:\n" +
                                          "Expected: %s\n" +
                                          "Found: %s",

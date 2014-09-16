@@ -4,6 +4,7 @@ import jline.console.ConsoleReader;
 import za.ac.uct.cs.ddd.lambda.evaluator.InvalidExpressionException;
 import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
 import za.ac.uct.cs.ddd.lambda.evaluator.Parser;
+import za.ac.uct.cs.ddd.lambda.evaluator.ReductionResult;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,6 +24,8 @@ public class Repl {
             builtins.put("ONE", Parser.parse("\\f.\\x.f x"));
             builtins.put("TWO", Parser.parse("\\f.\\x.f (f x)"));
             builtins.put("THREE", Parser.parse("\\f.\\x.f (f (f x))"));
+            builtins.put("FOUR", Parser.parse("\\f.\\x.f (f (f (f x)))"));
+            builtins.put("FIVE", Parser.parse("\\f.\\x.f (f (f (f (f x))))"));
 
             builtins.put("SUCC", Parser.parse("\\n.\\f.\\x.f (n f x)"));
             builtins.put("PLUS", Parser.parse("\\m.\\n.\\f.\\x.m f (n f x)"));
@@ -59,12 +62,12 @@ public class Repl {
                     System.out.println("Free variables:    " + expression.getFreeVariables());
 
                     System.out.println("Applicative order reduction:");
-                    for (LambdaExpression reduction : expression.reductions(APPLICATIVE, 15)) {
+                    for (ReductionResult reduction : expression.reductions(APPLICATIVE, 25)) {
                         System.out.println(reduction);
                     }
 
                     System.out.println("Normal order reduction:");
-                    for (LambdaExpression reduction : expression.reductions(NORMAL, 15)) {
+                    for (ReductionResult reduction : expression.reductions(NORMAL, 25)) {
                         System.out.println(reduction);
                     }
 

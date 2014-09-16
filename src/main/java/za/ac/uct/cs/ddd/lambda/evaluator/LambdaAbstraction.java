@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 
 /**
  * A representation of a lambda abstraction.
@@ -102,11 +103,11 @@ class LambdaAbstraction extends LambdaExpression {
 
     @Override
     public LambdaExpression substitute(LambdaVariable variable, LambdaExpression expression) {
-       Scope freeVariables = expression.getFreeVariables();
+        Scope freeVariables = expression.getFreeVariables();
         if (freeVariables.contains(var.name)) {
             // rename this variable to avoid capture
-            String newName = Util.nextVariableName(var.name);
             freeVariables.addAll(body.getFreeVariables());
+            String newName = Util.nextVariableName(var.name);
             while (freeVariables.contains(newName)) {
                 newName = Util.nextVariableName(newName);
             }
@@ -118,6 +119,30 @@ class LambdaAbstraction extends LambdaExpression {
                 return this;
             } else {
                 return new LambdaAbstraction(var, newBody);
+            }
+        }
+    }
+
+    @Override
+    protected ReductionResult reduceSubstitute(LambdaVariable variable, LambdaExpression expression) {
+        Scope freeVariables = expression.getFreeVariables();
+        if (freeVariables.contains(var.name)) {
+            // rename this variable to avoid capture
+            freeVariables.addAll(body.getFreeVariables());
+            String newName = Util.nextVariableName(var.name);
+            while (freeVariables.contains(newName)) {
+                newName = Util.nextVariableName(newName);
+            }
+            LambdaVariable newVar = new LambdaVariable(newName);
+            LambdaAbstraction reduced = new LambdaAbstraction(newVar, body.substitute(var, newVar));
+            return new ReductionResult(this, this, reduced, ALPHA_CA);
+        } else {
+            ReductionResult bodyResult = body.reduceSubstitute(variable, expression);
+            if (bodyResult.type != NONE) {
+                LambdaAbstraction reduced = new LambdaAbstraction(var, bodyResult.reduced);
+                return new ReductionResult(this, body, reduced, bodyResult.type);
+            } else {
+                return new ReductionResult(this, null, this, NONE);
             }
         }
     }
@@ -138,25 +163,26 @@ class LambdaAbstraction extends LambdaExpression {
      * Returns the eta reduction of this abstraction, assuming it is eta-reducible.
      * @return The reduced expression
      */
-    private LambdaExpression etaReduce() {
-        return ((LambdaApplication) body).fn;
+    private ReductionResult etaReduce() {
+        return new ReductionResult(this, this, ((LambdaApplication) body).fn, ETA);
     }
 
     @Override
-    public LambdaExpression reduceOnce(ReductionOrder order) {
+    public ReductionResult reduceOnce(ReductionOrder order) {
         if (order == NORMAL && etaReducible()) {
             return etaReduce();
         }
 
-        LambdaExpression newBody = body.reduceOnce(order);
-        if (newBody != body) {
-            return new LambdaAbstraction(var, newBody);
+        ReductionResult bodyResult = body.reduceOnce(order);
+        if (bodyResult.type != NONE) {
+            LambdaExpression reducedExpression = new LambdaAbstraction(var, bodyResult.reduced);
+            return new ReductionResult(this, bodyResult.redex, reducedExpression, bodyResult.type);
         }
 
         if (order == APPLICATIVE && etaReducible()) {
             return etaReduce();
         }
 
-        return this;
+        return new ReductionResult(this, null, this, NONE);
     }
 }

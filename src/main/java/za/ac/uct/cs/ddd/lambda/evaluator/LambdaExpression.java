@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 
 /**
  * A structured representation of a lambda expression.
@@ -114,12 +115,14 @@ public abstract class LambdaExpression {
         return newExpr;
     }
 
+    protected abstract ReductionResult reduceSubstitute(LambdaVariable variable, LambdaExpression expression);
+
     /**
      * Performs one reduction, if possible, according to the specified order.
      * @param order The reduction order
-     * @return The reduced expression
+     * @return The result containing the reduced expression and reduction type
      */
-    public abstract LambdaExpression reduceOnce(ReductionOrder order);
+    public abstract ReductionResult reduceOnce(ReductionOrder order);
 
     /**
      * Reduces the lambda expression as much as possible.
@@ -146,7 +149,7 @@ public abstract class LambdaExpression {
                 return this;
             }
             last = expression;
-            expression = expression.reduceOnce(order);
+            expression = expression.reduceOnce(order).reduced;
             iterations++;
         }
         return expression;
@@ -155,9 +158,10 @@ public abstract class LambdaExpression {
     /**
      * Returns a list of iterations of reduction according to the specified order.
      * @param order The reduction order
-     * @return The list of expressions, beginning with the original and ending with the fully reduced expression
+     * @return The list of reduction results, up to and including the result in normal form, or an empty list if the
+     *         expression is already in normal form.
      */
-    public List<LambdaExpression> reductions(ReductionOrder order) {
+    public List<ReductionResult> reductions(ReductionOrder order) {
         return reductions(order, defaultMaxIterations);
     }
 
@@ -166,17 +170,16 @@ public abstract class LambdaExpression {
      * specified number of times.
      * @param order The reduction order
      * @param maxIterations The maximum number of iterations
-     * @return The list of expressions, beginning with the original and ending with the fully reduced expression
+     * @return The list of reduction results, up to and including the result in normal form, or an empty list if the
+     *         expression is already in normal form.
      */
-    public List<LambdaExpression> reductions(ReductionOrder order, int maxIterations) {
-        ArrayList<LambdaExpression> results = new ArrayList<LambdaExpression>();
+    public List<ReductionResult> reductions(ReductionOrder order, int maxIterations) {
+        ArrayList<ReductionResult> results = new ArrayList<ReductionResult>();
         int iterations = 0;
-        LambdaExpression expression = this;
-        LambdaExpression last = null;
-        while (expression != last && iterations < maxIterations) {
-            results.add(expression);
-            last = expression;
-            expression = expression.reduceOnce(order);
+        ReductionResult reduction = this.reduceOnce(order);
+        while (reduction.type != NONE && iterations < maxIterations) {
+            results.add(reduction);
+            reduction = reduction.reduced.reduceOnce(order);
             iterations++;
         }
         return results;
@@ -193,17 +196,17 @@ public abstract class LambdaExpression {
             return true;
         }
 
-        for (LambdaExpression thisReduction : this.reductions(NORMAL)) {
-            for (LambdaExpression thatReduction : expr.reductions(NORMAL)) {
-                if (thisReduction.alphaEquivalentTo(thatReduction)) {
+        for (ReductionResult thisReduction : this.reductions(NORMAL)) {
+            for (ReductionResult thatReduction : expr.reductions(NORMAL)) {
+                if (thisReduction.reduced.alphaEquivalentTo(thatReduction.reduced)) {
                     return true;
                 }
             }
         }
 
-        for (LambdaExpression thisReduction : this.reductions(APPLICATIVE)) {
-            for (LambdaExpression thatReduction : expr.reductions(APPLICATIVE)) {
-                if (thisReduction.alphaEquivalentTo(thatReduction)) {
+        for (ReductionResult thisReduction : this.reductions(APPLICATIVE)) {
+            for (ReductionResult thatReduction : expr.reductions(APPLICATIVE)) {
+                if (thisReduction.reduced.alphaEquivalentTo(thatReduction.reduced)) {
                     return true;
                 }
             }
