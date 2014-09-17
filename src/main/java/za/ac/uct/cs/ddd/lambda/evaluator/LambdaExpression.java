@@ -13,6 +13,10 @@ import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
  */
 public abstract class LambdaExpression {
     private static final int defaultMaxIterations = 50;
+    protected static final String HIGHLIGHT = "\033[4m";
+    protected static final String UNHIGHLIGHT = "\033[0m";
+
+    protected Scope freeVariables = null;
 
     /**
      * Creates a deep copy of this lambda expression.
@@ -53,13 +57,32 @@ public abstract class LambdaExpression {
      * @return The string representation
      */
     @Override
-    public abstract String toString();
+    public String toString() {
+        return toString(false, null);
+    }
 
     /**
-     * Returns the string representation, with all optional brackets.
+     * Returns the string representation.
+     * @param fullBrackets Whether all optional brackets should be included
      * @return The string representation
      */
-    public abstract String toStringBracketed();
+    public String toString(boolean fullBrackets) {
+        return toString(fullBrackets, null);
+    }
+
+    /**
+     * Returns the string representation.  Uses VT-100 escape sequences to underline a highlighted sub-expression.
+     * @param fullBrackets Whether all optional brackets should be included
+     * @param highlighted A reference to an expression to highlight; typically a redex
+     * @return The string representation
+     */
+    public String toString(boolean fullBrackets, LambdaExpression highlighted) {
+        StringBuilder builder = new StringBuilder();
+        buildString(builder, fullBrackets, highlighted);
+        return builder.toString();
+    }
+
+    protected abstract void buildString(StringBuilder builder, boolean fullBrackets, LambdaExpression highlighted);
 
     /**
      * Finds all free variables in this expression.

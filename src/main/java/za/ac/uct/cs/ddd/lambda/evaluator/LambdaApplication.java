@@ -54,39 +54,42 @@ class LambdaApplication extends LambdaExpression {
     }
 
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
+    protected void buildString(StringBuilder builder, boolean fullBrackets, LambdaExpression highlighted) {
+        if (this == highlighted) builder.append(HIGHLIGHT);
 
-        if (fn instanceof LambdaAbstraction) {
+        if (fullBrackets) {
             builder.append('(');
-            builder.append(fn);
+            fn.buildString(builder, fullBrackets, highlighted);
+            builder.append(' ');
+            body.buildString(builder, fullBrackets, highlighted);
             builder.append(')');
         } else {
-            builder.append(fn);
+            if (fn instanceof LambdaAbstraction) {
+                builder.append('(');
+                fn.buildString(builder, fullBrackets, highlighted);
+                builder.append(')');
+            } else {
+                fn.buildString(builder, fullBrackets, highlighted);
+            }
+            builder.append(' ');
+            if (body instanceof LambdaVariable) {
+                body.buildString(builder, fullBrackets, highlighted);
+            } else {
+                builder.append('(');
+                body.buildString(builder, fullBrackets, highlighted);
+                builder.append(')');
+            }
         }
 
-        builder.append(' ');
-
-        if (body instanceof LambdaVariable) {
-            builder.append(body);
-        } else {
-            builder.append('(');
-            builder.append(body);
-            builder.append(')');
-        }
-
-        return builder.toString();
-    }
-
-    @Override
-    public String toStringBracketed() {
-        return String.format("(%s %s)", fn.toStringBracketed(), body.toStringBracketed());
+        if (this == highlighted) builder.append(UNHIGHLIGHT);
     }
 
     @Override
     public Scope getFreeVariables() {
-        Scope freeVariables = fn.getFreeVariables();
-        freeVariables.addAll(body.getFreeVariables());
+        if (freeVariables == null) {
+            freeVariables = fn.getFreeVariables();
+            freeVariables.addAll(body.getFreeVariables());
+        }
         return freeVariables;
     }
 
@@ -181,7 +184,7 @@ class LambdaApplication extends LambdaExpression {
         ReductionResult bodyResult = body.reduceOnce(order);
         if (bodyResult.type != NONE) {
             LambdaExpression reducedExpression = new LambdaApplication(fn, bodyResult.reduced);
-            return new ReductionResult(this, fnResult.redex, reducedExpression, bodyResult.type);
+            return new ReductionResult(this, bodyResult.redex, reducedExpression, bodyResult.type);
         }
 
         if (order == APPLICATIVE && betaReducible()) {

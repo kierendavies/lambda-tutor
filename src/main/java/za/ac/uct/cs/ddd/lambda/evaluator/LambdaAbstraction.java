@@ -59,19 +59,25 @@ class LambdaAbstraction extends LambdaExpression {
     }
 
     @Override
-    public String toString() {
-        return String.format("\u03bb%s.%s", var, body);
-    }
+    protected void buildString(StringBuilder builder, boolean fullBrackets, LambdaExpression highlighted) {
+        if (this == highlighted) builder.append(HIGHLIGHT);
+        if (fullBrackets) builder.append('(');
 
-    @Override
-    public String toStringBracketed() {
-        return String.format("(\u03bb%s.%s)", var.toStringBracketed(), body.toStringBracketed());
+        builder.append('\u03bb');
+        var.buildString(builder, fullBrackets, highlighted);
+        builder.append('.');
+        body.buildString(builder, fullBrackets, highlighted);
+
+        if (fullBrackets) builder.append(')');
+        if (this == highlighted) builder.append(UNHIGHLIGHT);
     }
 
     @Override
     public Scope getFreeVariables() {
-        Scope freeVariables = body.getFreeVariables();
-        freeVariables.remove(var);
+        if (freeVariables == null) {
+            freeVariables = body.getFreeVariables();
+            freeVariables.remove(var);
+        }
         return freeVariables;
     }
 

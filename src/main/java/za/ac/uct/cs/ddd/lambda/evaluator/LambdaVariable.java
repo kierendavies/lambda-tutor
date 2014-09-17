@@ -38,19 +38,20 @@ class LambdaVariable extends LambdaExpression {
     }
 
     @Override
-    public String toString() {
-        return name;
-    }
+    protected void buildString(StringBuilder builder, boolean fullBrackets, LambdaExpression highlighted) {
+        if (this == highlighted) builder.append(HIGHLIGHT);
 
-    @Override
-    public String toStringBracketed() {
-        return name;
+        builder.append(name);
+
+        if (this == highlighted) builder.append(UNHIGHLIGHT);
     }
 
     @Override
     public Scope getFreeVariables() {
-        Scope freeVariables = new Scope();
-        freeVariables.add(this);
+        if (freeVariables == null) {
+            freeVariables = new Scope();
+            freeVariables.add(this);
+        }
         return freeVariables;
     }
 
