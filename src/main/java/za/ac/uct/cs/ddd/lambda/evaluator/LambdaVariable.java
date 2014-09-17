@@ -7,7 +7,7 @@ import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 /**
  * A representation of a variable.
  */
-class LambdaVariable extends LambdaExpression {
+public class LambdaVariable extends LambdaExpression {
     final String name;
 
     /**

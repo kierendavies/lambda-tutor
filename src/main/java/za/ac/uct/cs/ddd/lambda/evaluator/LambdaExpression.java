@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static za.ac.uct.cs.ddd.lambda.evaluator.ExpressionType.*;
 import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
 import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 
@@ -236,5 +237,15 @@ public abstract class LambdaExpression {
         }
 
         return false;
+    }
+
+    public ExpressionType getType() {
+        if (this instanceof LambdaAbstraction) {
+            return ABSTRACTION;
+        } else if (this instanceof LambdaApplication) {
+            return APPLICATION;
+        } else {
+            return VARIABLE;
+        }
     }
 }

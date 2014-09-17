@@ -9,7 +9,7 @@ import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 /**
  * A representation of an application.
  */
-class LambdaApplication extends LambdaExpression {
+public class LambdaApplication extends LambdaExpression {
     final LambdaExpression fn;
     final LambdaExpression body;
 
@@ -36,6 +36,14 @@ class LambdaApplication extends LambdaExpression {
         } else {
             this.fn = new LambdaApplication(expressions);
         }
+    }
+
+    public LambdaExpression getFunction() {
+        return fn;
+    }
+
+    public LambdaExpression getInput() {
+        return body;
     }
 
     @Override

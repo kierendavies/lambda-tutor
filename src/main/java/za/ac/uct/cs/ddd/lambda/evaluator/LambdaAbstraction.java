@@ -9,7 +9,7 @@ import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 /**
  * A representation of a lambda abstraction.
  */
-class LambdaAbstraction extends LambdaExpression {
+public class LambdaAbstraction extends LambdaExpression {
     final LambdaVariable var;
     final LambdaExpression body;
 
@@ -36,6 +36,14 @@ class LambdaAbstraction extends LambdaExpression {
             vars.remove(0);
             this.body = new LambdaAbstraction(vars, body);
         }
+    }
+
+    public LambdaVariable getVariable() {
+        return var;
+    }
+
+    public LambdaExpression getBody() {
+        return body;
     }
 
     @Override
