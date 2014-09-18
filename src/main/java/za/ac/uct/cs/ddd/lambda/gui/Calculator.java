@@ -1,27 +1,38 @@
 package za.ac.uct.cs.ddd.lambda.gui;
 
-import za.ac.uct.cs.ddd.lambda.evaluator.InvalidExpressionException;
-import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
-import za.ac.uct.cs.ddd.lambda.evaluator.Parser;
+import za.ac.uct.cs.ddd.lambda.evaluator.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
+import java.util.List;
 import java.util.HashSet;
 
 public class Calculator extends JPanel {
     private static final String ERROR = "error";
     private static final String EXPRESSION = "expression";
-    JComboBox<String> inputBox;
-    JPanel body;
-    CardLayout bodyLayout;
-    JLabel errorLabel;
-    ExpressionTree expressionTree;
-    private LambdaExpression expression;
+    private static ImageIcon setInputIcon = null;
+
     private HashSet<String> history;
+    private LambdaExpression expression;
+
+    private JComboBox<String> inputBox;
+    private JPanel body;
+    private CardLayout bodyLayout;
+    private JLabel errorLabel;
+    private ExpressionTree expressionTree;
+    private ReductionOrder reductionOrder;
+    private JPanel reductionPanel;
 
     public Calculator() {
         super();
+
+        if (setInputIcon == null) {
+            setInputIcon = new ImageIcon(getClass().getResource("/icon_set_input.gif"), "set input");
+        }
+
         setLayout(new GridBagLayout());
 
         history = new HashSet<String>();
@@ -46,10 +57,10 @@ public class Calculator extends JPanel {
         constraints.gridwidth = 1;
         constraints.fill = GridBagConstraints.NONE;
         constraints.weightx = 0;
-        JButton button = new JButton("Calculate");
-        button.addActionListener(event -> setInput((String) inputBox.getSelectedItem()));
-        button.setPreferredSize(button.getMinimumSize());
-        add(button, constraints);
+        JButton calculateButton = new JButton("Calculate");
+        calculateButton.setPreferredSize(calculateButton.getMinimumSize());
+        calculateButton.addActionListener(event -> setInput((String) inputBox.getSelectedItem()));
+        add(calculateButton, constraints);
 
         body = new JPanel(new CardLayout());
         bodyLayout = (CardLayout) body.getLayout();
@@ -73,11 +84,47 @@ public class Calculator extends JPanel {
         body.add(errorPanel, ERROR);
         bodyLayout.show(body, ERROR);
 
-        constraints.gridy = 0;
         JPanel expressionPanel = new JPanel(new GridBagLayout());
+
+        constraints.gridy = 0;
         expressionTree = new ExpressionTree();
         expressionPanel.add(new JScrollPane(expressionTree), constraints);
-        // TODO add reductions
+
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        JButton reduceButton = new JButton("Reduce");
+        reduceButton.setPreferredSize(reduceButton.getMinimumSize());
+        reduceButton.addActionListener(event -> reduce());
+        expressionPanel.add(reduceButton, constraints);
+
+        ButtonGroup orderButtons = new ButtonGroup();
+        constraints.gridx = 1;
+        JRadioButton applicativeOrderButton = new JRadioButton("Applicative order");
+        applicativeOrderButton.addActionListener(event -> reductionOrder = ReductionOrder.APPLICATIVE);
+        orderButtons.add(applicativeOrderButton);
+        expressionPanel.add(applicativeOrderButton, constraints);
+        constraints.gridx = 2;
+        JRadioButton normalOrderButton = new JRadioButton("Normal order");
+        normalOrderButton.addActionListener(e -> reductionOrder = ReductionOrder.NORMAL);
+        orderButtons.add(normalOrderButton);
+        expressionPanel.add(normalOrderButton, constraints);
+
+        constraints.gridx = 3;
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        constraints.weightx = 1;
+        expressionPanel.add(Box.createHorizontalGlue(), constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weighty = 1;
+        reductionPanel = new JPanel();
+        reductionPanel.setLayout(new GridBagLayout());
+        expressionPanel.add(new JScrollPane(reductionPanel), constraints);
+
         body.add(expressionPanel, EXPRESSION);
     }
 
@@ -89,7 +136,6 @@ public class Calculator extends JPanel {
     }
 
     public void setInput(String input) {
-        System.err.println("received input: " + input);
         if (input == null) return;
 
         history.add(input);
@@ -101,12 +147,60 @@ public class Calculator extends JPanel {
 
         try {
             expression = Parser.parse(input);
-
             expressionTree.setExpression(expression);
+            reductionPanel.removeAll();
             bodyLayout.show(body, EXPRESSION);
         } catch (InvalidExpressionException exception) {
             errorLabel.setText("Syntax error: " + exception.getMessage());
             bodyLayout.show(body, ERROR);
         }
+    }
+
+    public void reduce() {
+        if (reductionOrder == null) return;
+
+        reductionPanel.removeAll();
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 1;
+        constraints.gridheight = 1;
+        constraints.anchor = GridBagConstraints.LINE_START;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.insets = new Insets(3, 3, 3, 3);
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+
+        List<ReductionResult> reductions = expression.reductions(reductionOrder);
+        if (reductions.isEmpty()) {
+            reductionPanel.add(new JLabel("No reductions"), constraints);
+            constraints.gridy++;
+        } else {
+            for (ReductionResult reduction : reductions) {
+                String reductionString = reduction.getReducedExpression().toString();
+
+                constraints.gridx = 0;
+                JButton button = new JButton(setInputIcon);
+                button.setBorderPainted(false);
+                button.setContentAreaFilled(false);
+                button.setPreferredSize(new Dimension(17, 17));
+                button.addActionListener(event -> setInput(reductionString));
+                reductionPanel.add(button, constraints);
+
+                constraints.gridx = 1;
+                reductionPanel.add(new JLabel(reductionString), constraints);
+
+                constraints.gridy++;
+            }
+        }
+
+        constraints.gridx = 2;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        reductionPanel.add(Box.createGlue(), constraints);
+
+        body.revalidate();
     }
 }

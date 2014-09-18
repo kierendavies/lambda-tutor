@@ -66,12 +66,7 @@ public class ExpressionTree extends JPanel {
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setPreferredSize(new Dimension(17, 17));
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                expand();
-            }
-        });
+        button.addActionListener(event -> expand());
         collapsed.add(button, constraints);
 
         constraints.gridx = 1;
@@ -104,12 +99,7 @@ public class ExpressionTree extends JPanel {
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setPreferredSize(new Dimension(17, 17));
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                collapse();
-            }
-        });
+        button.addActionListener(event -> collapse());
         expanded.add(button, constraints);
 
         constraints.gridx = 1;
@@ -117,15 +107,23 @@ public class ExpressionTree extends JPanel {
         constraints.anchor = GridBagConstraints.LINE_START;
         expanded.add(new JLabel(expression.toString()), constraints);
 
+//        constraints.gridy++;
+//        constraints.gridwidth = 1;
+//        expanded.add(new JLabel("Free variables:"), constraints);
+//        constraints.gridx = 2;
+//        constraints.gridwidth = GridBagConstraints.REMAINDER;
+//        expanded.add(new JLabel(expression.getFreeVariables().toString()), constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy++;
         constraints.anchor = GridBagConstraints.FIRST_LINE_START;
-        constraints.gridy = 1;
         if (expression instanceof LambdaAbstraction) {
             LambdaAbstraction abstraction = (LambdaAbstraction) expression;
 
             constraints.gridwidth = GridBagConstraints.REMAINDER;
             expanded.add(new JLabel("Abstraction"), constraints);
 
-            constraints.gridy = 2;
+            constraints.gridy++;
             constraints.gridwidth = 1;
             expanded.add(new JLabel("Variable:"), constraints);
             constraints.gridx = 2;
@@ -133,7 +131,7 @@ public class ExpressionTree extends JPanel {
             expanded.add(new JLabel(abstraction.getVariable().toString()), constraints);
 
             constraints.gridx = 1;
-            constraints.gridy = 3;
+            constraints.gridy++;
             constraints.gridwidth = 1;
             expanded.add(new JLabel("Body:"), constraints);
             constraints.gridx = 2;
@@ -146,7 +144,7 @@ public class ExpressionTree extends JPanel {
             constraints.gridwidth = GridBagConstraints.REMAINDER;
             expanded.add(new JLabel("Application"), constraints);
 
-            constraints.gridy = 2;
+            constraints.gridy++;
             constraints.gridwidth = 1;
             expanded.add(new JLabel("Function:"), constraints);
             constraints.gridx = 2;
@@ -154,7 +152,7 @@ public class ExpressionTree extends JPanel {
             expanded.add(new ExpressionTree(application.getFunction()), constraints);
 
             constraints.gridx = 1;
-            constraints.gridy = 3;
+            constraints.gridy++;
             constraints.gridwidth = 1;
             expanded.add(new JLabel("Input:"), constraints);
             constraints.gridx = 2;
@@ -166,11 +164,11 @@ public class ExpressionTree extends JPanel {
             expanded.add(new JLabel("Variable"), constraints);
         }
 
-        constraints.gridx = 0;
-        constraints.gridy = 4;
+        constraints.gridx = 3;
+        constraints.gridy++;
         constraints.weightx = 1;
         constraints.weighty = 1;
-        constraints.fill = GridBagConstraints.VERTICAL;
+        constraints.fill = GridBagConstraints.BOTH;
         expanded.add(Box.createGlue(), constraints);
     }
 

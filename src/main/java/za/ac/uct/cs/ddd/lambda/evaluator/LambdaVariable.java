@@ -17,6 +17,7 @@ public class LambdaVariable extends LambdaExpression {
      */
     public LambdaVariable(String name) {
         this.name = name;
+        freeVariables = null;
     }
 
     @Override

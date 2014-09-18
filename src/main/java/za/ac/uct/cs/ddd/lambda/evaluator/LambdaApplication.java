@@ -23,6 +23,7 @@ public class LambdaApplication extends LambdaExpression {
     public LambdaApplication(LambdaExpression fn, LambdaExpression body) {
         this.fn = fn;
         this.body = body;
+        freeVariables = null;
     }
 
     /**
@@ -39,6 +40,7 @@ public class LambdaApplication extends LambdaExpression {
         } else {
             this.fn = new LambdaApplication(expressions);
         }
+        freeVariables = null;
     }
 
     public LambdaExpression getFunction() {
@@ -98,7 +100,8 @@ public class LambdaApplication extends LambdaExpression {
     @Override
     public Scope getFreeVariables() {
         if (freeVariables == null) {
-            freeVariables = fn.getFreeVariables();
+            freeVariables = new Scope();
+            freeVariables.addAll(fn.getFreeVariables());
             freeVariables.addAll(body.getFreeVariables());
         }
         return freeVariables;

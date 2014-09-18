@@ -86,7 +86,8 @@ public class LambdaAbstraction extends LambdaExpression {
     @Override
     public Scope getFreeVariables() {
         if (freeVariables == null) {
-            freeVariables = body.getFreeVariables();
+            freeVariables = new Scope();
+            freeVariables.addAll(body.getFreeVariables());
             freeVariables.remove(var);
         }
         return freeVariables;
