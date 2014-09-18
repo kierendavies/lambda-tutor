@@ -12,6 +12,7 @@ public class LambdaVariable extends LambdaExpression {
 
     /**
      * Creates a new variable with the given name.
+     *
      * @param name The name of the variable
      */
     public LambdaVariable(String name) {

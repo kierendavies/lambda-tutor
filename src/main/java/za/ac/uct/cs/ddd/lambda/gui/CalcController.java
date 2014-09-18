@@ -15,9 +15,9 @@ public class CalcController {
 
     public CalcController(CalcView v) {
         view = v;
-    //... Add listeners to the view
-     view.addReduceListener(new ReduceListener());
-     }
+        //... Add listeners to the view
+        view.addReduceListener(new ReduceListener());
+    }
 
     class ReduceListener implements ActionListener {
 
@@ -31,7 +31,7 @@ public class CalcController {
                 LambdaExpression expr = Parser.parse(userInput);
                 view.setReductionSteps(expr.reductions(order));
 
-            } catch (InvalidExpressionException ex ) {
+            } catch (InvalidExpressionException ex) {
                 ex.printStackTrace();
             }
 

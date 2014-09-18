@@ -18,7 +18,6 @@ public class ContentWindow extends SizeablePanel {
         gbc = new GridBagConstraints();
 
 
-
         menuButton = new JButton("Main menu");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -27,20 +26,19 @@ public class ContentWindow extends SizeablePanel {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weighty = 1;
         gbc.insets = new Insets(0, 10, 10, 0);
-        menuButton.addActionListener( new MainMenuListener());
+        menuButton.addActionListener(new MainMenuListener());
         menuButton.setFont(new Font("Serif", Font.PLAIN, 14));
         add(menuButton, gbc);
 
 
     }
 
-    private  class MainMenuListener implements ActionListener{
+    private class MainMenuListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             parent.setContentPane(parent.menu);
         }
     }
-
 
 
 }

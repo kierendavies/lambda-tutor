@@ -1,6 +1,7 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
-import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.ALPHA;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.ALPHA_CA;
 
 public class ReductionResult {
     final LambdaExpression initial;

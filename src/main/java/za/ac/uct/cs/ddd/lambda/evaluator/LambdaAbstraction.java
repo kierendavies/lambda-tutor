@@ -3,7 +3,8 @@ package za.ac.uct.cs.ddd.lambda.evaluator;
 import java.util.HashMap;
 import java.util.List;
 
-import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.APPLICATIVE;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.NORMAL;
 import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 
 /**
@@ -15,7 +16,8 @@ public class LambdaAbstraction extends LambdaExpression {
 
     /**
      * Creates a lambda abstraction with a variable and body.
-     * @param var The variable
+     *
+     * @param var  The variable
      * @param body The body
      */
     public LambdaAbstraction(LambdaVariable var, LambdaExpression body) {
@@ -25,6 +27,7 @@ public class LambdaAbstraction extends LambdaExpression {
 
     /**
      * Creates a lambda abstraction of many variables.
+     *
      * @param vars The list of variables
      * @param body The body
      */
@@ -163,6 +166,7 @@ public class LambdaAbstraction extends LambdaExpression {
 
     /**
      * Checks if this abstraction is eta-reducible.
+     *
      * @return {@code true} if it is eta-reducible; {@code false} otherwise
      */
     private boolean etaReducible() {
@@ -175,6 +179,7 @@ public class LambdaAbstraction extends LambdaExpression {
 
     /**
      * Returns the eta reduction of this abstraction, assuming it is eta-reducible.
+     *
      * @return The reduced expression
      */
     private ReductionResult etaReduce() {

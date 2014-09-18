@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.APPLICATIVE;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.NORMAL;
 
 public class Repl {
     private static final int maxReductions = 25;
@@ -114,12 +115,12 @@ public class Repl {
 
         System.out.println("    " + expression.toString(false, reductions.get(0).getRedex()));
         int l = reductions.size();
-        for (int i = 0; i < l-1; i++) {
+        for (int i = 0; i < l - 1; i++) {
             ReductionResult reduction = reductions.get(i);
             System.out.print(String.format("[%s] ", reductions.get(i).getType()));
-            System.out.println(reductions.get(i).getReducedExpression().toString(false, reductions.get(i+1).getRedex()));
+            System.out.println(reductions.get(i).getReducedExpression().toString(false, reductions.get(i + 1).getRedex()));
         }
-        System.out.print(String.format("[%s] ", reductions.get(l-1).getType()));
-        System.out.println(reductions.get(l-1).getReducedExpression());
+        System.out.print(String.format("[%s] ", reductions.get(l - 1).getType()));
+        System.out.println(reductions.get(l - 1).getReducedExpression());
     }
 }

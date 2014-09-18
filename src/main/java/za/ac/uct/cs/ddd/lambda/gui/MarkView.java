@@ -106,7 +106,6 @@ public class MarkView extends ContentWindow {
         add(markButton, gbc);
 
 
-
         //Create "mark" JButton
         browseButton = new JButton("Browse");
         // browseButton.addActionListener(this);
@@ -122,20 +121,18 @@ public class MarkView extends ContentWindow {
         add(browseButton, gbc);
 
 
-
-
     }
 
-    void setFileName(String file){
+    String getFileName() {
+        return locationField.getText();
+    }
+
+    void setFileName(String file) {
         locationField.setText(file);
 
     }
 
-    String getFileName  (){
-        return locationField.getText();
-    }
-
-    void addBrowseListener(ActionListener browseListener){
+    void addBrowseListener(ActionListener browseListener) {
         browseButton.addActionListener(browseListener);
 
     }

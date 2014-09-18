@@ -19,6 +19,7 @@ public class Scope {
 
     /**
      * Creates a new scope from the contents of another.
+     *
      * @param other The scope to copy
      */
     public Scope(Scope other) {
@@ -30,6 +31,7 @@ public class Scope {
 
     /**
      * Adds a variable to the scope, shadowing any existing variables with the same name.
+     *
      * @param variable The variable to add
      */
     public void add(LambdaVariable variable) {
@@ -43,6 +45,7 @@ public class Scope {
 
     /**
      * Adds all the variables from another scope to this scope, shadowing any existing variables with the same name.
+     *
      * @param scope The other scope to add from
      */
     public void addAll(Scope scope) {
@@ -55,6 +58,7 @@ public class Scope {
 
     /**
      * Removes a variable from the scope, and restores any shadowed variables.
+     *
      * @param variable The variable to remove
      */
     public void remove(LambdaVariable variable) {
@@ -65,6 +69,7 @@ public class Scope {
 
     /**
      * Gets a variable instance by its name.
+     *
      * @param variableName The name of the variable
      * @return The instance of the variable, or {@code null} if is not in the scope
      */
@@ -78,6 +83,7 @@ public class Scope {
 
     /**
      * Checks if the scope contains any variables with the given name.
+     *
      * @param variableName The name of the variable
      * @return {@code true} if it exists in this scope, {@code false} otherwise
      */
@@ -87,6 +93,7 @@ public class Scope {
 
     /**
      * Checks if the scope contains the given variable.
+     *
      * @param variable The variable
      * @return {@code true} if it exists in this scope, {@code false} otherwise
      */
@@ -97,6 +104,7 @@ public class Scope {
     /**
      * Checks if the scope contains a variable with the given name, then either returns it if found or otherwise adds
      * and returns a new instance of a variable with the given name.
+     *
      * @param variableName The name of the variable
      * @return The existing or new variable
      */

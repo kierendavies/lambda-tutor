@@ -1,6 +1,9 @@
 package za.ac.uct.cs.ddd.lambda.gui;
 
-import za.ac.uct.cs.ddd.lambda.evaluator.*;
+import za.ac.uct.cs.ddd.lambda.evaluator.LambdaAbstraction;
+import za.ac.uct.cs.ddd.lambda.evaluator.LambdaApplication;
+import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
+import za.ac.uct.cs.ddd.lambda.evaluator.LambdaVariable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,12 +13,11 @@ import java.awt.event.ActionListener;
 public class ExpressionTree extends JPanel {
     private static final String COLLAPSED = "collapsed";
     private static final String EXPANDED = "expanded";
-
+    private static ImageIcon expandIcon = null;
+    private static ImageIcon collapseIcon = null;
     private LambdaExpression expression;
     private CardLayout layout;
     private JPanel collapsed, expanded;
-    private static ImageIcon expandIcon = null;
-    private static ImageIcon collapseIcon = null;
 
     public ExpressionTree() {
         super(new CardLayout());

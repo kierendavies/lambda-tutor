@@ -62,7 +62,6 @@ public class Window extends JFrame implements ActionListener {
     }
 
 
-
     // WindowListener idea found here: http://cs.nyu.edu/~yap/classes/visual/03s/lect/l7/
     private class windowHandler extends WindowAdapter {
         public void windowClosing(WindowEvent e) {

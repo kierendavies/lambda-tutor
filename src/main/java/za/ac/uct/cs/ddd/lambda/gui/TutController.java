@@ -5,17 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class TutController {
-    private TutView view ;
+    private TutView view;
 
- public TutController (TutView v){
-     view = v;
- }
+    public TutController(TutView v) {
+        view = v;
+    }
 
-    class ProblemListener implements ActionListener{
+    class ProblemListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            
+
         }
     }
 }

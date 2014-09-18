@@ -6,14 +6,12 @@ package za.ac.uct.cs.ddd.lambda.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.nio.Buffer;
 import java.util.ArrayList;
-import  java.util.List;
+import java.util.List;
+
 public class TutView extends ContentWindow {
 
     String[] problems = new String[5];
@@ -52,13 +50,13 @@ public class TutView extends ContentWindow {
 
     //Not Happy
 
-    void populateProblemSet( String fileName){
+    void populateProblemSet(String fileName) {
 
         try {
             BufferedReader input = new BufferedReader((new FileReader(fileName)));
-            List<String> set =  new ArrayList<String>();
+            List<String> set = new ArrayList<String>();
             String line = null;
-            while ( (line = input.readLine()) != null){
+            while ((line = input.readLine()) != null) {
                 set.add(line);
             }
             String[] probSetArr = set.toArray(new String[]{});
@@ -73,9 +71,9 @@ public class TutView extends ContentWindow {
 
     //Not Happy
 
-     void addComboBoxListener (ActionListener actionListener){
-         problemList.addActionListener(actionListener);
-     }
+    void addComboBoxListener(ActionListener actionListener) {
+        problemList.addActionListener(actionListener);
+    }
 
    /* @Override
 

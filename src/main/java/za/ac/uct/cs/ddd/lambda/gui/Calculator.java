@@ -4,29 +4,21 @@ import za.ac.uct.cs.ddd.lambda.evaluator.InvalidExpressionException;
 import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
 import za.ac.uct.cs.ddd.lambda.evaluator.Parser;
 
-import javax.smartcardio.Card;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Calculator extends JPanel {
     private static final String ERROR = "error";
     private static final String EXPRESSION = "expression";
-
-    private LambdaExpression expression;
-    private HashSet<String> history;
-
     JComboBox<String> inputBox;
     JPanel body;
     CardLayout bodyLayout;
     JLabel errorLabel;
     ExpressionTree expressionTree;
+    private LambdaExpression expression;
+    private HashSet<String> history;
 
     public Calculator() {
         super();
@@ -89,6 +81,13 @@ public class Calculator extends JPanel {
         body.add(expressionPanel, EXPRESSION);
     }
 
+    public static void main(String[] args) throws InvalidExpressionException, MalformedURLException {
+        JFrame frame = new JFrame();
+        frame.add(new Calculator());
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
     public void setInput(String input) {
         System.err.println("received input: " + input);
         if (input == null) return;
@@ -109,12 +108,5 @@ public class Calculator extends JPanel {
             errorLabel.setText("Syntax error: " + exception.getMessage());
             bodyLayout.show(body, ERROR);
         }
-    }
-
-    public static void main(String[] args) throws InvalidExpressionException, MalformedURLException {
-        JFrame frame = new JFrame();
-        frame.add(new Calculator());
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setVisible(true);
     }
 }

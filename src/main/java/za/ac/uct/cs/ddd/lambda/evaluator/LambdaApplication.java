@@ -3,7 +3,8 @@ package za.ac.uct.cs.ddd.lambda.evaluator;
 import java.util.HashMap;
 import java.util.List;
 
-import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.APPLICATIVE;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.NORMAL;
 import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 
 /**
@@ -15,7 +16,8 @@ public class LambdaApplication extends LambdaExpression {
 
     /**
      * Creates a lambda expression with some function on the left applied to a body on the right.
-     * @param fn The left side
+     *
+     * @param fn   The left side
      * @param body The right side
      */
     public LambdaApplication(LambdaExpression fn, LambdaExpression body) {
@@ -25,10 +27,11 @@ public class LambdaApplication extends LambdaExpression {
 
     /**
      * Creates a lambda expression from a chain of applications.
+     *
      * @param expressions The expressions to be applied in sequence
      */
     public LambdaApplication(List<LambdaExpression> expressions) {
-        this.body = expressions.get(expressions.size()-1);
+        this.body = expressions.get(expressions.size() - 1);
         expressions.remove(expressions.size() - 1);
 
         if (expressions.size() == 1) {
@@ -155,6 +158,7 @@ public class LambdaApplication extends LambdaExpression {
 
     /**
      * Checks if this application is beta-reducible.
+     *
      * @return {@code true} if it is beta-reducible; {@code false} otherwise
      */
     private boolean betaReducible() {
@@ -163,6 +167,7 @@ public class LambdaApplication extends LambdaExpression {
 
     /**
      * Returns the beta reduction of this abstraction, assuming it is beta-reducible.
+     *
      * @return The reduced expression
      */
     private ReductionResult betaReduce() {
