@@ -3,6 +3,7 @@ package za.ac.uct.cs.ddd.lambda.gui;
 import za.ac.uct.cs.ddd.lambda.evaluator.*;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,6 +52,17 @@ public class Calculator extends JPanel {
         inputBox = new JComboBox<String>();
         inputBox.setEditable(true);
         inputBox.addActionListener(event -> setInput((String) inputBox.getSelectedItem()));
+        PlainDocument doc = (PlainDocument) ((JTextComponent) inputBox.getEditor().getEditorComponent()).getDocument();
+        doc.setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr) throws BadLocationException {
+                fb.insertString(offset, text.replaceAll("\\\\", "\u03bb"), attr);
+            }
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attr) throws BadLocationException {
+                fb.replace(offset, length, text.replaceAll("\\\\", "\u03bb"), attr);
+            }
+        });
         add(inputBox, constraints);
 
         constraints.gridx = 1;
