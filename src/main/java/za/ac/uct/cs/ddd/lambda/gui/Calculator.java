@@ -27,7 +27,6 @@ public class Calculator extends JPanel {
     CardLayout bodyLayout;
     JLabel errorLabel;
     ExpressionTree expressionTree;
-//    GridBagConstraints constraints;
 
     public Calculator() {
         super();
@@ -91,15 +90,18 @@ public class Calculator extends JPanel {
     }
 
     public void setInput(String input) {
+        System.err.println("received input: " + input);
         if (input == null) return;
+
+        history.add(input);
+        if (history.contains(input)) {
+            inputBox.removeItem(input);
+        }
+        inputBox.insertItemAt(input, 0);
+        inputBox.setSelectedItem(input);
+
         try {
             expression = Parser.parse(input);
-
-            history.add(input);
-            if (history.contains(input)) {
-                inputBox.removeItem(input);
-            }
-            inputBox.insertItemAt(input, 0);
 
             expressionTree.setExpression(expression);
             bodyLayout.show(body, EXPRESSION);
