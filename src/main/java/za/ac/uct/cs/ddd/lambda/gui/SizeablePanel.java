@@ -18,8 +18,8 @@ public class SizeablePanel extends JPanel {
         width = (int) ((gd.getDisplayMode().getWidth()) * 0.41);
         height = (int) ((gd.getDisplayMode().getHeight()) * 0.47);
         setPreferredSize(new Dimension(width, height));
-        System.out.println(width);
-        System.out.println(height);
+        //System.out.println(width);
+        //System.out.println(height);
         setLayout(new BorderLayout());
 
 
