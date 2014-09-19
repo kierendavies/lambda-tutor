@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 public class ContentWindow extends SizeablePanel {
     GridBagConstraints gbc;
     JButton menuButton;
-    String mode;
     Window parent;
 
     public ContentWindow(Window par) {

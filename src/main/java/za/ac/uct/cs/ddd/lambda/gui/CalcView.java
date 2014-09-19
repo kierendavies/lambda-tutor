@@ -88,19 +88,38 @@ class CalcView extends ContentWindow {
 
     }
 
+    /**
+     *  Get the current expression as specified in the text field
+     *
+     * @return An string representation  of the expression
+     */
+
     public String getExpression() {
         return lambdaInputField.getText();
     }
 
+    /**
+     * Gets the current order.
+     *
+     * @return The current order
+     */
     public ReductionOrder getOrder() {
         return order;
 
     }
 
-    public void setOrder(ReductionOrder ord) {
-        order = ord;
+    /**
+     * Sets the current order.
+     *
+     * @param order The order to use as the current order
+     */
+    public void setOrder(ReductionOrder order) {
+        order = order;
     }
 
+    /**
+     * @param reductionSteps
+     */
     void setReductionSteps(List<ReductionResult> reductionSteps) {
         String output = "";
         for (ReductionResult step : reductionSteps) {
@@ -111,18 +130,15 @@ class CalcView extends ContentWindow {
         outputArea.setText(output);
     }
 
-    /* applicativeButton.putClientProperty("ORDER", ReductionOrder.APPLICATIVE);
-    normalButton.putClientProperty("ORDER", ReductionOrder.NORMAL);*/
-
 
     private class ReduceListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                LambdaExpression expression = Parser.parse( getExpression());
-               List<ReductionResult> steps =  expression.reductions(getOrder());
-               setReductionSteps(steps);
+                LambdaExpression expression = Parser.parse(getExpression());
+                List<ReductionResult> steps = expression.reductions(getOrder());
+                setReductionSteps(steps);
 
             } catch (InvalidExpressionException exp) {
                 exp.getMessage();

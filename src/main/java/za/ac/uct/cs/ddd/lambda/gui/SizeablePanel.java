@@ -3,9 +3,7 @@ package za.ac.uct.cs.ddd.lambda.gui;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by matthew on 2014/08/16.
- */
+
 public class SizeablePanel extends JPanel {
 
     int width;
@@ -25,6 +23,11 @@ public class SizeablePanel extends JPanel {
 
     }
 
+    /**
+     * Set the title of this panel to the specified string
+     *
+     * @param title The title to be displayed at the top of the pane
+     */
 
     public void addTitle(String title) {
         JPanel titlePane = new JPanel();

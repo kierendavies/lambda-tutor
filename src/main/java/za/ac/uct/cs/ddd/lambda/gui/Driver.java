@@ -3,7 +3,10 @@ package za.ac.uct.cs.ddd.lambda.gui;
 import javax.swing.*;
 
 public class Driver {
-
+    /**
+     *
+     *
+     */
     private  static  void createAndShowGUI(){
         //Create and set up window
         Window window = new Window();

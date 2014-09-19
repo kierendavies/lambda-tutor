@@ -41,7 +41,11 @@ public class MainMenu extends SizeablePanel {
         setVisible(true);
     }
 
-
+    /**
+     *
+     * @param text
+     * @param container
+     */
     private void addButton(String text, Container container) {
         JButton button = new JButton(text);
         button.setFont(new Font("Serif", Font.PLAIN, 20));

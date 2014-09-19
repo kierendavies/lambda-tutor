@@ -55,6 +55,10 @@ public class Window extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Removes the current contentPane
+     *
+     */
     private void removePane() {
         remove(getContentPane());
         revalidate();

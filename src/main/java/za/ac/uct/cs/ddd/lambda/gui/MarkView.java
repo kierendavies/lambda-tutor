@@ -126,19 +126,30 @@ public class MarkView extends ContentWindow {
 
     }
 
+    /**
+     * Set the filename of the
+     * @param file the file being set
+     */
     void setFileName(String file){
         locationField.setText(file);
 
     }
 
+    /**
+     * Returns the filename that the user selects
+     *
+     *  @return the filename of the current selected file
+     */
     String getFileName  (){
         return locationField.getText();
     }
 
-    void addBrowseListener(ActionListener browseListener){
+  /*  void addBrowseListener(ActionListener browseListener){
         browseButton.addActionListener(browseListener);
 
-    }
+    }*/
+
+
 
 
     //@Override
