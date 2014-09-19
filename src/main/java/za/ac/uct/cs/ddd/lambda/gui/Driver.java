@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class Driver {
     /**
-     *
+     * Create the GUI and show it.
      *
      */
     private  static  void createAndShowGUI(){

@@ -25,7 +25,6 @@ public class SizeablePanel extends JPanel {
 
     /**
      * Set the title of this panel to the specified string
-     *
      * @param title The title to be displayed at the top of the pane
      */
 

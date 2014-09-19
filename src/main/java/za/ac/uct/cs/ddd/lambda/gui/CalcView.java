@@ -12,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/**
+ *
+ */
 class CalcView extends ContentWindow {
 
     //... Components
@@ -89,7 +92,7 @@ class CalcView extends ContentWindow {
     }
 
     /**
-     *  Get the current expression as specified in the text field
+     * Get the current expression as specified in the text field
      *
      * @return An string representation  of the expression
      */
@@ -114,7 +117,7 @@ class CalcView extends ContentWindow {
      * @param order The order to use as the current order
      */
     public void setOrder(ReductionOrder order) {
-        order = order;
+        this.order = order;
     }
 
     /**

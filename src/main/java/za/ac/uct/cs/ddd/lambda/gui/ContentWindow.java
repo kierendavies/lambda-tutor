@@ -5,14 +5,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ *
+ */
 
 public class ContentWindow extends SizeablePanel {
     GridBagConstraints gbc;
     JButton menuButton;
     Window parent;
 
-    public ContentWindow(Window par) {
-        parent = par;
+    public ContentWindow(Window parent) {
+        this.parent = parent;
         setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
 

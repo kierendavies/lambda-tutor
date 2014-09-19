@@ -5,17 +5,24 @@
 
 package za.ac.uct.cs.ddd.lambda.gui;
 
+import za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static za.ac.uct.cs.ddd.lambda.tutor.Marker.markReductionsFromFile;
+
 public class MarkView extends ContentWindow {
+    ReductionOrder order = ReductionOrder.NORMAL;
     JTextArea feedbackArea;
     JRadioButton normalButton;
     JRadioButton applicativeButton;
     ButtonGroup group;
     JButton markButton, browseButton;
     JTextField locationField;
+    JFileChooser fileChooser;
 
     String fileName;
 
@@ -96,6 +103,7 @@ public class MarkView extends ContentWindow {
 
         //Create "mark" JButton
         markButton = new JButton("Mark");
+        markButton.addActionListener(new MarkListener());
 
         //GridBag constraints for JButton
         gbc = new GridBagConstraints();
@@ -106,10 +114,9 @@ public class MarkView extends ContentWindow {
         add(markButton, gbc);
 
 
-
-        //Create "mark" JButton
+        //Create "browse" JButton
         browseButton = new JButton("Browse");
-        // browseButton.addActionListener(this);
+        browseButton.addActionListener(new BrowseListener());
 
 
         //GridBag constraints for JButton
@@ -122,45 +129,66 @@ public class MarkView extends ContentWindow {
         add(browseButton, gbc);
 
 
-
-
     }
 
     /**
-     * Set the filename of the
+     * Set the current filename
+     *
      * @param file the file being set
      */
-    void setFileName(String file){
+    void setFileName(String file) {
         locationField.setText(file);
 
     }
 
     /**
+     * Sets the current order.
+     *
+     * @param order The order to use as the current order
+     */
+    public void setOrder(ReductionOrder order) {
+        this.order = order;
+    }
+
+    /**
+     * Gets the current order.
+     *
+     * @return The current order
+     */
+    public ReductionOrder getOrder() {
+        return order;
+
+    }
+
+
+    /**
      * Returns the filename that the user selects
      *
-     *  @return the filename of the current selected file
+     * @return the filename of the current selected file
      */
-    String getFileName  (){
+    String getFileName() {
         return locationField.getText();
     }
 
-  /*  void addBrowseListener(ActionListener browseListener){
-        browseButton.addActionListener(browseListener);
 
-    }*/
+    private class BrowseListener implements ActionListener {
 
-
-
-
-    //@Override
-  /*  public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == browseButton) {
-            System.out.println("Yes");
-            int returnVal = fileChooser.showOpenDialog(Marker.this);
-
-
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            fileChooser = new JFileChooser();
+            int returnVal = fileChooser.showOpenDialog(MarkView.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) setFileName(fileChooser.getSelectedFile().getName());
         }
+    }
 
-    }*/
+    private class MarkListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            markReductionsFromFile(getFileName());
+        }
+    }
+
+
 }
 
