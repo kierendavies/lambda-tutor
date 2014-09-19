@@ -1,9 +1,6 @@
 package za.ac.uct.cs.ddd.lambda.tutor;
 
-import za.ac.uct.cs.ddd.lambda.evaluator.InvalidExpressionException;
-import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
-import za.ac.uct.cs.ddd.lambda.evaluator.Parser;
-import za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder;
+import za.ac.uct.cs.ddd.lambda.evaluator.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,12 +16,12 @@ public class Marker {
     /**
      * Checks that an array of reductions are correct by reducing the first LambdaExpression and checking that the
      * subsequent steps in userReductions are alpha-equivalent to the reductions produced by the first LambdaExpression.
+     *
      * @param userReductions An array of expression reductions to be marked. (where each expression reduction is a list
      *                       of LambdaExpressions.
      * @return A boolean indicating whether the reductions are correct.
      */
     public static boolean markReductions(List<LambdaExpression>[] userReductions, ReductionOrder order){
-
         return checkReductions(userReductions, order).equals("All reductions are correct.");
     }
 
@@ -45,8 +42,8 @@ public class Marker {
         int countExpressions = 0;
 
         // TODO: strip extra newlines
-        while (fileScanner.hasNext()){
-            if(fileScanner.nextLine().equals(""))
+        while (fileScanner.hasNext()) {
+            if (fileScanner.nextLine().equals(""))
                 countExpressions++;
         }
         countExpressions++;
@@ -65,7 +62,6 @@ public class Marker {
             line = null;
             while(!"".equals(line) && fileScanner.hasNext()){
                 line = fileScanner.nextLine();
-
                 try {
                     userReductions[i].add(Parser.parse(line));
                 } catch (InvalidExpressionException e) {
@@ -89,13 +85,13 @@ public class Marker {
      */
     public static String checkReductions(List<LambdaExpression>[] userReductions, ReductionOrder order){
         // TODO: remove duplication in markReductions
-        userReductions[0].get(0);
+        //userReductions[0].get(0);
 
         for (List<LambdaExpression> l : userReductions) {
-            List<LambdaExpression> calculatedReductions = l.get(0).reductions(ReductionOrder.NORMAL);
+            List<ReductionResult> calculatedReductions = l.get(0).reductions(ReductionOrder.NORMAL);
 
             for (int i = 0; i < l.size() && i < calculatedReductions.size(); i++) {
-                if(!l.get(i).alphaEquivalentTo(calculatedReductions.get(i))){
+                if(!l.get(i).alphaEquivalentTo(calculatedReductions.get(i).getReducedExpression())){
                     return String.format("Reduction error found in reduction for expression %s:\n" +
                                     "Expected: %s\n" +
                                     "Found: %s",

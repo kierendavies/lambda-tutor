@@ -1,4 +1,6 @@
-# All taken from https://github.com/github/gitignore
+version
+
+# Below all taken from https://github.com/github/gitignore
 
 # Maven
 target/
