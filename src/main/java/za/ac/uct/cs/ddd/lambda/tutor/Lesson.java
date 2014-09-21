@@ -1,5 +1,8 @@
 package za.ac.uct.cs.ddd.lambda.tutor;
 
+/**
+ * A wrapper around Problem set to add some explanatory text about the problems encountered.
+ */
 public class Lesson {
 
     private String name;

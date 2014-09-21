@@ -4,6 +4,9 @@ import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
 import za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder;
 import za.ac.uct.cs.ddd.lambda.evaluator.ReductionResult;
 
+/**
+ * A problem in which the user simplifies the underlying expression using any combination of conversion or reduction.
+ */
 public class SimplificationProblem extends Problem{
 
     /**
