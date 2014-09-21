@@ -70,6 +70,12 @@ public class ProblemSet {
         }
     }
 
+    public ProblemSet(ProblemSet pset){
+        this.title = pset.title;
+        this.currentProblem = pset.currentProblem;
+        this.problems = new ArrayList<>(pset.problems);
+    }
+
     /**
      * Returns the current problem and advances the cursor to the next problem.
      * @return A reference to the current problem.
