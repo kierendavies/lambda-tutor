@@ -49,7 +49,7 @@ class CalcView extends ContentWindow {
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(10, 10, 0, 10);
-        gbc.weightx = 30;
+        gbc.weightx = 15;
 
 
         inputBox = new JComboBox<String>();
@@ -73,11 +73,9 @@ class CalcView extends ContentWindow {
         body = new JPanel(new CardLayout());
         bodyLayout = (CardLayout) body.getLayout();
 
-        gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 6;
-        gbc.gridheight = 3;
+        gbc.gridy = 1;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 2;
         gbc.weighty = 5;
