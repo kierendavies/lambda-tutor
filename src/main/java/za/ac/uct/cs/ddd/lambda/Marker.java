@@ -1,6 +1,8 @@
 package za.ac.uct.cs.ddd.lambda;
 
 import za.ac.uct.cs.ddd.lambda.evaluator.*;
+import za.ac.uct.cs.ddd.lambda.tutor.Problem;
+import za.ac.uct.cs.ddd.lambda.tutor.ProblemSet;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,28 +30,33 @@ public class Marker {
     }
 
     /**
-     * Parses the reductions in a file and checks for correctness using markReductions. This assumes the file consists
-     * only of newline-separated paragraphs of reductions. Currently assumes that the first line in a reduction is the
-     * correct starting point.
-     * @param filename The name of the file containing the lambda reductions to be marked.
-     * @return A boolean indicating whether the reductions are correct.
+     * Creates a ProblemSet (using the file at problemSetURL) and parses the answer to each question (found in the file
+     * at answerURL) as a list of LambdaExpressions. Each answer's LambdaExpressions are submitted to the corresponding
+     * Problem, and the resulting mark is returned.
+     * This assumes the answer file consists only of newline-separated paragraphs of reductions and that the answers are
+     * in the same order as found in the ProblemSet.
+     *
+     * @param problemSetURL The path to the xml file containing the problems.
+     * @param answerURL The path to the file containing the lambda reductions to be marked.
+     * @return The mark for the reductions in the answer file.
      */
-    public static boolean markReductionsFromFile(String filename, ReductionOrder order){ // TODO: add a second file for the questions
+    public static double markReductionsFromFile(String problemSetURL, String answerURL){
         // Count the number of expressions in the file by counting the number of clusters of newlines
         Scanner fileScanner = null;
         try {
-            fileScanner = new Scanner(new File(filename));
+            fileScanner = new Scanner(new File(answerURL));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         StringBuilder file = new StringBuilder();
         while (fileScanner.hasNext()) {
             file.append(fileScanner.nextLine());
+            file.append("\n");
         }
 
         String filetext = file.toString();
         // Ignore repeated newlines using regex
-        Pattern newlines = Pattern.compile("\n*");
+        Pattern newlines = Pattern.compile("\n{2,}");
         Matcher matcher = newlines.matcher(filetext);
 
         int countExpressions = 0;
@@ -57,9 +64,9 @@ public class Marker {
             countExpressions++;
         countExpressions++; // Count the last expression
 
-        // Parse the expressions
+        // Parse the answer expressions
         try {
-            fileScanner = new Scanner(new File(filename));
+            fileScanner = new Scanner(new File(answerURL));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -80,7 +87,20 @@ public class Marker {
             }
         }
 
-        return markReductions(userReductions, order);
+        // Read in the questions
+        ProblemSet pset = null;
+        pset = new ProblemSet(new File(problemSetURL));
+
+        // Submit the answers to the problems
+        for (int i = 0; i < pset.size(); i++) {
+            Problem currentProblem = pset.nextProblem();
+
+            for (LambdaExpression userReduction : userReductions[i]) {
+                currentProblem.submitStep(userReduction);
+            }
+        }
+
+        return pset.getMark();
     }
 
     /**
@@ -92,9 +112,6 @@ public class Marker {
      * any.
      */
     public static String checkReductions(List<LambdaExpression>[] userReductions, ReductionOrder order){
-        // TODO: remove duplication in markReductions
-        //userReductions[0].get(0);
-
         for (List<LambdaExpression> l : userReductions) {
             List<ReductionResult> calculatedReductions = l.get(0).reductions(ReductionOrder.NORMAL);
 
@@ -115,16 +132,18 @@ public class Marker {
 
     /**
      * Marks a given file's reductions
-     * @param args Command-line arguments. The first is the name of the file to check.
+     * @param args Command-line arguments. The first is the path to the problem set, the second is the path to the
+     *             answer file.
      */
     public static void main(String[] args) {
 
         try {
-            System.out.println(markReductionsFromFile(args[0], ReductionOrder.NORMAL) ?
-                    "Correct" :
-                    "Incorrect");
+            System.out.println("Score for reductions in "+args[1]+
+                                "using problem set"+args[0]+": "+
+                                markReductionsFromFile(args[0], args[1]));
         } catch(IndexOutOfBoundsException e){
-            System.out.println("Error: expected filename as the first argument");
+            System.out.println("Error: expected problem set filename as the first argument and answer file name as " +
+                    "the second argument.");
         }
     }
 }
