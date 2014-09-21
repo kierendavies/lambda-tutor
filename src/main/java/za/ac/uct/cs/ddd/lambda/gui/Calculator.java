@@ -14,7 +14,6 @@ import java.util.HashSet;
 public class Calculator extends JPanel {
     private static final String ERROR = "error";
     private static final String EXPRESSION = "expression";
-    private static ImageIcon setInputIcon = null;
 
     private HashSet<String> history;
     private LambdaExpression expression;
@@ -29,10 +28,6 @@ public class Calculator extends JPanel {
 
     public Calculator() {
         super();
-
-        if (setInputIcon == null) {
-            setInputIcon = new ImageIcon(getClass().getResource("/icon_set_input.gif"), "set input");
-        }
 
         setLayout(new GridBagLayout());
 
@@ -193,7 +188,7 @@ public class Calculator extends JPanel {
                 String reductionString = reduction.getReducedExpression().toString();
 
                 constraints.gridx = 0;
-                JButton button = new JButton(setInputIcon);
+                JButton button = new JButton(Icons.setInput);
                 button.setBorderPainted(false);
                 button.setContentAreaFilled(false);
                 button.setPreferredSize(new Dimension(17, 17));

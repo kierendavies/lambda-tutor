@@ -13,22 +13,14 @@ import java.awt.event.ActionListener;
 public class ExpressionTree extends JPanel {
     private static final String COLLAPSED = "collapsed";
     private static final String EXPANDED = "expanded";
-    private static ImageIcon expandIcon = null;
-    private static ImageIcon collapseIcon = null;
     private LambdaExpression expression;
     private CardLayout layout;
     private JPanel collapsed, expanded;
 
     public ExpressionTree() {
-        super(new CardLayout());
-        layout = (CardLayout) getLayout();
-
-        if (expandIcon == null) {
-            expandIcon = new ImageIcon(getClass().getResource("/icon_expand.gif"), "expand");
-        }
-        if (collapseIcon == null) {
-            collapseIcon = new ImageIcon(getClass().getResource("/icon_collapse.gif"), "collapse");
-        }
+        super();
+        layout = new CardLayout();
+        setLayout(layout);
     }
 
     public ExpressionTree(LambdaExpression expression) {
@@ -62,7 +54,7 @@ public class ExpressionTree extends JPanel {
         constraints.weightx = 0;
         constraints.weighty = 0;
 
-        JButton button = new JButton(expandIcon);
+        JButton button = new JButton(Icons.expand);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setPreferredSize(new Dimension(17, 17));
@@ -72,7 +64,9 @@ public class ExpressionTree extends JPanel {
         constraints.gridx = 1;
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.anchor = GridBagConstraints.LINE_START;
-        collapsed.add(new JLabel(expression.toString()), constraints);
+        JLabel expressionLabel = new JLabel(expression.toString());
+        expressionLabel.setFont(Fonts.mono);
+        collapsed.add(expressionLabel, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 1;
@@ -95,7 +89,7 @@ public class ExpressionTree extends JPanel {
         constraints.weightx = 0;
         constraints.weighty = 0;
 
-        JButton button = new JButton(collapseIcon);
+        JButton button = new JButton(Icons.collapse);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setPreferredSize(new Dimension(17, 17));
@@ -105,7 +99,9 @@ public class ExpressionTree extends JPanel {
         constraints.gridx = 1;
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.anchor = GridBagConstraints.LINE_START;
-        expanded.add(new JLabel(expression.toString()), constraints);
+        JLabel expressionLabel = new JLabel(expression.toString());
+        expressionLabel.setFont(Fonts.mono);
+        expanded.add(expressionLabel, constraints);
 
 //        constraints.gridy++;
 //        constraints.gridwidth = 1;
@@ -128,7 +124,9 @@ public class ExpressionTree extends JPanel {
             expanded.add(new JLabel("Variable:"), constraints);
             constraints.gridx = 2;
             constraints.gridwidth = GridBagConstraints.REMAINDER;
-            expanded.add(new JLabel(abstraction.getVariable().toString()), constraints);
+            JLabel variableLabel = new JLabel(abstraction.getVariable().toString());
+            variableLabel.setFont(Fonts.mono);
+            expanded.add(variableLabel, constraints);
 
             constraints.gridx = 1;
             constraints.gridy++;
