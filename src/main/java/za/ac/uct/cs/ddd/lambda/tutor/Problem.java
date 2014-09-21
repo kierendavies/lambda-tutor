@@ -125,6 +125,12 @@ public abstract class Problem {
         return null;
     }
 
+    /**
+     * Parses a single problem node into a Problem.
+     * @param problemNode The jdom element representing a problem.
+     * @return A problem constructed from the information in the problem node.
+     * @throws NoSuchFieldException
+     */
     protected static Problem parseProblemNode(Element problemNode) throws NoSuchFieldException {
         String type = problemNode.getChildText("type");
         String expression = problemNode.getChildText("start");
@@ -169,8 +175,8 @@ public abstract class Problem {
     }
 
     /**
-     * Returns the messages accrued for this problem.
-     * @return The list of messages
+     * Returns the messages accumulated for this problem.
+     * @return The list of messages this problem has accumulated.
      */
     public List<String> getMessage(){
         return new ArrayList<>(messages);

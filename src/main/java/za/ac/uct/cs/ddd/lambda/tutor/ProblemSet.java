@@ -86,6 +86,10 @@ public class ProblemSet {
         return problems.get(currentProblem);
     }
 
+    /**
+     * Returns the title of the problem set.
+     * @return The title of this problem set.
+     */
     public String getTitle(){
         return title;
     }
