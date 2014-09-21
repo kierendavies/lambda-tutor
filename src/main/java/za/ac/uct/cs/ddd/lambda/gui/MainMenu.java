@@ -44,7 +44,7 @@ public class MainMenu extends SizeablePanel {
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(parentFrame);
         container.add(button);
-        container.add(Box.createRigidArea(new Dimension(0, WIDTH / 70)));
+        container.add(Box.createRigidArea(new Dimension(0, WIDTH / 50)));
 
 
     }

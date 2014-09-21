@@ -22,9 +22,10 @@ public class ContentWindow extends SizeablePanel {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 7;
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.fill = GridBagConstraints.NONE;
         gbc.weighty = 1;
         gbc.insets = new Insets(0, 10, 10, 0);
+        menuButton.setPreferredSize(menuButton.getMaximumSize());
         menuButton.addActionListener(new MainMenuListener());
         add(menuButton, gbc);
 
