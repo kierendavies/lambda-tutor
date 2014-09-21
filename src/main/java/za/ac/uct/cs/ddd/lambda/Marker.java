@@ -1,4 +1,4 @@
-package za.ac.uct.cs.ddd.lambda.tutor;
+package za.ac.uct.cs.ddd.lambda;
 
 import za.ac.uct.cs.ddd.lambda.evaluator.*;
 
@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A collection of static methods for marking lambda reductions in a given text file.
@@ -33,21 +35,29 @@ public class Marker {
      * @return A boolean indicating whether the reductions are correct.
      */
     public static boolean markReductionsFromFile(String filename, ReductionOrder order){ // TODO: add a second file for the questions
+        // Count the number of expressions in the file by counting the number of clusters of newlines
         Scanner fileScanner = null;
         try {
             fileScanner = new Scanner(new File(filename));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        int countExpressions = 0;
-
-        // TODO: strip extra newlines
+        StringBuilder file = new StringBuilder();
         while (fileScanner.hasNext()) {
-            if (fileScanner.nextLine().equals(""))
-                countExpressions++;
+            file.append(fileScanner.nextLine());
         }
-        countExpressions++;
 
+        String filetext = file.toString();
+        // Ignore repeated newlines using regex
+        Pattern newlines = Pattern.compile("\n*");
+        Matcher matcher = newlines.matcher(filetext);
+
+        int countExpressions = 0;
+        while (matcher.find())
+            countExpressions++;
+        countExpressions++; // Count the last expression
+
+        // Parse the expressions
         try {
             fileScanner = new Scanner(new File(filename));
         } catch (FileNotFoundException e) {
@@ -56,20 +66,18 @@ public class Marker {
         String line;
         List<LambdaExpression>[] userReductions = new List[countExpressions];
 
-        for (int i = 0; i < countExpressions; i++) {
-            userReductions[i] = new ArrayList<LambdaExpression>();
+        for (int i = 0; i < userReductions.length; i++) {
+            userReductions[i] = new ArrayList<>();
 
-            line = null;
+            line = fileScanner.nextLine();
             while(!"".equals(line) && fileScanner.hasNext()){
-                line = fileScanner.nextLine();
                 try {
                     userReductions[i].add(Parser.parse(line));
                 } catch (InvalidExpressionException e) {
                     e.printStackTrace();
                 }
+                line = fileScanner.nextLine();
             }
-            if(fileScanner.hasNext())
-                fileScanner.nextLine(); // move past blank line
         }
 
         return markReductions(userReductions, order);
