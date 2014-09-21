@@ -30,7 +30,6 @@ public class MainMenu extends SizeablePanel {
         //Adding  buttons to the pane
         addButton("Calculator", buttonPane);
         addButton("Tutor", buttonPane);
-        addButton("Marker", buttonPane);
         add(buttonPane);
 
 
