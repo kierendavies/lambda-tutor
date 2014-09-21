@@ -15,11 +15,12 @@ import java.util.List;
  */
 public class ProblemSet {
 
-    private List<Problem> problems;
-    private int currentProblem;
     private String title;
+    private int currentProblem;
+    private List<Problem> problems;
 
-    public ProblemSet(List<Problem> problems){
+    public ProblemSet(String title, List<Problem> problems){
+        this.title = title;
         currentProblem = 0;
         this.problems = new ArrayList<>(problems);
     }
@@ -46,7 +47,8 @@ public class ProblemSet {
      * Where each problem follows the same format as found in the problem class.
      * @param url A string containing a path to an xml file with a problem set defined.
      */
-    public ProblemSet(String url){
+    public ProblemSet(String title, String url){
+        this.title = title;
         currentProblem = 0;
 
         SAXBuilder builder = new SAXBuilder();
