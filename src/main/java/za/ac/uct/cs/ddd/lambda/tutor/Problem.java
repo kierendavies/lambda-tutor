@@ -5,7 +5,7 @@ import za.ac.uct.cs.ddd.lambda.evaluator.*;
 /**
  * A wrapper around LambdaExpression for tracking the progress of reductions.
  */
-public class Problem {
+public abstract class Problem {
 
     LambdaExpression expression;
     String message;
