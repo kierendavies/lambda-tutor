@@ -46,6 +46,7 @@ public class Calculator extends JPanel {
 
         inputBox = new JComboBox<String>();
         inputBox.setEditable(true);
+        inputBox.setFont(Fonts.mono);
         inputBox.addActionListener(event -> setInput((String) inputBox.getSelectedItem()));
         PlainDocument doc = (PlainDocument) ((JTextComponent) inputBox.getEditor().getEditorComponent()).getDocument();
         doc.setDocumentFilter(new DocumentFilter() {
@@ -196,7 +197,9 @@ public class Calculator extends JPanel {
                 reductionPanel.add(button, constraints);
 
                 constraints.gridx = 1;
-                reductionPanel.add(new JLabel(reductionString), constraints);
+                JLabel reductionLabel = new JLabel(reductionString);
+                reductionLabel.setFont(Fonts.mono);
+                reductionPanel.add(reductionLabel, constraints);
 
                 constraints.gridy++;
             }
