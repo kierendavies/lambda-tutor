@@ -109,7 +109,7 @@ public abstract class Problem {
      * @param url A string containing a path to an xml file with a single problem.
      * @return A Problem subclass with the specified configuration.
      */
-    public static Problem parseXML(String url) throws NoSuchFieldException{
+    public static Problem parseProblemFromURL(String url) throws NoSuchFieldException{
         SAXBuilder builder = new SAXBuilder();
         File xmlFile = new File(url);
 
