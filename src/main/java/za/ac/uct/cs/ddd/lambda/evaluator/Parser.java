@@ -87,19 +87,6 @@ public class Parser {
             lexer.yypushback(1);
         }
 
-        // remove pointless nesting
-        if (be.getTokens().size() == 1 && be.getTokens().get(0) instanceof BracketedExpression) {
-            be.hoistOnlyChild();
-        }
-        for (int i = 0; i < be.getTokens().size(); i++) {
-            if (be.getTokens().get(i) instanceof BracketedExpression) {
-                BracketedExpression child = (BracketedExpression) be.getTokens().get(i);
-                if (child.getTokens().size() == 1) {
-                    be.hoistSingletonChild(i);
-                }
-            }
-        }
-
         return be;
     }
 
@@ -167,13 +154,13 @@ public class Parser {
                 }
             }
             if (arrowIndex == 1) {
-                Token token = tokens.get(1);
+                Token token = tokens.get(0);
                 throw new InvalidExpressionException("Missing variable binding",
                         token.getLine(), token.getColumn());
             } else if (arrowIndex == -1) {
-                Token token = tokens.get(tokens.size() - 1);
+                Token token = tokens.get(0);
                 throw new InvalidExpressionException("Missing abstraction body",
-                        token.getLine(), (token.getColumn() + token.getLength()));
+                        token.getLine(), token.getColumn());
             }
 
             List<LambdaVariable> variables = new LinkedList<LambdaVariable>();
