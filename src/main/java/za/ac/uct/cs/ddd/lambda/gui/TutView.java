@@ -4,6 +4,9 @@
  */
 package za.ac.uct.cs.ddd.lambda.gui;
 
+import za.ac.uct.cs.ddd.lambda.tutor.Problem;
+import za.ac.uct.cs.ddd.lambda.tutor.ProblemSet;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,7 +19,6 @@ import java.util.List;
 
 public class TutView extends ContentWindow {
 
-    String[] problems = new String[5];
     JComboBox problemList;
     JLabel problemTitleLabel;
     JLabel problemTextLabel;
@@ -41,13 +43,12 @@ public class TutView extends ContentWindow {
 
 
         JPanel comboPane = new JPanel(new BorderLayout());
-        // populateProblemSet(file);
+        populateProblemSet(null);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 6;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(10, 10, 10, 10);
-        problemList = new JComboBox();
         comboPane.add(problemList, BorderLayout.CENTER);
         add(comboPane, gbc);
 
@@ -57,20 +58,10 @@ public class TutView extends ContentWindow {
     //Not Happy
 
     void populateProblemSet(String fileName) {
+        ProblemSet problemSet = new ProblemSet(fileName);
 
-        try {
-            BufferedReader input = new BufferedReader((new FileReader(fileName)));
-            List<String> set = new ArrayList<String>();
-            String line = null;
-            while ((line = input.readLine()) != null) {
-                set.add(line);
-            }
-            String[] probSetArr = set.toArray(new String[]{});
-            problemList = new JComboBox(probSetArr);
-            input.close();
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
+        problemList = new JComboBox(problemSet.getProblems().toArray());
+
 
     }
 

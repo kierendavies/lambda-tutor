@@ -79,6 +79,13 @@ public class ProblemSet {
     }
 
     /**
+     * Returns the list of problems.
+     * @return A reference to the list of problems.
+     */
+    public List<Problem> getProblems(){
+      return problems;
+    }
+    /**
      * Returns the current problem without affecting the cursor.
      * @return A reference to the current problem.
      */
