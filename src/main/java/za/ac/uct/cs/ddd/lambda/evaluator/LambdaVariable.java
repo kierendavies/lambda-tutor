@@ -7,15 +7,17 @@ import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 /**
  * A representation of a variable.
  */
-class LambdaVariable extends LambdaExpression {
+public class LambdaVariable extends LambdaExpression {
     final String name;
 
     /**
      * Creates a new variable with the given name.
+     *
      * @param name The name of the variable
      */
     public LambdaVariable(String name) {
         this.name = name;
+        freeVariables = null;
     }
 
     @Override
@@ -38,19 +40,20 @@ class LambdaVariable extends LambdaExpression {
     }
 
     @Override
-    public String toString() {
-        return name;
-    }
+    protected void buildString(StringBuilder builder, boolean fullBrackets, LambdaExpression highlighted) {
+        if (this == highlighted) builder.append(HIGHLIGHT);
 
-    @Override
-    public String toStringBracketed() {
-        return name;
+        builder.append(name);
+
+        if (this == highlighted) builder.append(UNHIGHLIGHT);
     }
 
     @Override
     public Scope getFreeVariables() {
-        Scope freeVariables = new Scope();
-        freeVariables.add(this);
+        if (freeVariables == null) {
+            freeVariables = new Scope();
+            freeVariables.add(this);
+        }
         return freeVariables;
     }
 

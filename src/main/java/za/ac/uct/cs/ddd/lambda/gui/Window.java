@@ -42,16 +42,18 @@ public class Window extends JFrame implements ActionListener {
         if (actionCommand == "Main menu") {
             setPanel(menu);
         } else if (actionCommand == "Calculator") {
+
             setPanel(calculator);
+
         } else if (actionCommand == "Tutor") {
             setPanel(tutor);
         } else if (actionCommand == "Marker") {
-            setPanel(marker);
+
 
         }
     }
 
-    /**
+  /**
      * @param panel
      */
     private void setPanel(JPanel panel) {
@@ -62,6 +64,9 @@ public class Window extends JFrame implements ActionListener {
 
     /**
      * Removes the current contentPane
+=======
+     *  Removes the current contentPane
+>>>>>>> develop
      */
     private void removePane() {
         remove(getContentPane());

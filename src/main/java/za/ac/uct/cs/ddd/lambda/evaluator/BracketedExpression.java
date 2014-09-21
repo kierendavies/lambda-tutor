@@ -15,7 +15,8 @@ class BracketedExpression extends Token {
 
     /**
      * Creates a bracketed expression.
-     * @param line The line at which it started
+     *
+     * @param line   The line at which it started
      * @param column The column at which it started
      */
     public BracketedExpression(int line, int column) {
@@ -25,6 +26,7 @@ class BracketedExpression extends Token {
 
     /**
      * Adds a token to the end of this expression.
+     *
      * @param token The token to add
      */
     void addToken(Token token) {
@@ -33,6 +35,7 @@ class BracketedExpression extends Token {
 
     /**
      * Returns the tokens in an unmodifiable list.
+     *
      * @return The unmodifiable list of tokens
      */
     public List<Token> getTokens() {
@@ -53,6 +56,7 @@ class BracketedExpression extends Token {
     /**
      * Replaces a token which is a BracketedExpression with its contents.  This flattens the tree structure to make it
      * more efficient when the nested expression contains only one token.
+     *
      * @param index The index of the token
      */
     void hoistSingletonChild(int index) {
@@ -67,6 +71,7 @@ class BracketedExpression extends Token {
 
     /**
      * Returns a string representation of this bracketed expression.
+     *
      * @return The string representation.
      */
     @Override

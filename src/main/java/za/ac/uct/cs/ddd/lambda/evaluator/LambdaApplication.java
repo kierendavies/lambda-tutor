@@ -3,32 +3,36 @@ package za.ac.uct.cs.ddd.lambda.evaluator;
 import java.util.HashMap;
 import java.util.List;
 
-import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.APPLICATIVE;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.NORMAL;
 import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 
 /**
  * A representation of an application.
  */
-class LambdaApplication extends LambdaExpression {
+public class LambdaApplication extends LambdaExpression {
     final LambdaExpression fn;
     final LambdaExpression body;
 
     /**
      * Creates a lambda expression with some function on the left applied to a body on the right.
-     * @param fn The left side
+     *
+     * @param fn   The left side
      * @param body The right side
      */
     public LambdaApplication(LambdaExpression fn, LambdaExpression body) {
         this.fn = fn;
         this.body = body;
+        freeVariables = null;
     }
 
     /**
      * Creates a lambda expression from a chain of applications.
+     *
      * @param expressions The expressions to be applied in sequence
      */
     public LambdaApplication(List<LambdaExpression> expressions) {
-        this.body = expressions.get(expressions.size()-1);
+        this.body = expressions.get(expressions.size() - 1);
         expressions.remove(expressions.size() - 1);
 
         if (expressions.size() == 1) {
@@ -36,6 +40,15 @@ class LambdaApplication extends LambdaExpression {
         } else {
             this.fn = new LambdaApplication(expressions);
         }
+        freeVariables = null;
+    }
+
+    public LambdaExpression getFunction() {
+        return fn;
+    }
+
+    public LambdaExpression getInput() {
+        return body;
     }
 
     @Override
@@ -54,39 +67,43 @@ class LambdaApplication extends LambdaExpression {
     }
 
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
+    protected void buildString(StringBuilder builder, boolean fullBrackets, LambdaExpression highlighted) {
+        if (this == highlighted) builder.append(HIGHLIGHT);
 
-        if (fn instanceof LambdaAbstraction) {
+        if (fullBrackets) {
             builder.append('(');
-            builder.append(fn);
+            fn.buildString(builder, fullBrackets, highlighted);
+            builder.append(' ');
+            body.buildString(builder, fullBrackets, highlighted);
             builder.append(')');
         } else {
-            builder.append(fn);
+            if (fn instanceof LambdaAbstraction) {
+                builder.append('(');
+                fn.buildString(builder, fullBrackets, highlighted);
+                builder.append(')');
+            } else {
+                fn.buildString(builder, fullBrackets, highlighted);
+            }
+            builder.append(' ');
+            if (body instanceof LambdaVariable) {
+                body.buildString(builder, fullBrackets, highlighted);
+            } else {
+                builder.append('(');
+                body.buildString(builder, fullBrackets, highlighted);
+                builder.append(')');
+            }
         }
 
-        builder.append(' ');
-
-        if (body instanceof LambdaVariable) {
-            builder.append(body);
-        } else {
-            builder.append('(');
-            builder.append(body);
-            builder.append(')');
-        }
-
-        return builder.toString();
-    }
-
-    @Override
-    public String toStringBracketed() {
-        return String.format("(%s %s)", fn.toStringBracketed(), body.toStringBracketed());
+        if (this == highlighted) builder.append(UNHIGHLIGHT);
     }
 
     @Override
     public Scope getFreeVariables() {
-        Scope freeVariables = fn.getFreeVariables();
-        freeVariables.addAll(body.getFreeVariables());
+        if (freeVariables == null) {
+            freeVariables = new Scope();
+            freeVariables.addAll(fn.getFreeVariables());
+            freeVariables.addAll(body.getFreeVariables());
+        }
         return freeVariables;
     }
 
@@ -144,6 +161,7 @@ class LambdaApplication extends LambdaExpression {
 
     /**
      * Checks if this application is beta-reducible.
+     *
      * @return {@code true} if it is beta-reducible; {@code false} otherwise
      */
     private boolean betaReducible() {
@@ -152,6 +170,7 @@ class LambdaApplication extends LambdaExpression {
 
     /**
      * Returns the beta reduction of this abstraction, assuming it is beta-reducible.
+     *
      * @return The reduced expression
      */
     private ReductionResult betaReduce() {
@@ -181,7 +200,7 @@ class LambdaApplication extends LambdaExpression {
         ReductionResult bodyResult = body.reduceOnce(order);
         if (bodyResult.type != NONE) {
             LambdaExpression reducedExpression = new LambdaApplication(fn, bodyResult.reduced);
-            return new ReductionResult(this, fnResult.redex, reducedExpression, bodyResult.type);
+            return new ReductionResult(this, bodyResult.redex, reducedExpression, bodyResult.type);
         }
 
         if (order == APPLICATIVE && betaReducible()) {

@@ -3,19 +3,21 @@ package za.ac.uct.cs.ddd.lambda.evaluator;
 import java.util.HashMap;
 import java.util.List;
 
-import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.APPLICATIVE;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.NORMAL;
 import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionType.*;
 
 /**
  * A representation of a lambda abstraction.
  */
-class LambdaAbstraction extends LambdaExpression {
+public class LambdaAbstraction extends LambdaExpression {
     final LambdaVariable var;
     final LambdaExpression body;
 
     /**
      * Creates a lambda abstraction with a variable and body.
-     * @param var The variable
+     *
+     * @param var  The variable
      * @param body The body
      */
     public LambdaAbstraction(LambdaVariable var, LambdaExpression body) {
@@ -25,6 +27,7 @@ class LambdaAbstraction extends LambdaExpression {
 
     /**
      * Creates a lambda abstraction of many variables.
+     *
      * @param vars The list of variables
      * @param body The body
      */
@@ -36,6 +39,14 @@ class LambdaAbstraction extends LambdaExpression {
             vars.remove(0);
             this.body = new LambdaAbstraction(vars, body);
         }
+    }
+
+    public LambdaVariable getVariable() {
+        return var;
+    }
+
+    public LambdaExpression getBody() {
+        return body;
     }
 
     @Override
@@ -59,19 +70,26 @@ class LambdaAbstraction extends LambdaExpression {
     }
 
     @Override
-    public String toString() {
-        return String.format("\u03bb%s.%s", var, body);
-    }
+    protected void buildString(StringBuilder builder, boolean fullBrackets, LambdaExpression highlighted) {
+        if (this == highlighted) builder.append(HIGHLIGHT);
+        if (fullBrackets) builder.append('(');
 
-    @Override
-    public String toStringBracketed() {
-        return String.format("(\u03bb%s.%s)", var.toStringBracketed(), body.toStringBracketed());
+        builder.append('\u03bb');
+        var.buildString(builder, fullBrackets, highlighted);
+        builder.append('.');
+        body.buildString(builder, fullBrackets, highlighted);
+
+        if (fullBrackets) builder.append(')');
+        if (this == highlighted) builder.append(UNHIGHLIGHT);
     }
 
     @Override
     public Scope getFreeVariables() {
-        Scope freeVariables = body.getFreeVariables();
-        freeVariables.remove(var);
+        if (freeVariables == null) {
+            freeVariables = new Scope();
+            freeVariables.addAll(body.getFreeVariables());
+            freeVariables.remove(var);
+        }
         return freeVariables;
     }
 
@@ -149,6 +167,7 @@ class LambdaAbstraction extends LambdaExpression {
 
     /**
      * Checks if this abstraction is eta-reducible.
+     *
      * @return {@code true} if it is eta-reducible; {@code false} otherwise
      */
     private boolean etaReducible() {
@@ -161,6 +180,7 @@ class LambdaAbstraction extends LambdaExpression {
 
     /**
      * Returns the eta reduction of this abstraction, assuming it is eta-reducible.
+     *
      * @return The reduced expression
      */
     private ReductionResult etaReduce() {

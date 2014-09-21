@@ -37,7 +37,6 @@ public class TutView extends ContentWindow {
         gbc.weightx = 2;
         gbc.weighty = 5;
         gbc.insets = new Insets(10, 10, 10, 10);
-
         add(inputArea, gbc);
 
 
