@@ -6,9 +6,11 @@ package za.ac.uct.cs.ddd.lambda.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,8 @@ public class TutView extends ContentWindow {
 
     public TutView(Window parent, String file) {
         super(parent);
+
+
         inputArea = new JTextArea(5, 20);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -33,15 +37,18 @@ public class TutView extends ContentWindow {
         gbc.weightx = 2;
         gbc.weighty = 5;
         gbc.insets = new Insets(10, 10, 10, 10);
+        //inputArea.setFocusTraversalKeys();
         add(inputArea, gbc);
 
+
         JPanel comboPane = new JPanel(new BorderLayout());
-        populateProblemSet(file);
+        // populateProblemSet(file);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 6;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(10, 10, 10, 10);
+        problemList = new JComboBox();
         comboPane.add(problemList, BorderLayout.CENTER);
         add(comboPane, gbc);
 
@@ -68,14 +75,10 @@ public class TutView extends ContentWindow {
 
     }
 
+    private class ProblemListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
 
-    //Not Happy
-
-    void addComboBoxListener(ActionListener actionListener) {
-        problemList.addActionListener(actionListener);
+        }
     }
-
-   /* @Override
-
-    }*/
 }

@@ -7,6 +7,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ *
+ */
+
 public class Window extends JFrame implements ActionListener {
 
     MainMenu menu;
@@ -21,9 +25,8 @@ public class Window extends JFrame implements ActionListener {
         //Basic setup
         setTitle("Lambda Calculus");
         setLocation(50, 50);
-        //setResizable(false);
 
-        addWindowListener(new windowHandler());
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         menu = new MainMenu(this);
         calculator = new CalcView(this);
@@ -41,7 +44,6 @@ public class Window extends JFrame implements ActionListener {
         } else if (actionCommand == "Calculator") {
             removePane();
             this.setContentPane(calculator);
-            CalcController c_controller = new CalcController(calculator);
             pack();
         } else if (actionCommand == "Tutor") {
             removePane();
@@ -50,11 +52,13 @@ public class Window extends JFrame implements ActionListener {
         } else if (actionCommand == "Marker") {
             removePane();
             this.setContentPane(marker);
-            MarkController m_controller = new MarkController(marker);
             pack();
         }
     }
 
+    /**
+     *  Removes the current contentPane
+     */
     private void removePane() {
         remove(getContentPane());
         revalidate();
@@ -62,10 +66,4 @@ public class Window extends JFrame implements ActionListener {
     }
 
 
-    // WindowListener idea found here: http://cs.nyu.edu/~yap/classes/visual/03s/lect/l7/
-    private class windowHandler extends WindowAdapter {
-        public void windowClosing(WindowEvent e) {
-            System.exit(0);
-        }
-    }
 }

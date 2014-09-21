@@ -5,17 +5,24 @@
 
 package za.ac.uct.cs.ddd.lambda.gui;
 
+import za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import static za.ac.uct.cs.ddd.lambda.tutor.Marker.markReductionsFromFile;
 
 public class MarkView extends ContentWindow {
     JTextArea feedbackArea;
-    JRadioButton normalButton;
-    JRadioButton applicativeButton;
+    private ReductionOrder reductionOrder;
+    JRadioButton normalOrderButton;
+    JRadioButton applicativeOrderButton;
     ButtonGroup group;
     JButton markButton, browseButton;
     JTextField locationField;
+    JFileChooser fileChooser;
 
     String fileName;
 
@@ -64,20 +71,20 @@ public class MarkView extends ContentWindow {
 
 
         // Create radio buttons
-        normalButton = new JRadioButton("Normal Form");
-        applicativeButton = new JRadioButton("Applicative Form");
-        normalButton.setFont(new Font("Serif", Font.PLAIN, 14));
-        applicativeButton.setFont(new Font("Serif", Font.PLAIN, 14));
+        normalOrderButton = new JRadioButton("Normal Form");
+        applicativeOrderButton = new JRadioButton("Applicative Form");
+        normalOrderButton.addActionListener(event -> reductionOrder = ReductionOrder.NORMAL);
+        applicativeOrderButton.addActionListener(event -> reductionOrder = ReductionOrder.APPLICATIVE);
 
 
         //Create and set up button group
         group = new ButtonGroup();
-        group.add(normalButton);
-        group.add(applicativeButton);
+        group.add(normalOrderButton);
+        group.add(applicativeOrderButton);
 
         //Add button to panel
-        radioPane.add(normalButton);
-        radioPane.add(applicativeButton);
+        radioPane.add(normalOrderButton);
+        radioPane.add(applicativeOrderButton);
 
 
         //GridBag constraints for radio pane
@@ -96,6 +103,7 @@ public class MarkView extends ContentWindow {
 
         //Create "mark" JButton
         markButton = new JButton("Mark");
+        markButton.addActionListener(new MarkListener());
 
         //GridBag constraints for JButton
         gbc = new GridBagConstraints();
@@ -106,9 +114,9 @@ public class MarkView extends ContentWindow {
         add(markButton, gbc);
 
 
-        //Create "mark" JButton
+        //Create "browse" JButton
         browseButton = new JButton("Browse");
-        // browseButton.addActionListener(this);
+        browseButton.addActionListener(new BrowseListener());
 
 
         //GridBag constraints for JButton
@@ -123,30 +131,44 @@ public class MarkView extends ContentWindow {
 
     }
 
-    String getFileName() {
-        return locationField.getText();
-    }
-
+    /**
+     * Set the current filename
+     *
+     * @param file the file being set
+     */
     void setFileName(String file) {
         locationField.setText(file);
 
     }
 
-    void addBrowseListener(ActionListener browseListener) {
-        browseButton.addActionListener(browseListener);
 
+    /**
+     * Returns the filename that the user selects
+     *
+     * @return the filename of the current selected file
+     */
+    String getFileName() {
+        return locationField.getText();
     }
 
 
-    //@Override
-  /*  public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == browseButton) {
-            System.out.println("Yes");
-            int returnVal = fileChooser.showOpenDialog(Marker.this);
+    private class BrowseListener implements ActionListener {
 
-
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            fileChooser = new JFileChooser();
+            int returnVal = fileChooser.showOpenDialog(MarkView.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) setFileName(fileChooser.getSelectedFile().getName());
         }
+    }
 
-    }*/
+    private class MarkListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            markReductionsFromFile(getFileName(), reductionOrder);
+        }
+    }
+
+
 }
-
