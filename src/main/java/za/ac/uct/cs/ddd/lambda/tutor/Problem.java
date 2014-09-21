@@ -93,10 +93,10 @@ public abstract class Problem {
      * Checks that a given reduction is correct for this problem. If correct, the current reduction is set to the next
      * reduction. Note that the same ReductionOrder should be passed to this method each time, or the result might not
      * properly conform to either order.
-     * @param userReduction A LambdaExpression representing the attempted reduction.
+     * @param submission A LambdaExpression representing the attempted reduction.
      * @return true if the given reduction is correct, false otherwise.
      */
-    public abstract boolean submitStep(LambdaExpression userReduction);
+    public abstract boolean submitStep(String submission);
 
     /**
      * Parses the text in an xml file into a problem. The general format for the file is as follows:
@@ -169,7 +169,7 @@ public abstract class Problem {
      */
     public double getMark(){
         if(totalMark != 0)
-            return (double)(mark/totalMark);
+            return ((double) mark) / totalMark;
         else
             return 0;
     }

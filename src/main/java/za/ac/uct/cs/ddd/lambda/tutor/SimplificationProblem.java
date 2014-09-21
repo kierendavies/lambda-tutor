@@ -1,8 +1,6 @@
 package za.ac.uct.cs.ddd.lambda.tutor;
 
-import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
-import za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder;
-import za.ac.uct.cs.ddd.lambda.evaluator.ReductionResult;
+import za.ac.uct.cs.ddd.lambda.evaluator.*;
 
 /**
  * A problem in which the user simplifies the underlying expression using any combination of conversion or reduction.
@@ -50,14 +48,21 @@ public class SimplificationProblem extends Problem{
     /**
      * Submits a reduction to the problem. This checks whether the submitted reduction is correct and changes the mark
      * appropriately. Any extra alpha conversions are ignored.
-     * @param userReduction A LambdaExpression representing the attempted reduction.
+     * @param submission A LambdaExpression representing the attempted reduction.
      * @return true if the reduction is valid, false otherwise.
      */
     @Override
-    public boolean submitStep(LambdaExpression userReduction) {
+    public boolean submitStep(String submission) {
+        LambdaExpression userReduction;
+        try {
+            userReduction = Parser.parse(submission);
+        } catch (InvalidExpressionException e) {
+            totalMark++;
+            return false;
+        }
+
         ReductionResult tutorReduction = expression.reduceOnce(this.reductionOrder);
         if(userReduction.alphaEquivalentTo(tutorReduction.getReducedExpression())) {
-            expression = userReduction;
             mark++;
             totalMark++;
             return true;

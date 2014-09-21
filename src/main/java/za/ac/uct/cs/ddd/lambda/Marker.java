@@ -4,9 +4,9 @@ import za.ac.uct.cs.ddd.lambda.evaluator.*;
 import za.ac.uct.cs.ddd.lambda.tutor.Problem;
 import za.ac.uct.cs.ddd.lambda.tutor.ProblemSet;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -30,77 +30,42 @@ public class Marker {
     }
 
     /**
-     * Creates a ProblemSet (using the file at problemSetURL) and parses the answer to each question (found in the file
-     * at answerURL) as a list of LambdaExpressions. Each answer's LambdaExpressions are submitted to the corresponding
+     * Creates a ProblemSet (using the file at problemSetFilename) and parses the answer to each question (found in the file
+     * at answerFilename) as a list of LambdaExpressions. Each answer's LambdaExpressions are submitted to the corresponding
      * Problem, and the resulting mark is returned.
      * This assumes the answer file consists only of newline-separated paragraphs of reductions and that the answers are
      * in the same order as found in the ProblemSet.
      *
-     * @param problemSetURL The path to the xml file containing the problems.
-     * @param answerURL The path to the file containing the lambda reductions to be marked.
+     * @param problemSetFilename The path to the xml file containing the problems.
+     * @param answerFilename The path to the file containing the lambda reductions to be marked.
      * @return The mark for the reductions in the answer file.
      */
-    public static double markReductionsFromFile(String problemSetURL, String answerURL){
-        // Count the number of expressions in the file by counting the number of clusters of newlines
-        Scanner fileScanner = null;
-        try {
-            fileScanner = new Scanner(new File(answerURL));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        StringBuilder file = new StringBuilder();
-        while (fileScanner.hasNext()) {
-            file.append(fileScanner.nextLine());
-            file.append("\n");
-        }
-
-        String filetext = file.toString();
-        // Ignore repeated newlines using regex
-        Pattern newlines = Pattern.compile("\n{2,}");
-        Matcher matcher = newlines.matcher(filetext);
-
-        int countExpressions = 0;
-        while (matcher.find())
-            countExpressions++;
-        countExpressions++; // Count the last expression
-
-        // Parse the answer expressions
-        try {
-            fileScanner = new Scanner(new File(answerURL));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        String line;
-        List<LambdaExpression>[] userReductions = new List[countExpressions];
-
-        for (int i = 0; i < userReductions.length; i++) {
-            userReductions[i] = new ArrayList<>();
-
-            line = fileScanner.nextLine();
-            while(!"".equals(line) && fileScanner.hasNext()){
-                try {
-                    userReductions[i].add(Parser.parse(line));
-                } catch (InvalidExpressionException e) {
-                    e.printStackTrace();
-                }
-                line = fileScanner.nextLine();
-            }
-        }
-
+    public static double markReductionsFromFile(String problemSetFilename, String answerFilename) throws IOException {
         // Read in the questions
-        ProblemSet pset = null;
-        pset = new ProblemSet(new File(problemSetURL));
+        ProblemSet problemSet = new ProblemSet(new File(problemSetFilename));
 
         // Submit the answers to the problems
-        for (int i = 0; i < pset.size(); i++) {
-            Problem currentProblem = pset.nextProblem();
+        Problem currentProblem = problemSet.nextProblem();
+        BufferedReader answerReader = new BufferedReader(new FileReader(answerFilename));
 
-            for (LambdaExpression userReduction : userReductions[i]) {
-                currentProblem.submitStep(userReduction);
+        // Eat empty lines at beginning of file
+        String line = answerReader.readLine();
+        while (line != null && line.isEmpty()) {
+            line = answerReader.readLine();
+        }
+
+        while (line != null) {
+            if (line.isEmpty()) {
+                currentProblem = problemSet.nextProblem();
+                while (line != null && line.isEmpty()) {
+                    line = answerReader.readLine();
+                }
+            } else {
+                currentProblem.submitStep(line);
             }
         }
 
-        return pset.getMark();
+        return problemSet.getMark();
     }
 
     /**
@@ -144,6 +109,8 @@ public class Marker {
         } catch(IndexOutOfBoundsException e){
             System.out.println("Error: expected problem set filename as the first argument and answer file name as " +
                     "the second argument.");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
