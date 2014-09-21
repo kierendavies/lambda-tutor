@@ -2,20 +2,36 @@ package za.ac.uct.cs.ddd.lambda.tutor;
 
 public class Lesson {
 
-    private String lessonText;
+    private String name;
+    private String text;
     private ProblemSet problems;
 
-    public Lesson(String text, ProblemSet problems){
-        this.lessonText = text;
+    public Lesson(String name, String text, ProblemSet problems){
+        this.name = name;
+        this.text = text;
         this.problems = problems;
     }
 
+    public Lesson(String name, String text, String url){
+        this.name = name;
+        this.text = text;
+        this.problems = new ProblemSet("Lesson problem set", url);
+    }
+
     public void setLessonText(String text){
-        lessonText = text;
+        this.text = text;
     }
 
     public String getLessonText(){
-        return lessonText;
+        return text;
+    }
+
+    public String getLessonName(){
+        return name;
+    }
+
+    public ProblemSet getProblemSet(){
+        return new ProblemSet(problems);
     }
 
 }
