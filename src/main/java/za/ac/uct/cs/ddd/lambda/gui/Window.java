@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 /**
  *
  */
+
 public class Window extends JFrame implements ActionListener {
 
     MainMenu menu;
@@ -29,7 +30,7 @@ public class Window extends JFrame implements ActionListener {
 
         menu = new MainMenu(this);
         calculator = new CalcView(this);
-        tutor = new TutView(this, "");
+        tutor = new TutView(this);
         marker = new MarkView(this);
         this.setContentPane(menu);
     }
@@ -39,22 +40,24 @@ public class Window extends JFrame implements ActionListener {
         String actionCommand = e.getActionCommand();
 
         if (actionCommand == "Main menu") {
-            this.setContentPane(menu);
+            setPanel(menu);
         } else if (actionCommand == "Calculator") {
-            removePane();
-            this.setContentPane(calculator);
-            // CalcController c_controller = new CalcController(calculator);
-            pack();
+            setPanel(calculator);
         } else if (actionCommand == "Tutor") {
-            removePane();
-            this.setContentPane(tutor);
-            pack();
+            setPanel(tutor);
         } else if (actionCommand == "Marker") {
-            removePane();
-            this.setContentPane(marker);
-            //MarkController m_controller = new MarkController(marker);
-            pack();
+            setPanel(marker);
+
         }
+    }
+
+    /**
+     * @param panel
+     */
+    private void setPanel(JPanel panel) {
+        removePane();
+        this.setContentPane(panel);
+        pack();
     }
 
     /**

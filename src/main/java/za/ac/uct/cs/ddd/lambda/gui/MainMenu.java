@@ -37,11 +37,7 @@ public class MainMenu extends SizeablePanel {
         setVisible(true);
     }
 
-    /**
-     * Adds a button to a specified container
-     * @param text The text of the button
-     * @param container The  Container which to add the button to.
-     */
+
     private void addButton(String text, Container container) {
         JButton button = new JButton(text);
         button.setFont(new Font("Serif", Font.PLAIN, 20));
@@ -57,12 +53,3 @@ public class MainMenu extends SizeablePanel {
 
 }
 
-       /* addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                repaint();
-            }
-
-    });*/
-
-// setBorder(new EmptyBorder(0,width/4,height/6,width/4));

@@ -23,7 +23,7 @@ public class TutView extends ContentWindow {
     JTextArea inputArea;
     JButton menuButton;
 
-    public TutView(Window parent, String file) {
+    public TutView(Window parent) {
         super(parent);
 
 
@@ -37,7 +37,7 @@ public class TutView extends ContentWindow {
         gbc.weightx = 2;
         gbc.weighty = 5;
         gbc.insets = new Insets(10, 10, 10, 10);
-        //inputArea.setFocusTraversalKeys();
+
         add(inputArea, gbc);
 
 
@@ -81,19 +81,4 @@ public class TutView extends ContentWindow {
 
         }
     }
-
-
-
-
-  /*  //Not Happy
-
-     void addComboBoxListener (ActionListener actionListener){
-         problemList.addActionListener(actionListener);
-     }
-
-   /* @Override
-
-    }*/
-
-
 }

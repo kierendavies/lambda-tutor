@@ -15,10 +15,10 @@ import java.awt.event.ActionListener;
 import static za.ac.uct.cs.ddd.lambda.tutor.Marker.markReductionsFromFile;
 
 public class MarkView extends ContentWindow {
-    ReductionOrder order = ReductionOrder.NORMAL;
     JTextArea feedbackArea;
-    JRadioButton normalButton;
-    JRadioButton applicativeButton;
+    private ReductionOrder reductionOrder;
+    JRadioButton normalOrderButton;
+    JRadioButton applicativeOrderButton;
     ButtonGroup group;
     JButton markButton, browseButton;
     JTextField locationField;
@@ -71,20 +71,20 @@ public class MarkView extends ContentWindow {
 
 
         // Create radio buttons
-        normalButton = new JRadioButton("Normal Form");
-        applicativeButton = new JRadioButton("Applicative Form");
-        normalButton.setFont(new Font("Serif", Font.PLAIN, 14));
-        applicativeButton.setFont(new Font("Serif", Font.PLAIN, 14));
+        normalOrderButton = new JRadioButton("Normal Form");
+        applicativeOrderButton = new JRadioButton("Applicative Form");
+        normalOrderButton.addActionListener(event -> reductionOrder = ReductionOrder.NORMAL);
+        applicativeOrderButton.addActionListener(event -> reductionOrder = ReductionOrder.APPLICATIVE);
 
 
         //Create and set up button group
         group = new ButtonGroup();
-        group.add(normalButton);
-        group.add(applicativeButton);
+        group.add(normalOrderButton);
+        group.add(applicativeOrderButton);
 
         //Add button to panel
-        radioPane.add(normalButton);
-        radioPane.add(applicativeButton);
+        radioPane.add(normalOrderButton);
+        radioPane.add(applicativeOrderButton);
 
 
         //GridBag constraints for radio pane
@@ -141,25 +141,6 @@ public class MarkView extends ContentWindow {
 
     }
 
-    /**
-     * Sets the current order.
-     *
-     * @param order The order to use as the current order
-     */
-    public void setOrder(ReductionOrder order) {
-        this.order = order;
-    }
-
-    /**
-     * Gets the current order.
-     *
-     * @return The current order
-     */
-    public ReductionOrder getOrder() {
-        return order;
-
-    }
-
 
     /**
      * Returns the filename that the user selects
@@ -185,10 +166,9 @@ public class MarkView extends ContentWindow {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            markReductionsFromFile(getFileName());
+            markReductionsFromFile(getFileName(), reductionOrder);
         }
     }
 
 
 }
-
