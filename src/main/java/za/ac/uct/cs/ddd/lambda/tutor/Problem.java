@@ -88,12 +88,13 @@ public abstract class Problem {
 
     /**
      * Checks that a given reduction is correct for this problem. If correct, the current reduction is set to the next
-     * reduction.
+     * reduction. Note that the same ReductionOrder should be passed to this method each time, or the result might not
+     * properly conform to either order.
      * @param userReduction A LambdaExpression representing the attempted reduction.
      * @param order The reduction order used.
      * @return true if the given reduction is correct, false otherwise.
      */
-    public boolean submitStep(LambdaExpression userReduction, ReductionOrder order){
+    public abstract boolean submitStep(LambdaExpression userReduction);
         ReductionResult tutorReduction = expression.reduceOnce(order);
         if(userReduction.alphaEquivalentTo(tutorReduction.getReducedExpression())) {
             expression = userReduction; //TODO: change marks when the reduction is correct
@@ -103,10 +104,13 @@ public abstract class Problem {
     }
 
     public double getMark(){
-        return mark;
+        if(totalMark != 0)
+            return (double)(mark/totalMark);
+        else
+            return 0;
     }
 
-    public String getMessage(){
-        return message;
+    public List<String> getMessage(){
+        return new ArrayList<>(messages);
     }
 }
