@@ -1,6 +1,12 @@
 package za.ac.uct.cs.ddd.lambda.tutor;
 
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +17,7 @@ public class ProblemSet {
 
     private List<Problem> problems;
     private int currentProblem;
+    private String title;
 
     public ProblemSet(List<Problem> problems){
         currentProblem = 0;
@@ -37,11 +44,28 @@ public class ProblemSet {
      * </problemset>
      *
      * Where each problem follows the same format as found in the problem class.
-     * @param xmlFile A file containing text in the format above representing the problem set.
+     * @param url A string containing a path to an xml file with a problem set defined.
      */
-    public ProblemSet(File xmlFile){
+    public ProblemSet(String url){
         currentProblem = 0;
-        //TODO: parse the file
+
+        SAXBuilder builder = new SAXBuilder();
+        File xmlFile = new File(url);
+
+        try {
+            Document doc = builder.build(xmlFile);
+            Element rootNode = doc.getRootElement();
+
+            title = rootNode.getChildText("name");
+
+            List<Element> problemNodes = rootNode.getChild("problems").getChildren();
+            problems = new ArrayList<>();
+            for (Element problemNode : problemNodes) {
+                problems.add(Problem.parseProblemNode(problemNode));
+            }
+        } catch (JDOMException | IOException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -60,6 +84,10 @@ public class ProblemSet {
      */
     public Problem getProblem(){
         return problems.get(currentProblem);
+    }
+
+    public String getTitle(){
+        return title;
     }
 
     /**
