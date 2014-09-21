@@ -106,50 +106,55 @@ public abstract class Problem {
      *     <start>(λn.λf.λx.f (n f x)) (λf.λx.x)</start>
      *     <steps>10</steps> (optional)
      * </problem>
-     * @param xmlFile A file containing text in the format above representing the problem.
+     * @param url A string containing a path to an xml file with a single problem.
      * @return A Problem subclass with the specified configuration.
      */
-    public static Problem parseXML(File xmlFile) throws NoSuchFieldException{
+    public static Problem parseXML(String url) throws NoSuchFieldException{
         SAXBuilder builder = new SAXBuilder();
+        File xmlFile = new File(url);
 
         try {
             Document doc = builder.build(xmlFile);
             Element rootNode = doc.getRootElement();
-            String type = rootNode.getChildText("type");
-            String expression = rootNode.getChildText("start");
-            String orderString = rootNode.getChildText("order");
-            String stepsText = rootNode.getChildText("steps");
-            int maxSteps = stepsText == null ? -1 : Integer.parseInt(stepsText);
 
-            ReductionOrder order;
-            switch (orderString) {
-                case "reductionNormal":
-                    order = ReductionOrder.NORMAL;
-                    break;
-                case "reductionApplicative":
-                    order = ReductionOrder.APPLICATIVE;
-                    break;
-                default:
-                    throw new NoSuchFieldException("Invalid order supplied. Order must be one of reductionNormal or " +
-                            "reductionApplicative.");
-            }
-
-            if(type.equals("simplification")){
-                if(maxSteps > 0){
-                    return new SimplificationProblem(expression, order, maxSteps);
-                } else {
-                    return new SimplificationProblem(expression, order);
-                }
-            } else{
-                throw new NoSuchFieldException("Invalid problem type supplied. Problem types must be one of " +
-                        "simplification, conversion, reduction, bracketing or labelling.");
-            }
-
-        } catch (JDOMException | IOException e) {
+            return parseProblemNode(rootNode);
+        } catch (JDOMException | IOException | NoSuchFieldException e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    protected static Problem parseProblemNode(Element problemNode) throws NoSuchFieldException {
+        String type = problemNode.getChildText("type");
+        String expression = problemNode.getChildText("start");
+        String orderString = problemNode.getChildText("order");
+        String stepsText = problemNode.getChildText("steps");
+        int maxSteps = stepsText == null ? -1 : Integer.parseInt(stepsText);
+
+        ReductionOrder order;
+        switch (orderString) {
+            case "reductionNormal":
+                order = ReductionOrder.NORMAL;
+                break;
+            case "reductionApplicative":
+                order = ReductionOrder.APPLICATIVE;
+                break;
+            default:
+                throw new NoSuchFieldException("Invalid order supplied. Order must be one of reductionNormal or " +
+                        "reductionApplicative.");
+        }
+
+        if(type.equals("simplification")){
+            if(maxSteps > 0){
+                return new SimplificationProblem(expression, order, maxSteps);
+            } else {
+                return new SimplificationProblem(expression, order);
+            }
+        } else{
+            throw new NoSuchFieldException("Invalid problem type supplied. Problem types must be one of " +
+                    "simplification, conversion, reduction, bracketing or labelling.");
+        }
     }
 
     /**
