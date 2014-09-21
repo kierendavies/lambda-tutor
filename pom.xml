@@ -69,11 +69,11 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <!--<archive>-->
-                        <!--<manifest>-->
-                            <!--<mainClass>za.ac.uct.cs.ddd.lambda.Repl</mainClass>-->
-                        <!--</manifest>-->
-                    <!--</archive>-->
+                    <archive>
+                        <manifest>
+                            <mainClass>za.ac.uct.cs.ddd.lambda.gui.Driver</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
