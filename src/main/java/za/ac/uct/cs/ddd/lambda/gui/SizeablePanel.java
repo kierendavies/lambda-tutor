@@ -4,20 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by matthew on 2014/08/16.
+ *
  */
 public class SizeablePanel extends JPanel {
 
-    int width;
-    int height;
+    static final int WIDTH = 600;
+    static final int HEIGHT = 450;
 
 
     public SizeablePanel() {
-        // setBackground(Color.black);
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        width = (int) ((gd.getDisplayMode().getWidth()) * 0.41);
-        height = (int) ((gd.getDisplayMode().getHeight()) * 0.47);
-        setPreferredSize(new Dimension(width, height));
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setLayout(new BorderLayout());
 
 
@@ -26,7 +22,7 @@ public class SizeablePanel extends JPanel {
 
     public void addTitle(String title) {
         JPanel titlePane = new JPanel();
-        Font fnt0 = new Font("arial", Font.BOLD, 72);
+        Font fnt0 = new Font("arial", Font.BOLD, 65);
         JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(fnt0);
         titlePane.add(titleLabel);

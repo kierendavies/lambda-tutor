@@ -17,14 +17,14 @@ public class MainMenu extends SizeablePanel {
         addTitle("\u03bbambda");
 
         //Add Border
-        setBorder(new EmptyBorder(0, width / 4, height / 8, width / 4));
+        setBorder(new EmptyBorder(0, WIDTH / 4, HEIGHT / 8, WIDTH / 4));
 
         //Create and add button pane:
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.PAGE_AXIS));
 
 
-        buttonPane.add(Box.createRigidArea(new Dimension(0, width / 50)));
+        buttonPane.add(Box.createRigidArea(new Dimension(0, WIDTH / 50)));
 
 
         //Adding  buttons to the pane
@@ -39,12 +39,12 @@ public class MainMenu extends SizeablePanel {
 
     private void addButton(String text, Container container) {
         JButton button = new JButton(text);
-        button.setFont(new Font("Serif", Font.PLAIN, 20));
-        button.setMaximumSize(new Dimension((2 * width) / 3, height / 3));
+
+        button.setMaximumSize(new Dimension((2 * WIDTH) / 3, HEIGHT / 3));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(parentFrame);
         container.add(button);
-        container.add(Box.createRigidArea(new Dimension(0, width / 70)));
+        container.add(Box.createRigidArea(new Dimension(0, WIDTH / 70)));
 
 
     }

@@ -18,19 +18,19 @@ class CalcView extends ContentWindow {
 
     public CalcView(Window parent) {
         super(parent);
-        Calculator calculator  = new Calculator();
+        Calculator calculator = new Calculator();
 
-     GridBagConstraints gbc = new GridBagConstraints();
-     gbc.gridx =0;
-     gbc.gridy  =0;
-     gbc.gridwidth =6;
-     gbc.gridheight = 3;
-     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-     gbc.fill = GridBagConstraints.BOTH;
-     gbc.weightx =2;
-     gbc.weighty =6;
-     gbc.insets = new Insets(10, 10, 20, 10);
-      add(calculator ,gbc);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 6;
+        gbc.gridheight = 7;
+        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 2;
+        gbc.weighty = 8;
+        gbc.insets = new Insets(10, 10, 50, 10);
+        add(calculator, gbc);
     }
 
 

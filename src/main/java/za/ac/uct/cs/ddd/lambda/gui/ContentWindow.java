@@ -22,12 +22,10 @@ public class ContentWindow extends SizeablePanel {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 7;
-        //gbc.gridheight=2;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weighty = 1;
         gbc.insets = new Insets(0, 10, 10, 0);
         menuButton.addActionListener(new MainMenuListener());
-        menuButton.setFont(new Font("Serif", Font.PLAIN, 14));
         add(menuButton, gbc);
 
 
