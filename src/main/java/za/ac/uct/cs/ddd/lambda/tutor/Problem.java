@@ -165,6 +165,10 @@ public abstract class Problem {
             return 0;
     }
 
+    /**
+     * Returns the messages accrued for this problem.
+     * @return The list of messages
+     */
     public List<String> getMessage(){
         return new ArrayList<>(messages);
     }
