@@ -81,7 +81,6 @@ public abstract class Problem {
      * @param maxIterations The maximum number of iterations that should be done when reducing the expression.
      */
     public Problem(LambdaExpression startExpression, ReductionOrder order, int maxIterations){
-        mark = 0;
         expression = startExpression.clone();
         reductionOrder = order;
         reductions = expression.reductions(order, maxIterations);
@@ -95,7 +94,6 @@ public abstract class Problem {
      * reduction. Note that the same ReductionOrder should be passed to this method each time, or the result might not
      * properly conform to either order.
      * @param userReduction A LambdaExpression representing the attempted reduction.
-     * @param order The reduction order used.
      * @return true if the given reduction is correct, false otherwise.
      */
     public abstract boolean submitStep(LambdaExpression userReduction);
