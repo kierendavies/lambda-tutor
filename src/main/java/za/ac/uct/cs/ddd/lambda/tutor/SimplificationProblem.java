@@ -66,6 +66,7 @@ public class SimplificationProblem extends Problem{
             userReduction = Parser.parse(submission);
         } catch (InvalidExpressionException e) {
             totalMark++;
+            messages.add("Invalid expression ("+this.mark+"/"+this.totalMark+"): "+submission);
             return false;
         }
 
@@ -74,11 +75,15 @@ public class SimplificationProblem extends Problem{
             mark++;
             totalMark++;
             expression = tutorReduction.getReducedExpression();
+            messages.add("Correct reduction ("+this.mark+"/"+this.totalMark+"): "+userReduction.toString());
             return true;
         } else if(userReduction.alphaEquivalentTo(expression)) {
+            messages.add("Extra alpha conversion: "+userReduction.toString());
             return true;
         }
         else {
+            messages.add("Incorrect reduction ("+this.mark+"/"+this.totalMark+"): "+userReduction+
+                    " Expected: "+tutorReduction.getReducedExpression().toString());
             totalMark++;
             expression = tutorReduction.getReducedExpression();
             return userReduction.alphaEquivalentTo(expression);
