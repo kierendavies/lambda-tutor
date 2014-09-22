@@ -47,7 +47,7 @@ public class ProblemSet {
      * Where each problem follows the same format as found in the problem class.
      * @param xmlFile A file object containing xml with a problem set defined as above.
      */
-    public ProblemSet(File xmlFile){
+    public ProblemSet(File xmlFile) throws IOException{
         currentProblem = 0;
 
         try {
@@ -62,7 +62,7 @@ public class ProblemSet {
             for (Element problemNode : problemNodes) {
                 problems.add(Problem.parseProblemNode(problemNode));
             }
-        } catch (JDOMException | IOException | NoSuchFieldException e) {
+        } catch (JDOMException | NoSuchFieldException e) {
             e.printStackTrace();
         }
     }
@@ -138,7 +138,7 @@ public class ProblemSet {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException{
         File psetFile = new File(args[0]);
         ProblemSet set = new ProblemSet(psetFile);
     }
