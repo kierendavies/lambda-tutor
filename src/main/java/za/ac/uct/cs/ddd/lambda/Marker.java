@@ -184,6 +184,16 @@ public class Marker {
         if(options.has("verbose"))
             opts += "v";
 
+        // Check that the problem set specification is an xml file
+        if(options.has("pset")){
+            String psetFilePath = (String)options.valueOf("pset");
+            if(!psetFilePath.contains(".xml")){
+                System.out.println("Invalid problem set file: "+psetFilePath+
+                                   "\nShould be an xml file (*.xml)");
+                System.exit(1);
+            }
+        }
+
         if(options.has("pset") && options.has("file")) {
             // Mark a single file
             try {
