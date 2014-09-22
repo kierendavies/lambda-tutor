@@ -12,7 +12,6 @@ public class SizablePanel extends JPanel {
         setLayout(new BorderLayout());
     }
 
-
     /**
      * Set the biggest of this panel to the specified string
      *

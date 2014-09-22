@@ -9,32 +9,30 @@ import java.awt.event.ActionListener;
  * Creates
  */
 public class MainMenu extends SizablePanel {
-    ActionListener parentFrame;
+    ActionListener actionListener;
 
+    public MainMenu(ActionListener actionListener) {
+        this.actionListener = actionListener;
 
-    public MainMenu(ActionListener l) {
-        this.parentFrame = l;
-
-        //Add title
+        // Add title
         addTitle("\u03bbambda");
 
-        //Add Border
+        // Add Border
         setBorder(new EmptyBorder(0, WIDTH / 4, HEIGHT / 8, WIDTH / 4));
 
-        //Create and add button pane:
+        // Create and add button pane
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.PAGE_AXIS));
 
         buttonPane.add(Box.createRigidArea(new Dimension(0, WIDTH / 50)));
 
-        //Adding  buttons to the pane
+        // Add buttons to the pane
         addButton(buttonPane, "Calculator");
         addButton(buttonPane, "Tutor");
         add(buttonPane);
 
         setVisible(true);
     }
-
 
     /**
      * Creates a button with text and adds it to the specified container.
@@ -47,7 +45,7 @@ public class MainMenu extends SizablePanel {
         button.setFont(Fonts.bigger);
         button.setMaximumSize(new Dimension((2 * WIDTH) / 3, HEIGHT / 3));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.addActionListener(parentFrame);
+        button.addActionListener(actionListener);
         container.add(button);
         container.add(Box.createRigidArea(new Dimension(0, WIDTH / 50)));
     }

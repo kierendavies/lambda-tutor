@@ -35,9 +35,6 @@ public class Window extends JFrame implements ActionListener {
         }
     }
 
-    /**
-     * @param panel
-     */
     private void setPanel(JPanel panel) {
         removePane();
         this.setContentPane(panel);
@@ -50,6 +47,5 @@ public class Window extends JFrame implements ActionListener {
     private void removePane() {
         remove(getContentPane());
         revalidate();
-//        repaint();
     }
 }
