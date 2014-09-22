@@ -17,6 +17,7 @@ import java.util.List;
 public abstract class Problem {
 
     protected LambdaExpression expression;
+    protected LambdaExpression firstExpression;
     protected ReductionOrder reductionOrder;
     protected List<ReductionResult> reductions;
     protected List<String> messages;
@@ -34,6 +35,7 @@ public abstract class Problem {
         } catch (InvalidExpressionException e) {
             e.printStackTrace();
         }
+        firstExpression = expression.clone();
         reductionOrder = order;
         reductions = expression.reductions(order);
         messages = new ArrayList<>();
@@ -48,6 +50,7 @@ public abstract class Problem {
      */
     public Problem(LambdaExpression startExpression, ReductionOrder order){
         expression = startExpression.clone();
+        firstExpression = expression.clone();
         reductionOrder = order;
         reductions = expression.reductions(order);
         messages = new ArrayList<>();
@@ -67,6 +70,7 @@ public abstract class Problem {
         } catch (InvalidExpressionException e) {
             e.printStackTrace();
         }
+        firstExpression = expression.clone();
         reductionOrder = order;
         reductions = expression.reductions(order, maxIterations);
         messages = new ArrayList<>();
@@ -82,6 +86,7 @@ public abstract class Problem {
      */
     public Problem(LambdaExpression startExpression, ReductionOrder order, int maxIterations){
         expression = startExpression.clone();
+        firstExpression = expression.clone();
         reductionOrder = order;
         reductions = expression.reductions(order, maxIterations);
         messages = new ArrayList<>();
@@ -180,5 +185,15 @@ public abstract class Problem {
      */
     public List<String> getMessage(){
         return new ArrayList<>(messages);
+    }
+
+    /**
+     * Resets the messages and marks in this Problem.
+     */
+    public void reset(){
+        expression = firstExpression.clone();
+        messages = new ArrayList<>();
+        mark = 0;
+        totalMark = 0;
     }
 }
