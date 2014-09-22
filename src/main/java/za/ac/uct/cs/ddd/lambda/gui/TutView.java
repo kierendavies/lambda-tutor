@@ -26,14 +26,11 @@ public class TutView extends ContentWindow {
 
 
     /**
-     *  Creates a new
+     * Creates a new
      * @param parent
-     * @param Filename
      */
-    public  TutView ( Window parent , String Filename){
+    public  TutView (Window parent){
         super(parent);
-
-
     }
 
     /**

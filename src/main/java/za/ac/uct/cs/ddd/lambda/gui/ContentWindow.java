@@ -7,37 +7,24 @@ import java.awt.event.ActionListener;
 
 
 public class ContentWindow extends SizablePanel {
-    GridBagConstraints gbc;
-    JButton menuButton;
-    String mode;
-    Window parent;
-
-    public ContentWindow(Window par) {
-        parent = par;
+    public ContentWindow(Window parent) {
         setLayout(new GridBagLayout());
-        gbc = new GridBagConstraints();
 
-
-        menuButton = new JButton("Main menu");
-        gbc = new GridBagConstraints();
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 7;
         gbc.fill = GridBagConstraints.NONE;
         gbc.weighty = 1;
-        gbc.insets = new Insets(0, 10, 10, 0);
+        gbc.insets = new Insets(3, 10, 3, 10);
+
+        JButton menuButton = new JButton("Main menu");
         menuButton.setPreferredSize(menuButton.getMaximumSize());
-        menuButton.addActionListener(new MainMenuListener());
+        menuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parent.setContentPane(parent.menu);
+            }
+        });
         add(menuButton, gbc);
-
-
     }
-
-    private class MainMenuListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            parent.setContentPane(parent.menu);
-        }
-    }
-
-
 }

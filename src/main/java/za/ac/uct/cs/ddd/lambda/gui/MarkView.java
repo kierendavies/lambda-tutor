@@ -12,7 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static za.ac.uct.cs.ddd.lambda.tutor.Marker.markReductionsFromFile;
+import static za.ac.uct.cs.ddd.lambda.Marker.markReductionsFromFile;
 
 public class MarkView extends ContentWindow {
     JTextArea feedbackArea;
@@ -35,35 +35,35 @@ public class MarkView extends ContentWindow {
         locationField = new JTextField("<<File or folder name here. >>");
 
         //GridBag constraints for JTextField
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 4;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 30;
-        gbc.insets = new Insets(10, 10, 0, 10);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 4;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 30;
+        constraints.insets = new Insets(10, 10, 0, 10);
 
 
         //Add JTextField to context
-        add(locationField, gbc);
+        add(locationField, constraints);
 
 
         //Create the JTextArea
         feedbackArea = new JTextArea(5, 20);
         //GridBag constraints for JTextArea
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 6;
-        gbc.gridheight = 3;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 2;
-        gbc.weighty = 5;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        constraints.gridwidth = 6;
+        constraints.gridheight = 3;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 2;
+        constraints.weighty = 5;
+        constraints.insets = new Insets(10, 10, 10, 10);
 
 
         //Add JTextArea to context pane
-        add(feedbackArea, gbc);
+        add(feedbackArea, constraints);
 
 
         // Create radio button panel
@@ -88,17 +88,17 @@ public class MarkView extends ContentWindow {
 
 
         //GridBag constraints for radio pane
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridheight = 1;
-        gbc.gridwidth = 2;
-        gbc.insets = new Insets(10, 10, 0, 10);
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 5;
+        constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridheight = 1;
+        constraints.gridwidth = 2;
+        constraints.insets = new Insets(10, 10, 0, 10);
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 5;
 
         //Add radio pane to context pane
-        add(radioPane, gbc);
+        add(radioPane, constraints);
 
 
         //Create "mark" JButton
@@ -106,12 +106,12 @@ public class MarkView extends ContentWindow {
         markButton.addActionListener(new MarkListener());
 
         //GridBag constraints for JButton
-        gbc = new GridBagConstraints();
-        gbc.gridx = 4;
-        gbc.gridy = 1;
-        gbc.insets = new Insets(10, 0, 0, 10);
-        gbc.fill = GridBagConstraints.BOTH;
-        add(markButton, gbc);
+        constraints = new GridBagConstraints();
+        constraints.gridx = 4;
+        constraints.gridy = 1;
+        constraints.insets = new Insets(10, 0, 0, 10);
+        constraints.fill = GridBagConstraints.BOTH;
+        add(markButton, constraints);
 
 
         //Create "browse" JButton
@@ -120,13 +120,13 @@ public class MarkView extends ContentWindow {
 
 
         //GridBag constraints for JButton
-        gbc = new GridBagConstraints();
-        gbc.gridx = 4;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 0, 0, 10);
-        gbc.weighty = 0.5;
-        gbc.fill = GridBagConstraints.BOTH;
-        add(browseButton, gbc);
+        constraints = new GridBagConstraints();
+        constraints.gridx = 4;
+        constraints.gridy = 0;
+        constraints.insets = new Insets(10, 0, 0, 10);
+        constraints.weighty = 0.5;
+        constraints.fill = GridBagConstraints.BOTH;
+        add(browseButton, constraints);
 
 
     }
@@ -166,7 +166,7 @@ public class MarkView extends ContentWindow {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            markReductionsFromFile(getFileName(), reductionOrder);
+//            markReductionsFromFile(getFileName(), reductionOrder);
         }
     }
 
