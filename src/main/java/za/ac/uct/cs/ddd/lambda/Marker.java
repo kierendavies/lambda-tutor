@@ -173,7 +173,7 @@ public class Marker {
         parser.acceptsAll(Arrays.asList("v", "verbose"),
                           "Print out each filename followed by the messages associated with each reduction" +
                           "(to see mistakes in reductions)");
-        parser.acceptsAll(Arrays.asList("d", "debug"),
+        parser.acceptsAll(Arrays.asList("g", "debug"),
                           "As verbose, with additional debug messages. Shows all messages associated with reductions.");
 
         OptionSet options = parser.parse(args);
