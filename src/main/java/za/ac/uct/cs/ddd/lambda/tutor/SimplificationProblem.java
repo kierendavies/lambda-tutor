@@ -12,7 +12,7 @@ public class SimplificationProblem extends Problem{
      * @param startExpression A string representing the starting expression of the problem.
      * @param order The order in which the expressions in this problem must be reduced.
      */
-    public SimplificationProblem(String startExpression, ReductionOrder order){
+    public SimplificationProblem(String startExpression, ReductionOrder order) throws InvalidExpressionException{
         super(startExpression, order);
     }
 
@@ -31,7 +31,7 @@ public class SimplificationProblem extends Problem{
      * @param order The order in which the expressions in this problem must be reduced.
      * @param maxIterations The maximum number of iterations that should be done when reducing the expression.
      */
-    public SimplificationProblem(String startExpression, ReductionOrder order, int maxIterations){
+    public SimplificationProblem(String startExpression, ReductionOrder order, int maxIterations) throws InvalidExpressionException{
         super(startExpression, order, maxIterations);
     }
 
@@ -43,6 +43,14 @@ public class SimplificationProblem extends Problem{
      */
     public SimplificationProblem(LambdaExpression startExpression, ReductionOrder order, int maxIterations) {
         super(startExpression, order, maxIterations);
+    }
+
+    /**
+     * Copy constructor. Creates a deep copy of the other Problem.
+     * @param other The Problem to copy.
+     */
+    public SimplificationProblem(Problem other){
+        super(other);
     }
 
     /**
@@ -58,6 +66,7 @@ public class SimplificationProblem extends Problem{
             userReduction = Parser.parse(submission);
         } catch (InvalidExpressionException e) {
             totalMark++;
+            messages.add("Invalid expression ("+this.mark+"/"+this.totalMark+"): "+submission);
             return false;
         }
 
@@ -66,13 +75,17 @@ public class SimplificationProblem extends Problem{
             mark++;
             totalMark++;
             expression = tutorReduction.getReducedExpression();
+            messages.add("Correct reduction ("+this.mark+"/"+this.totalMark+"): "+userReduction.toString());
             return true;
         } else if(userReduction.alphaEquivalentTo(expression)) {
+            messages.add("Extra alpha conversion: "+userReduction.toString());
             return true;
         }
         else {
             totalMark++;
             expression = tutorReduction.getReducedExpression();
+            messages.add("Incorrect reduction ("+this.mark+"/"+this.totalMark+"): "+userReduction.toString()+
+                    "\nExpected: "+tutorReduction.getReducedExpression().toString());
             return userReduction.alphaEquivalentTo(expression);
         }
     }

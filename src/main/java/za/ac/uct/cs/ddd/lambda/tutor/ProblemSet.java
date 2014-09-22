@@ -33,7 +33,7 @@ public class ProblemSet {
      *     <problems>
      *         <problem>
      *             <type>simplification | conversion | reduction | bracketing | labelling</type>
-     *             <order>reductionNormal | reductionApplicative</order>
+     *             <order>normal | applicative</order>
      *             <start>(λn.λf.λx.f (n f x)) (λf.λx.x)</start>
      *             <steps>10</steps> (optional)
      *         </problem>
@@ -47,7 +47,7 @@ public class ProblemSet {
      * Where each problem follows the same format as found in the problem class.
      * @param xmlFile A file object containing xml with a problem set defined as above.
      */
-    public ProblemSet(File xmlFile){
+    public ProblemSet(File xmlFile) throws IOException{
         currentProblem = 0;
 
         try {
@@ -60,17 +60,24 @@ public class ProblemSet {
             List<Element> problemNodes = rootNode.getChild("problems").getChildren();
             problems = new ArrayList<>();
             for (Element problemNode : problemNodes) {
-                problems.add(Problem.parseProblemNode(problemNode));
+                Problem newProblem = Problem.parseProblemNode(problemNode);
+                if(newProblem != null) problems.add(newProblem);
             }
-        } catch (JDOMException | IOException | NoSuchFieldException e) {
-            e.printStackTrace();
+        } catch (JDOMException e) {
+            System.out.println("Error parsing xml file: "+xmlFile.getName());
+        } catch (NoSuchFieldException e){
+            System.out.println(e.getMessage());
         }
     }
 
     public ProblemSet(ProblemSet pset){
         this.title = pset.title;
         this.currentProblem = pset.currentProblem;
-        this.problems = new ArrayList<>(pset.problems);
+        this.problems = new ArrayList<>();
+        for (Problem problem : pset.problems) {
+            if(problem instanceof SimplificationProblem)
+                this.problems.add(new SimplificationProblem(problem));
+        }
     }
 
     /**
@@ -78,7 +85,7 @@ public class ProblemSet {
      * @return A reference to the current problem. Returns null if the last problem has already been returned.
      */
     public Problem nextProblem(){
-        if(currentProblem > problems.size())
+        if(currentProblem >= problems.size())
             return null;
         else {
             Problem next = problems.get(currentProblem);
@@ -113,14 +120,14 @@ public class ProblemSet {
     /**
      * Calculates an evenly weighted average of the marks of all of the problems in this problem set. The mark is a
      * percentage in the range [0, 100].
-     * @return An overall mark for the problem set, normalised to be in the interval [0,1].
+     * @return An overall mark for the problem set, normalised to be in the interval [0,100].
      */
     public double getMark(){
         double mark = 0;
         for (Problem problem : problems) {
             mark += problem.getMark();
         }
-        return mark/problems.size()*100;
+        return problems.size()>0 ? mark/problems.size()*100 : 0;
     }
 
     /**
@@ -131,7 +138,17 @@ public class ProblemSet {
         return problems.size();
     }
 
-    public static void main(String[] args) {
+    /**
+     * Resets the current problem to the beginning of the problem set and resets all problems in the problem set.
+     */
+    public void reset(){
+        currentProblem = 0;
+        for (Problem problem : problems) {
+            problem.reset();
+        }
+    }
+
+    public static void main(String[] args) throws IOException{
         File psetFile = new File(args[0]);
         ProblemSet set = new ProblemSet(psetFile);
     }

@@ -17,6 +17,7 @@ import java.util.List;
 public abstract class Problem {
 
     protected LambdaExpression expression;
+    protected final LambdaExpression firstExpression;
     protected ReductionOrder reductionOrder;
     protected List<ReductionResult> reductions;
     protected List<String> messages;
@@ -28,12 +29,9 @@ public abstract class Problem {
      * @param startExpression A string representing the starting expression of the problem.
      * @param order The order in which the expressions in this problem must be reduced.
      */
-    public Problem(String startExpression, ReductionOrder order){
-        try {
-            expression = Parser.parse(startExpression);
-        } catch (InvalidExpressionException e) {
-            e.printStackTrace();
-        }
+    public Problem(String startExpression, ReductionOrder order) throws InvalidExpressionException{
+        expression = Parser.parse(startExpression);
+        firstExpression = expression.clone();
         reductionOrder = order;
         reductions = expression.reductions(order);
         messages = new ArrayList<>();
@@ -48,6 +46,7 @@ public abstract class Problem {
      */
     public Problem(LambdaExpression startExpression, ReductionOrder order){
         expression = startExpression.clone();
+        firstExpression = expression.clone();
         reductionOrder = order;
         reductions = expression.reductions(order);
         messages = new ArrayList<>();
@@ -61,12 +60,9 @@ public abstract class Problem {
      * @param order The order in which the expressions in this problem must be reduced.
      * @param maxIterations The maximum number of iterations that should be done when reducing the expression.
      */
-    public Problem(String startExpression, ReductionOrder order, int maxIterations){
-        try {
-            expression = Parser.parse(startExpression);
-        } catch (InvalidExpressionException e) {
-            e.printStackTrace();
-        }
+    public Problem(String startExpression, ReductionOrder order, int maxIterations) throws InvalidExpressionException{
+        expression = Parser.parse(startExpression);
+        firstExpression = expression.clone();
         reductionOrder = order;
         reductions = expression.reductions(order, maxIterations);
         messages = new ArrayList<>();
@@ -82,11 +78,26 @@ public abstract class Problem {
      */
     public Problem(LambdaExpression startExpression, ReductionOrder order, int maxIterations){
         expression = startExpression.clone();
+        firstExpression = expression.clone();
         reductionOrder = order;
         reductions = expression.reductions(order, maxIterations);
         messages = new ArrayList<>();
         mark = 0;
         totalMark = 0;
+    }
+
+    /**
+     * Copy constructor. Creates a deep copy of the other problem.
+     * @param other The Problem to copy.
+     */
+    public Problem(Problem other){
+        this.expression = other.expression.clone();
+        this.firstExpression = other.firstExpression.clone();
+        this.reductionOrder = other.reductionOrder;
+        this.reductions = new ArrayList<>(other.reductions);
+        this.messages = new ArrayList<>(other.messages);
+        this.mark = other.mark;
+        this.totalMark = other.totalMark;
     }
 
     /**
@@ -102,7 +113,7 @@ public abstract class Problem {
      * Parses the text in an xml file into a problem. The general format for the file is as follows:
      * <problem>
      *     <type>simplification | conversion | reduction | bracketing | labelling</type>
-     *     <order>reductionNormal | reductionApplicative</order>
+     *     <order>normal | applicative</order>
      *     <start>(λn.λf.λx.f (n f x)) (λf.λx.x)</start>
      *     <steps>10</steps> (optional)
      * </problem>
@@ -128,8 +139,8 @@ public abstract class Problem {
     /**
      * Parses a single problem node into a Problem.
      * @param problemNode The jdom element representing a problem.
-     * @return A problem constructed from the information in the problem node.
-     * @throws NoSuchFieldException
+     * @return A problem constructed from the information in the problem node, or null if no information is provided.
+     * @throws NoSuchFieldException If incorrect values are found for either the order or type elements.
      */
     protected static Problem parseProblemNode(Element problemNode) throws NoSuchFieldException {
         String type = problemNode.getChildText("type");
@@ -140,26 +151,31 @@ public abstract class Problem {
 
         ReductionOrder order;
         switch (orderString) {
-            case "reductionNormal":
+            case "normal":
                 order = ReductionOrder.NORMAL;
                 break;
-            case "reductionApplicative":
+            case "applicative":
                 order = ReductionOrder.APPLICATIVE;
                 break;
             default:
-                throw new NoSuchFieldException("Invalid order supplied. Order must be one of reductionNormal or " +
-                        "reductionApplicative.");
+                throw new NoSuchFieldException("Invalid order supplied. Order must be one of normal or " +
+                        "applicative.");
         }
 
-        if(type.equals("simplification")){
-            if(maxSteps > 0){
-                return new SimplificationProblem(expression, order, maxSteps);
+        try {
+            if (type.equals("simplification")) {
+                if (maxSteps > 0) {
+                    return new SimplificationProblem(expression, order, maxSteps);
+                } else {
+                    return new SimplificationProblem(expression, order);
+                }
             } else {
-                return new SimplificationProblem(expression, order);
+                //TODO: add in new types of problems for conversion, reduction, bracketing and labelling.
+                throw new NoSuchFieldException("Invalid problem type supplied. Problem type must be simplification.");
             }
-        } else{
-            throw new NoSuchFieldException("Invalid problem type supplied. Problem types must be one of " +
-                    "simplification, conversion, reduction, bracketing or labelling.");
+        } catch (InvalidExpressionException e){
+            System.out.println("Invalid starting lambda expression found: "+e.getMessage());
+            return null;
         }
     }
 
@@ -178,7 +194,17 @@ public abstract class Problem {
      * Returns the messages accumulated for this problem.
      * @return The list of messages this problem has accumulated.
      */
-    public List<String> getMessage(){
+    public List<String> getMessages(){
         return new ArrayList<>(messages);
+    }
+
+    /**
+     * Resets the messages and marks in this Problem.
+     */
+    public void reset(){
+        expression = firstExpression.clone();
+        messages = new ArrayList<>();
+        mark = 0;
+        totalMark = 0;
     }
 }
