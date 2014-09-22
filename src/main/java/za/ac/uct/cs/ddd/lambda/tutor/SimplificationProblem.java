@@ -82,10 +82,10 @@ public class SimplificationProblem extends Problem{
             return true;
         }
         else {
-            messages.add("Incorrect reduction ("+this.mark+"/"+this.totalMark+"): "+userReduction+
-                    " Expected: "+tutorReduction.getReducedExpression().toString());
             totalMark++;
             expression = tutorReduction.getReducedExpression();
+            messages.add("Incorrect reduction ("+this.mark+"/"+this.totalMark+"): "+userReduction.toString()+
+                    ";\nExpected: "+tutorReduction.getReducedExpression().toString());
             return userReduction.alphaEquivalentTo(expression);
         }
     }
