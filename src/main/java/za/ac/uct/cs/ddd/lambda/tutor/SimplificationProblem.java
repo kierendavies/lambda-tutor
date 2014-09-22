@@ -46,6 +46,14 @@ public class SimplificationProblem extends Problem{
     }
 
     /**
+     * Copy constructor. Creates a deep copy of the other Problem.
+     * @param other The Problem to copy.
+     */
+    public SimplificationProblem(Problem other){
+        super(other);
+    }
+
+    /**
      * Submits a reduction to the problem. This checks whether the submitted reduction is correct and changes the mark
      * appropriately. Any extra alpha conversions are ignored.
      * @param submission A LambdaExpression representing the attempted reduction.

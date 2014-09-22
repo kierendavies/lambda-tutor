@@ -70,7 +70,11 @@ public class ProblemSet {
     public ProblemSet(ProblemSet pset){
         this.title = pset.title;
         this.currentProblem = pset.currentProblem;
-        this.problems = new ArrayList<>(pset.problems);
+        this.problems = new ArrayList<>();
+        for (Problem problem : pset.problems) {
+            if(problem instanceof SimplificationProblem)
+                this.problems.add(new SimplificationProblem(problem));
+        }
     }
 
     /**
