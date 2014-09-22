@@ -31,6 +31,7 @@ public class Marker {
         boolean verbose = opts.contains("v") || debug;
 
         // Submit the answers to the problems
+
         Problem currentProblem = problemSet.nextProblem();
         BufferedReader answerReader = new BufferedReader(new FileReader(answerFilename));
 
@@ -191,10 +192,10 @@ public class Marker {
             }
         }
 
+        // Mark a single file
         if(options.has("pset") && options.has("file")) {
-            // Mark a single file
             try {
-                System.out.println("Score for reductions in " + options.valueOf("file") +
+                System.out.println("\nScore for reductions in " + options.valueOf("file") +
                         "\nusing problem set " + options.valueOf("pset") + ": " +
                         markReductionsFromFile((String)options.valueOf("pset"), (String)options.valueOf("file"), opts)
                         +" %");
@@ -205,9 +206,11 @@ public class Marker {
                 System.out.println("Problem reading file (or IOException): "+e.getMessage());
             }
         }
+        // Mark all files in a directory
         if(options.has("pset") && options.has("dir")){
-            // Mark all files in a directory
             try {
+                System.out.println("Scores for .lam files in "+options.valueOf("dir"));
+                System.out.println("Using problem set "+options.valueOf("pset")+":\n");
                 markReductionsFromDir((String)options.valueOf("pset"), (String)options.valueOf("dir"), opts);
             } catch(FileNotFoundException e){
                 System.out.println("File not found: " + e.getMessage() +
