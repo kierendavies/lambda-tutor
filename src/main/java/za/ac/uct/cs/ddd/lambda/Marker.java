@@ -182,7 +182,8 @@ public class Marker {
      */
     public static void main(String[] args) {
 
-        try {
+        // Mark a single file
+        /*try {
             System.out.println("Score for reductions in "+args[1]+
                                 "using problem set"+args[0]+": "+
                                 markReductionsFromFile(args[0], args[1]));
@@ -191,9 +192,10 @@ public class Marker {
                     "the second argument.");
         } catch (IOException e) {
             System.out.println("File not found. Please check that the specified files exist and that the filenames " +
-                    "passed are correct.");;
-        }
+                    "passed are correct.");
+        }*/
 
+        // Mark all files in a directory
         markReductionsFromDir("/home/dave/Projects/Capstone Project/lambda_test_pset.txt",
                 "/home/dave/Projects/Capstone Project");
     }
