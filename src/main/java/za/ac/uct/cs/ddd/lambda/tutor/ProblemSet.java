@@ -60,7 +60,8 @@ public class ProblemSet {
             List<Element> problemNodes = rootNode.getChild("problems").getChildren();
             problems = new ArrayList<>();
             for (Element problemNode : problemNodes) {
-                problems.add(Problem.parseProblemNode(problemNode));
+                Problem newProblem = Problem.parseProblemNode(problemNode);
+                if(newProblem != null) problems.add(newProblem);
             }
         } catch (JDOMException | NoSuchFieldException e) {
             e.printStackTrace();
