@@ -63,8 +63,10 @@ public class ProblemSet {
                 Problem newProblem = Problem.parseProblemNode(problemNode);
                 if(newProblem != null) problems.add(newProblem);
             }
-        } catch (JDOMException | NoSuchFieldException e) {
-            e.printStackTrace();
+        } catch (JDOMException e) {
+            System.out.println("Error parsing xml file: "+xmlFile.getName());
+        } catch (NoSuchFieldException e){
+            System.out.println(e.getMessage());
         }
     }
 
