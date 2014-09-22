@@ -93,10 +93,10 @@ public abstract class Problem {
      * Checks that a given reduction is correct for this problem. If correct, the current reduction is set to the next
      * reduction. Note that the same ReductionOrder should be passed to this method each time, or the result might not
      * properly conform to either order.
-     * @param userReduction A LambdaExpression representing the attempted reduction.
+     * @param submission A LambdaExpression representing the attempted reduction.
      * @return true if the given reduction is correct, false otherwise.
      */
-    public abstract boolean submitStep(LambdaExpression userReduction);
+    public abstract boolean submitStep(String submission);
 
     /**
      * Parses the text in an xml file into a problem. The general format for the file is as follows:
@@ -109,7 +109,7 @@ public abstract class Problem {
      * @param url A string containing a path to an xml file with a single problem.
      * @return A Problem subclass with the specified configuration.
      */
-    public static Problem parseXML(String url) throws NoSuchFieldException{
+    public static Problem parseProblemFromURL(String url) throws NoSuchFieldException{
         SAXBuilder builder = new SAXBuilder();
         File xmlFile = new File(url);
 
@@ -125,6 +125,12 @@ public abstract class Problem {
         return null;
     }
 
+    /**
+     * Parses a single problem node into a Problem.
+     * @param problemNode The jdom element representing a problem.
+     * @return A problem constructed from the information in the problem node.
+     * @throws NoSuchFieldException
+     */
     protected static Problem parseProblemNode(Element problemNode) throws NoSuchFieldException {
         String type = problemNode.getChildText("type");
         String expression = problemNode.getChildText("start");
@@ -163,14 +169,14 @@ public abstract class Problem {
      */
     public double getMark(){
         if(totalMark != 0)
-            return (double)(mark/totalMark);
+            return ((double) mark) / totalMark;
         else
             return 0;
     }
 
     /**
-     * Returns the messages accrued for this problem.
-     * @return The list of messages
+     * Returns the messages accumulated for this problem.
+     * @return The list of messages this problem has accumulated.
      */
     public List<String> getMessage(){
         return new ArrayList<>(messages);

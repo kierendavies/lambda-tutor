@@ -227,7 +227,7 @@ public abstract class LambdaExpression {
     }
 
     /**
-     * Checks if another lambda expression if extensionally equivalent to this one.  May produce false negatives.
+     * Checks if another lambda expression is extensionally equivalent to this one.  May produce false negatives.
      *
      * @param expr The expression to compare
      * @return {@code true} if this expression is equivalent to the argument; {@code false} otherwise

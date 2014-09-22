@@ -1,14 +1,16 @@
 package za.ac.uct.cs.ddd.lambda;
 
-import za.ac.uct.cs.ddd.lambda.evaluator.*;
+import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
+import za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder;
+import za.ac.uct.cs.ddd.lambda.evaluator.ReductionResult;
+import za.ac.uct.cs.ddd.lambda.tutor.Problem;
+import za.ac.uct.cs.ddd.lambda.tutor.ProblemSet;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A collection of static methods for marking lambda reductions in a given text file.
@@ -28,59 +30,43 @@ public class Marker {
     }
 
     /**
-     * Parses the reductions in a file and checks for correctness using markReductions. This assumes the file consists
-     * only of newline-separated paragraphs of reductions. Currently assumes that the first line in a reduction is the
-     * correct starting point.
-     * @param filename The name of the file containing the lambda reductions to be marked.
-     * @return A boolean indicating whether the reductions are correct.
+     * Creates a ProblemSet (using the file at problemSetFilename) and parses the answer to each question (found in the
+     * file at answerFilename) as a list of LambdaExpressions. Each answer's LambdaExpressions are submitted to the
+     * corresponding problem, and the resulting mark is returned.
+     * This assumes the answer file consists only of newline-separated paragraphs of reductions and that the answers are
+     * in the same order as found in the ProblemSet.
+     *
+     * @param problemSetFilename The path to the xml file containing the problems.
+     * @param answerFilename The path to the file containing the lambda reductions to be marked.
+     * @return The mark for the reductions in the answer file.
      */
-    public static boolean markReductionsFromFile(String filename, ReductionOrder order){ // TODO: add a second file for the questions
-        // Count the number of expressions in the file by counting the number of clusters of newlines
-        Scanner fileScanner = null;
-        try {
-            fileScanner = new Scanner(new File(filename));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+    public static double markReductionsFromFile(String problemSetFilename, String answerFilename) throws IOException {
+        // Read in the questions
+        ProblemSet problemSet = new ProblemSet(new File(problemSetFilename));
+
+        // Submit the answers to the problems
+        Problem currentProblem = problemSet.nextProblem();
+        BufferedReader answerReader = new BufferedReader(new FileReader(answerFilename));
+
+        // Eat empty lines at beginning of file
+        String line = answerReader.readLine();
+        while (line != null && line.isEmpty()) {
+            line = answerReader.readLine();
         }
-        StringBuilder file = new StringBuilder();
-        while (fileScanner.hasNext()) {
-            file.append(fileScanner.nextLine());
-        }
 
-        String filetext = file.toString();
-        // Ignore repeated newlines using regex
-        Pattern newlines = Pattern.compile("\n*");
-        Matcher matcher = newlines.matcher(filetext);
-
-        int countExpressions = 0;
-        while (matcher.find())
-            countExpressions++;
-        countExpressions++; // Count the last expression
-
-        // Parse the expressions
-        try {
-            fileScanner = new Scanner(new File(filename));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        String line;
-        List<LambdaExpression>[] userReductions = new List[countExpressions];
-
-        for (int i = 0; i < userReductions.length; i++) {
-            userReductions[i] = new ArrayList<>();
-
-            line = fileScanner.nextLine();
-            while(!"".equals(line) && fileScanner.hasNext()){
-                try {
-                    userReductions[i].add(Parser.parse(line));
-                } catch (InvalidExpressionException e) {
-                    e.printStackTrace();
+        while (line != null) {
+            if (line.isEmpty()) {
+                currentProblem = problemSet.nextProblem();
+                while (line != null && line.isEmpty()) {
+                    line = answerReader.readLine();
                 }
-                line = fileScanner.nextLine();
+            } else {
+                currentProblem.submitStep(line);
+                line = answerReader.readLine();
             }
         }
 
-        return markReductions(userReductions, order);
+        return problemSet.getMark();
     }
 
     /**
@@ -92,9 +78,6 @@ public class Marker {
      * any.
      */
     public static String checkReductions(List<LambdaExpression>[] userReductions, ReductionOrder order){
-        // TODO: remove duplication in markReductions
-        //userReductions[0].get(0);
-
         for (List<LambdaExpression> l : userReductions) {
             List<ReductionResult> calculatedReductions = l.get(0).reductions(ReductionOrder.NORMAL);
 
@@ -115,16 +98,20 @@ public class Marker {
 
     /**
      * Marks a given file's reductions
-     * @param args Command-line arguments. The first is the name of the file to check.
+     * @param args Command-line arguments. The first is the path to the problem set, the second is the path to the
+     *             answer file.
      */
     public static void main(String[] args) {
 
         try {
-            System.out.println(markReductionsFromFile(args[0], ReductionOrder.NORMAL) ?
-                    "Correct" :
-                    "Incorrect");
+            System.out.println("Score for reductions in "+args[1]+
+                                "using problem set"+args[0]+": "+
+                                markReductionsFromFile(args[0], args[1]));
         } catch(IndexOutOfBoundsException e){
-            System.out.println("Error: expected filename as the first argument");
+            System.out.println("Error: expected problem set filename as the first argument and answer file name as " +
+                    "the second argument.");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

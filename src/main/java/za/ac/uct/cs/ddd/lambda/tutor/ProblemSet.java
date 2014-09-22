@@ -11,15 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A collection of problems.
+ * A collection of problems with a title. This is stateful, and tracks the current problem being solved.
  */
 public class ProblemSet {
 
-    private List<Problem> problems;
-    private int currentProblem;
     private String title;
+    private int currentProblem;
+    private List<Problem> problems;
 
-    public ProblemSet(List<Problem> problems){
+    public ProblemSet(String title, List<Problem> problems){
+        this.title = title;
         currentProblem = 0;
         this.problems = new ArrayList<>(problems);
     }
@@ -44,15 +45,13 @@ public class ProblemSet {
      * </problemset>
      *
      * Where each problem follows the same format as found in the problem class.
-     * @param url A string containing a path to an xml file with a problem set defined.
+     * @param xmlFile A file object containing xml with a problem set defined as above.
      */
-    public ProblemSet(String url){
+    public ProblemSet(File xmlFile){
         currentProblem = 0;
 
-        SAXBuilder builder = new SAXBuilder();
-        File xmlFile = new File(url);
-
         try {
+            SAXBuilder builder = new SAXBuilder();
             Document doc = builder.build(xmlFile);
             Element rootNode = doc.getRootElement();
 
@@ -68,14 +67,24 @@ public class ProblemSet {
         }
     }
 
+    public ProblemSet(ProblemSet pset){
+        this.title = pset.title;
+        this.currentProblem = pset.currentProblem;
+        this.problems = new ArrayList<>(pset.problems);
+    }
+
     /**
      * Returns the current problem and advances the cursor to the next problem.
-     * @return A reference to the current problem.
+     * @return A reference to the current problem. Returns null if the last problem has already been returned.
      */
     public Problem nextProblem(){
-        Problem next = problems.get(currentProblem);
-        currentProblem++;
-        return next;
+        if(currentProblem > problems.size())
+            return null;
+        else {
+            Problem next = problems.get(currentProblem);
+            currentProblem++;
+            return next;
+        }
     }
 
     /**
@@ -93,12 +102,17 @@ public class ProblemSet {
         return problems.get(currentProblem);
     }
 
+    /**
+     * Returns the title of the problem set.
+     * @return The title of this problem set.
+     */
     public String getTitle(){
         return title;
     }
 
     /**
-     * Calculates an evenly weighted, normalised average of the marks of all of the problems in this problem set.
+     * Calculates an evenly weighted average of the marks of all of the problems in this problem set. The mark is a
+     * percentage in the range [0, 100].
      * @return An overall mark for the problem set, normalised to be in the interval [0,1].
      */
     public double getMark(){
@@ -106,6 +120,19 @@ public class ProblemSet {
         for (Problem problem : problems) {
             mark += problem.getMark();
         }
-        return mark/problems.size();
+        return mark/problems.size()*100;
+    }
+
+    /**
+     * Returns the size of the underlying list of problems.
+     * @return The number of problems in this problem set.
+     */
+    public int size(){
+        return problems.size();
+    }
+
+    public static void main(String[] args) {
+        File psetFile = new File(args[0]);
+        ProblemSet set = new ProblemSet(psetFile);
     }
 }
