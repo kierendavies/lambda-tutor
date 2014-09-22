@@ -33,7 +33,7 @@ public class ProblemSet {
      *     <problems>
      *         <problem>
      *             <type>simplification | conversion | reduction | bracketing | labelling</type>
-     *             <order>reductionNormal | reductionApplicative</order>
+     *             <order>normal | applicative</order>
      *             <start>(λn.λf.λx.f (n f x)) (λf.λx.x)</start>
      *             <steps>10</steps> (optional)
      *         </problem>
@@ -113,7 +113,7 @@ public class ProblemSet {
     /**
      * Calculates an evenly weighted average of the marks of all of the problems in this problem set. The mark is a
      * percentage in the range [0, 100].
-     * @return An overall mark for the problem set, normalised to be in the interval [0,1].
+     * @return An overall mark for the problem set, normalised to be in the interval [0,100].
      */
     public double getMark(){
         double mark = 0;

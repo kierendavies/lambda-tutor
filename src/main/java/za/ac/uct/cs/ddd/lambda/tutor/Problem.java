@@ -113,7 +113,7 @@ public abstract class Problem {
      * Parses the text in an xml file into a problem. The general format for the file is as follows:
      * <problem>
      *     <type>simplification | conversion | reduction | bracketing | labelling</type>
-     *     <order>reductionNormal | reductionApplicative</order>
+     *     <order>normal | applicative</order>
      *     <start>(λn.λf.λx.f (n f x)) (λf.λx.x)</start>
      *     <steps>10</steps> (optional)
      * </problem>
@@ -139,8 +139,8 @@ public abstract class Problem {
     /**
      * Parses a single problem node into a Problem.
      * @param problemNode The jdom element representing a problem.
-     * @return A problem constructed from the information in the problem node.
-     * @throws NoSuchFieldException
+     * @return A problem constructed from the information in the problem node, or null if no information is provided.
+     * @throws NoSuchFieldException If incorrect values are found for either the order or type elements.
      */
     protected static Problem parseProblemNode(Element problemNode) throws NoSuchFieldException {
         String type = problemNode.getChildText("type");
