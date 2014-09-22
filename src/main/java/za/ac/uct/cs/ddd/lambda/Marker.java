@@ -52,21 +52,24 @@ public class Marker {
             line = answerReader.readLine();
         }
 
+        List<String> messages;
         while (line != null) {
-            List<String> messages = currentProblem.getMessage();
-            System.out.println(messages.size() > 0 ? messages.get(messages.size()-1) : "");
             if (line.isEmpty()) {
+                System.out.println("  Empty line - new problem");
                 currentProblem = problemSet.nextProblem();
                 while (line != null && line.isEmpty()) {
                     line = answerReader.readLine();
                 }
             } else {
-                System.out.println("*Line submitted: "+line);
                 currentProblem.submitStep(line);
+                System.out.println("  Line submitted: "+line);
                 line = answerReader.readLine();
-                System.out.println("*Line read: "+line);
+                System.out.println("  Line read: "+line);
             }
-
+            if(currentProblem != null){
+                messages = currentProblem.getMessages();
+                System.out.println(messages.size() > 0 ? messages.get(messages.size()-1) : "");
+            }
         }
 
         return problemSet.getMark();
