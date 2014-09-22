@@ -65,11 +65,14 @@ public class SimplificationProblem extends Problem{
         if(userReduction.alphaEquivalentTo(tutorReduction.getReducedExpression())) {
             mark++;
             totalMark++;
+            expression = tutorReduction.getReducedExpression();
             return true;
-        } else if(userReduction.alphaEquivalentTo(expression))
+        } else if(userReduction.alphaEquivalentTo(expression)) {
             return true;
+        }
         else {
             totalMark++;
+            expression = tutorReduction.getReducedExpression();
             return userReduction.alphaEquivalentTo(expression);
         }
     }
