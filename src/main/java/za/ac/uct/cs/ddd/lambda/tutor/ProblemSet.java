@@ -124,6 +124,16 @@ public class ProblemSet {
         return problems.size();
     }
 
+    /**
+     * Resets the current problem to the beginning of the problem set and resets all problems in the problem set.
+     */
+    public void reset(){
+        currentProblem = 0;
+        for (Problem problem : problems) {
+            problem.reset();
+        }
+    }
+
     public static void main(String[] args) {
         File psetFile = new File(args[0]);
         ProblemSet set = new ProblemSet(psetFile);
