@@ -39,29 +39,27 @@ public class Marker {
         while (line != null && line.isEmpty()) {
             line = answerReader.readLine();
         }
-        boolean firstLine = true;
-
         List<String> messages;
+
         while (line != null) {
+            // Submit lines to currentProblem until an empty line is found.
+
             if (line.isEmpty()) {
+                // End of an answer
                 if(debug) System.out.println("  Empty line - new problem");
                 currentProblem = problemSet.nextProblem();
                 while (line != null && line.isEmpty()) {
                     line = answerReader.readLine();
                 }
-                firstLine = true;
             } else if(currentProblem != null){
-                if(firstLine){
-                    if(debug) System.out.println("  Line read: "+line);
-                    line = answerReader.readLine();
-                    firstLine = false;
-                    continue;
-                } else if(!firstLine){
-                    currentProblem.submitStep(line);
-                    if(debug) System.out.println("  Line submitted: " + line);
-                    line = answerReader.readLine();
-                    if(debug) System.out.println("  Line read: "+line);
-                }
+                // There is a line ready to be submitted to a problem.
+                currentProblem.submitStep(line);
+                if(debug) System.out.println("  Line submitted: " + line);
+                line = answerReader.readLine();
+                if(debug) System.out.println("  Line read: "+line);
+            } else {
+                // No more problems
+                break;
             }
             if(currentProblem != null && verbose){
                 messages = currentProblem.getMessages();
