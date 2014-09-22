@@ -83,7 +83,7 @@ public class SimplificationProblem extends Problem{
         }
         else {
             totalMark++;
-            expression = userReduction;
+            expression = tutorReduction.getReducedExpression();
             messages.add("Incorrect reduction ("+this.mark+"/"+this.totalMark+"): "+userReduction.toString()+
                     "\nExpected: "+tutorReduction.getReducedExpression().toString());
             return userReduction.alphaEquivalentTo(expression);
