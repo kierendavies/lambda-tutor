@@ -1,15 +1,11 @@
 package za.ac.uct.cs.ddd.lambda;
 
-import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
-import za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder;
-import za.ac.uct.cs.ddd.lambda.evaluator.ReductionResult;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 import za.ac.uct.cs.ddd.lambda.tutor.Problem;
 import za.ac.uct.cs.ddd.lambda.tutor.ProblemSet;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,18 +14,6 @@ import java.util.List;
  * A collection of static methods for marking lambda reductions in a given text file.
  */
 public class Marker {
-
-    /**
-     * Checks that an array of reductions are correct by reducing the first LambdaExpression and checking that the
-     * subsequent steps in userReductions are alpha-equivalent to the reductions produced by the first LambdaExpression.
-     *
-     * @param userReductions An array of expression reductions to be marked. (where each expression reduction is a list
-     *                       of LambdaExpressions.
-     * @return A boolean indicating whether the reductions are correct.
-     */
-    public static boolean markReductions(List<LambdaExpression>[] userReductions, ReductionOrder order){
-        return checkReductions(userReductions, order).equals("All reductions are correct.");
-    }
 
     /**
      Marks the file at answerFilename according to the problems found in the problemset defined in problemSetFilename.
@@ -41,7 +25,11 @@ public class Marker {
      * @return The mark for the reductions in the answer file.
      * @throws java.io.IOException If the file at answerFilename doesn't exist.
      */
-    private static double markReductionsFromPSet(ProblemSet problemSet, String answerFilename) throws IOException{
+    private static double markReductionsFromPSet(ProblemSet problemSet, String answerFilename, String opts) throws IOException{
+        // Determine options
+        boolean debug = opts.contains("d");
+        boolean verbose = opts.contains("v") || debug;
+
         // Submit the answers to the problems
         Problem currentProblem = problemSet.nextProblem();
         BufferedReader answerReader = new BufferedReader(new FileReader(answerFilename));
@@ -51,22 +39,31 @@ public class Marker {
         while (line != null && line.isEmpty()) {
             line = answerReader.readLine();
         }
+        boolean firstLine = true;
 
         List<String> messages;
         while (line != null) {
             if (line.isEmpty()) {
-                System.out.println("  Empty line - new problem");
+                if(debug) System.out.println("  Empty line - new problem");
                 currentProblem = problemSet.nextProblem();
                 while (line != null && line.isEmpty()) {
                     line = answerReader.readLine();
                 }
-            } else {
-                currentProblem.submitStep(line);
-                System.out.println("  Line submitted: "+line);
-                line = answerReader.readLine();
-                System.out.println("  Line read: "+line);
+                firstLine = true;
+            } else if(currentProblem != null){
+                if(firstLine){
+                    if(debug) System.out.println("  Line read: "+line);
+                    line = answerReader.readLine();
+                    firstLine = false;
+                    continue;
+                } else if(!firstLine){
+                    currentProblem.submitStep(line);
+                    if(debug) System.out.println("  Line submitted: " + line);
+                    line = answerReader.readLine();
+                    if(debug) System.out.println("  Line read: "+line);
+                }
             }
-            if(currentProblem != null){
+            if(currentProblem != null && verbose){
                 messages = currentProblem.getMessages();
                 System.out.println(messages.size() > 0 ? messages.get(messages.size()-1) : "");
             }
@@ -83,12 +80,12 @@ public class Marker {
      * @param problemSetFilename The path to the xml file containing the problemset with the problems.
      * @param answerFilename The path to the file containing the lambda reductions to be marked.
      * @return The mark for the reductions in the answer file.
-     * @throws java.io.IOException
+     * @throws java.io.IOException If the file at answerFilename doesn't exist.
      */
-    public static double markReductionsFromFile(String problemSetFilename, String answerFilename) throws IOException {
+    public static double markReductionsFromFile(String problemSetFilename, String answerFilename, String opts) throws IOException {
         ProblemSet problemSet = new ProblemSet(new File(problemSetFilename));
 
-        return markReductionsFromPSet(problemSet, answerFilename);
+        return markReductionsFromPSet(problemSet, answerFilename, opts);
     }
 
     /**
@@ -100,7 +97,7 @@ public class Marker {
      * @param problemSetFilename The path to the xml file containing the problemset with the problems.
      * @param answerFolder Path to the directory containing answer files.
      */
-    public static void markReductionsFromDir(String problemSetFilename, String answerFolder) {
+    public static void markReductionsFromDir(String problemSetFilename, String answerFolder, String opts) throws IOException {
         // Read in the questions
         ProblemSet problemSet = new ProblemSet(new File(problemSetFilename));
 
@@ -131,7 +128,7 @@ public class Marker {
                 mark = 0;
                 try {
                     problemSet.reset();
-                    mark = markReductionsFromPSet(problemSet, answerFolder+filename);
+                    mark = markReductionsFromPSet(problemSet, answerFolder+filename, opts);
                 } catch (IOException e) {
                     System.out.println("The file "+filename+" could not be found in folder "+answerFolder+".");
                 }
@@ -149,54 +146,68 @@ public class Marker {
     }
 
     /**
-     * Checks that an array of reductions are correct by reducing the first LambdaExpression and checking that the
-     * subsequent steps in userReductions are alpha-equivalent to the reductions produced by the first LambdaExpression.
-     * @param userReductions An array of expression reductions to be marked. (where each expression reduction is a list
-     *                       of LambdaExpressions.
-     * @return A string message indicating whether the reductions are correct and the location of the first error, if
-     * any.
-     */
-    public static String checkReductions(List<LambdaExpression>[] userReductions, ReductionOrder order){
-        for (List<LambdaExpression> l : userReductions) {
-            List<ReductionResult> calculatedReductions = l.get(0).reductions(ReductionOrder.NORMAL);
-
-            for (int i = 0; i < l.size() && i < calculatedReductions.size(); i++) {
-                if(!l.get(i).alphaEquivalentTo(calculatedReductions.get(i).getReducedExpression())){
-                    return String.format("Reduction error found in reduction for expression %s:\n" +
-                                    "Expected: %s\n" +
-                                    "Found: %s",
-                            calculatedReductions.get(0).toString(),
-                            calculatedReductions.get(i),
-                            l.get(i));
-                }
-            }
-        }
-
-        return "All reductions are correct.";
-    }
-
-    /**
      * Marks a given file's reductions
      * @param args Command-line arguments. The first is the path to the problem set, the second is the path to the
      *             answer file.
      */
     public static void main(String[] args) {
 
-        // Mark a single file
-        /*try {
-            System.out.println("Score for reductions in "+args[1]+
-                                "using problem set"+args[0]+": "+
-                                markReductionsFromFile(args[0], args[1]));
-        } catch(IndexOutOfBoundsException e){
-            System.out.println("Error: expected problem set filename as the first argument and answer file name as " +
-                    "the second argument.");
-        } catch (IOException e) {
-            System.out.println("File not found. Please check that the specified files exist and that the filenames " +
-                    "passed are correct.");
-        }*/
+        if(args.length < 4){
+            System.out.println("Too few options supplied. Please specify a problem set file and a file or folder for " +
+                    "marking by supplying one of '-p <problemset> -f <filename>' or '-p <problemset> -d <directory>'. ");
+        }
 
-        // Mark all files in a directory
-        markReductionsFromDir("/home/dave/Projects/Capstone Project/lambda_test_pset.txt",
-                "/home/dave/Projects/Capstone Project");
+        OptionParser parser = new OptionParser();
+        parser.acceptsAll(Arrays.asList("p", "pset"),
+                "Supply the path to the problem set file for marking.")
+                .withRequiredArg()
+                .ofType(String.class);
+        parser.acceptsAll(Arrays.asList("f", "file"),
+                          "Supply the path to a single .lam file for marking.")
+                .withRequiredArg()
+                .ofType(String.class);
+        parser.acceptsAll(Arrays.asList("d", "dir"),
+                          "Supply the path to a directory containing .lam files for marking.")
+                .withRequiredArg()
+                .ofType(String.class);
+        parser.acceptsAll(Arrays.asList("v", "verbose"),
+                          "Print out each filename followed by the messages associated with each reduction" +
+                          "(to see mistakes in reductions)");
+        parser.acceptsAll(Arrays.asList("d", "debug"),
+                          "As verbose, with additional debug messages. Shows all messages associated with reductions.");
+
+        OptionSet options = parser.parse(args);
+
+        String opts = "";
+        if(options.has("debug"))
+            opts += "d";
+        if(options.has("verbose"))
+            opts += "v";
+
+        if(options.has("pset") && options.has("file")) {
+            // Mark a single file
+            try {
+                System.out.println("Score for reductions in " + options.valueOf("file") +
+                        "\nusing problem set " + options.valueOf("pset") + ": " +
+                        markReductionsFromFile((String)options.valueOf("pset"), (String)options.valueOf("file"), opts)
+                        +" %");
+            } catch(FileNotFoundException e){
+                System.out.println("File not found: " + e.getMessage() +
+                        "\nPlease check that the specified file exists and that the filename passed is correct.");
+            } catch (IOException e) {
+                System.out.println("Problem reading file (or IOException): "+e.getMessage());
+            }
+        }
+        if(options.has("pset") && options.has("dir")){
+            // Mark all files in a directory
+            try {
+                markReductionsFromDir((String)options.valueOf("pset"), (String)options.valueOf("dir"), opts);
+            } catch(FileNotFoundException e){
+                System.out.println("File not found: " + e.getMessage() +
+                        "\nPlease check that the specified file exists and that the filename passed is correct.");
+            } catch (IOException e) {
+                System.out.println("Problem reading file (or IOException): "+e.getMessage());
+            }
+        }
     }
 }
