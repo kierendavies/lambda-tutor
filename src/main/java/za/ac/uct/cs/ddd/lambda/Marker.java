@@ -135,12 +135,11 @@ public class Marker {
                 markList.append(" - ");
                 markList.append(mark);
                 markList.append("\n");
-                System.out.println(filename+" added to markList.\n");
+                if(opts.contains("v") || opts.contains("d")) System.out.println("***"+filename+" complete.\n");
             }
         }
 
         System.out.println("\n"+markList);
-
     }
 
     /**
