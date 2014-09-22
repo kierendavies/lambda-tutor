@@ -1,16 +1,16 @@
 package za.ac.uct.cs.ddd.lambda;
 
-import za.ac.uct.cs.ddd.lambda.evaluator.*;
+import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
+import za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder;
+import za.ac.uct.cs.ddd.lambda.evaluator.ReductionResult;
 import za.ac.uct.cs.ddd.lambda.tutor.Problem;
 import za.ac.uct.cs.ddd.lambda.tutor.ProblemSet;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A collection of static methods for marking lambda reductions in a given text file.
@@ -30,9 +30,9 @@ public class Marker {
     }
 
     /**
-     * Creates a ProblemSet (using the file at problemSetFilename) and parses the answer to each question (found in the file
-     * at answerFilename) as a list of LambdaExpressions. Each answer's LambdaExpressions are submitted to the corresponding
-     * Problem, and the resulting mark is returned.
+     * Creates a ProblemSet (using the file at problemSetFilename) and parses the answer to each question (found in the
+     * file at answerFilename) as a list of LambdaExpressions. Each answer's LambdaExpressions are submitted to the
+     * corresponding problem, and the resulting mark is returned.
      * This assumes the answer file consists only of newline-separated paragraphs of reductions and that the answers are
      * in the same order as found in the ProblemSet.
      *
@@ -62,6 +62,7 @@ public class Marker {
                 }
             } else {
                 currentProblem.submitStep(line);
+                line = answerReader.readLine();
             }
         }
 
