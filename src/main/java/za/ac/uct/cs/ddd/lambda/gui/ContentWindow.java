@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class ContentWindow extends SizeablePanel {
+public class ContentWindow extends SizablePanel {
     GridBagConstraints gbc;
     JButton menuButton;
     String mode;

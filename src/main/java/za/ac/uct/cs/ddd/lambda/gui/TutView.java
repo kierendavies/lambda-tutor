@@ -9,26 +9,49 @@ import za.ac.uct.cs.ddd.lambda.tutor.ProblemSet;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 public class TutView extends ContentWindow {
 
+    JScrollPane scrollPane;
+    JLabel problem;
+    ProblemSet problemSet;
+
+
+    /**
+     *  Creates a new
+     * @param parent
+     * @param Filename
+     */
+    public  TutView ( Window parent , String Filename){
+        super(parent);
+
+
+    }
+
+    /**
+     * Reset the problem label to reflect the current problem
+     */
+    private void updateProblem(){
+        problemSet.getProblem();
+    }
+
+    /*String[] problems = new String[5];
     JComboBox problemList;
     JLabel problemTitleLabel;
     JLabel problemTextLabel;
     JTextArea inputArea;
-    JButton menuButton;
+    JButton menuButton;*
 
-    public TutView(Window parent) {
+    public TutView(Window parent, String file) {
         super(parent);
-
-
         inputArea = new JTextArea(5, 20);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -41,9 +64,8 @@ public class TutView extends ContentWindow {
         gbc.insets = new Insets(10, 10, 10, 10);
         add(inputArea, gbc);
 
-
         JPanel comboPane = new JPanel(new BorderLayout());
-        populateProblemSet(null);
+        populateProblemSet(file);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 6;
@@ -58,17 +80,29 @@ public class TutView extends ContentWindow {
     //Not Happy
 
     void populateProblemSet(String fileName) {
-        ProblemSet problemSet = new ProblemSet(fileName);
 
-        problemList = new JComboBox(problemSet.getProblems().toArray());
-
-
-    }
-
-    private class ProblemListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
+        try {
+            BufferedReader input = new BufferedReader((new FileReader(fileName)));
+            List<String> set = new ArrayList<String>();
+            String line = null;
+            while ((line = input.readLine()) != null) {
+                set.add(line);
+            }
+            String[] probSetArr = set.toArray(new String[]{});
+            problemList = new JComboBox(probSetArr);
+            input.close();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
+
+    } */
+    //Not Happy
+
+   /* void addComboBoxListener(ActionListener actionListener) {
+        problemList.addActionListener(actionListener);
     }
+
+   /* @Override
+
+    }*/
 }

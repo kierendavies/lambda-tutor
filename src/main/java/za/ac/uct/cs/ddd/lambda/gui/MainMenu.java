@@ -4,8 +4,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
-
-public class MainMenu extends SizeablePanel {
+/**
+ *  Creates
+ */
+public class MainMenu extends SizablePanel {
     ActionListener parentFrame;
 
 
@@ -37,9 +39,13 @@ public class MainMenu extends SizeablePanel {
     }
 
 
+    /**
+     * Creates a button with text and adds it to the specified container
+     * @param text the text of the button.
+     * @param container The 
+     */
     private void addButton(String text, Container container) {
         JButton button = new JButton(text);
-
         button.setMaximumSize(new Dimension((2 * WIDTH) / 3, HEIGHT / 3));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(parentFrame);
@@ -51,4 +57,3 @@ public class MainMenu extends SizeablePanel {
 
 
 }
-
