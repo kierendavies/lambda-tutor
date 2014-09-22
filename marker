@@ -2,4 +2,4 @@
 
 source $(dirname $0)/getversion.sh
 
-java -cp $(dirname $0)/target/lambda-${version}-jar-with-dependencies.jar za.ac.uct.cs.ddd.lambda.Marker $@
+java -cp $(dirname $0)/target/lambda-${version}-jar-with-dependencies.jar za.ac.uct.cs.ddd.lambda.Marker "$@"
