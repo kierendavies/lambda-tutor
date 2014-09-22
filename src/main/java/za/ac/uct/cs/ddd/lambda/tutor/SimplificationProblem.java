@@ -12,7 +12,7 @@ public class SimplificationProblem extends Problem{
      * @param startExpression A string representing the starting expression of the problem.
      * @param order The order in which the expressions in this problem must be reduced.
      */
-    public SimplificationProblem(String startExpression, ReductionOrder order){
+    public SimplificationProblem(String startExpression, ReductionOrder order) throws InvalidExpressionException{
         super(startExpression, order);
     }
 
@@ -31,7 +31,7 @@ public class SimplificationProblem extends Problem{
      * @param order The order in which the expressions in this problem must be reduced.
      * @param maxIterations The maximum number of iterations that should be done when reducing the expression.
      */
-    public SimplificationProblem(String startExpression, ReductionOrder order, int maxIterations){
+    public SimplificationProblem(String startExpression, ReductionOrder order, int maxIterations) throws InvalidExpressionException{
         super(startExpression, order, maxIterations);
     }
 

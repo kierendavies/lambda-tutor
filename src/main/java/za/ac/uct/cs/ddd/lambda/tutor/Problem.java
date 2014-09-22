@@ -29,12 +29,8 @@ public abstract class Problem {
      * @param startExpression A string representing the starting expression of the problem.
      * @param order The order in which the expressions in this problem must be reduced.
      */
-    public Problem(String startExpression, ReductionOrder order){
-        try {
-            expression = Parser.parse(startExpression);
-        } catch (InvalidExpressionException e) {
-            e.printStackTrace();
-        }
+    public Problem(String startExpression, ReductionOrder order) throws InvalidExpressionException{
+        expression = Parser.parse(startExpression);
         firstExpression = expression.clone();
         reductionOrder = order;
         reductions = expression.reductions(order);
@@ -64,12 +60,8 @@ public abstract class Problem {
      * @param order The order in which the expressions in this problem must be reduced.
      * @param maxIterations The maximum number of iterations that should be done when reducing the expression.
      */
-    public Problem(String startExpression, ReductionOrder order, int maxIterations){
-        try {
-            expression = Parser.parse(startExpression);
-        } catch (InvalidExpressionException e) {
-            e.printStackTrace();
-        }
+    public Problem(String startExpression, ReductionOrder order, int maxIterations) throws InvalidExpressionException{
+        expression = Parser.parse(startExpression);
         firstExpression = expression.clone();
         reductionOrder = order;
         reductions = expression.reductions(order, maxIterations);
@@ -159,26 +151,31 @@ public abstract class Problem {
 
         ReductionOrder order;
         switch (orderString) {
-            case "reductionNormal":
+            case "normal":
                 order = ReductionOrder.NORMAL;
                 break;
-            case "reductionApplicative":
+            case "applicative":
                 order = ReductionOrder.APPLICATIVE;
                 break;
             default:
-                throw new NoSuchFieldException("Invalid order supplied. Order must be one of reductionNormal or " +
-                        "reductionApplicative.");
+                throw new NoSuchFieldException("Invalid order supplied. Order must be one of normal or " +
+                        "applicative.");
         }
 
-        if(type.equals("simplification")){
-            if(maxSteps > 0){
-                return new SimplificationProblem(expression, order, maxSteps);
+        try {
+            if (type.equals("simplification")) {
+                if (maxSteps > 0) {
+                    return new SimplificationProblem(expression, order, maxSteps);
+                } else {
+                    return new SimplificationProblem(expression, order);
+                }
             } else {
-                return new SimplificationProblem(expression, order);
+                //TODO: add in new types of problems for conversion, reduction, bracketing and labelling.
+                throw new NoSuchFieldException("Invalid problem type supplied. Problem type must be simplification.");
             }
-        } else{
-            throw new NoSuchFieldException("Invalid problem type supplied. Problem types must be one of " +
-                    "simplification, conversion, reduction, bracketing or labelling.");
+        } catch (InvalidExpressionException e){
+            System.out.println("Invalid starting lambda expression found: "+e.getMessage());
+            return null;
         }
     }
 
