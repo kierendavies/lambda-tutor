@@ -103,8 +103,8 @@ public class ProblemSet {
     }
 
     /**
-     * Returns the title of the problem set.
-     * @return The title of this problem set.
+     * Returns the biggest of the problem set.
+     * @return The biggest of this problem set.
      */
     public String getTitle(){
         return title;

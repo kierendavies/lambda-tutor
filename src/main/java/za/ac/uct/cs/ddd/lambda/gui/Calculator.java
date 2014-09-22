@@ -5,11 +5,9 @@ import za.ac.uct.cs.ddd.lambda.evaluator.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
-import java.util.List;
 import java.util.HashSet;
+import java.util.List;
 
 public class Calculator extends JPanel {
     private static final String ERROR = "error";
@@ -38,7 +36,7 @@ public class Calculator extends JPanel {
         constraints.gridy = 0;
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         constraints.gridheight = 1;
-        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        constraints.anchor = GridBagConstraints.LINE_START;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(3, 3, 3, 3);
         constraints.weightx = 1;
@@ -54,6 +52,7 @@ public class Calculator extends JPanel {
             public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr) throws BadLocationException {
                 fb.insertString(offset, text.replaceAll("\\\\", "\u03bb"), attr);
             }
+
             @Override
             public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attr) throws BadLocationException {
                 fb.replace(offset, length, text.replaceAll("\\\\", "\u03bb"), attr);
@@ -76,6 +75,7 @@ public class Calculator extends JPanel {
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = GridBagConstraints.REMAINDER;
+        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 1;
         constraints.weighty = 1;

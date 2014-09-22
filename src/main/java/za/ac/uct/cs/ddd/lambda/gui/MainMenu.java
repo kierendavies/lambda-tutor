@@ -4,15 +4,15 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+
 /**
- *  Creates
+ * Creates
  */
 public class MainMenu extends SizablePanel {
     ActionListener parentFrame;
 
 
     public MainMenu(ActionListener l) {
-
         this.parentFrame = l;
 
         //Add title
@@ -25,35 +25,30 @@ public class MainMenu extends SizablePanel {
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.PAGE_AXIS));
 
-
         buttonPane.add(Box.createRigidArea(new Dimension(0, WIDTH / 50)));
 
-
         //Adding  buttons to the pane
-        addButton("Calculator", buttonPane);
-        addButton("Tutor", buttonPane);
+        addButton(buttonPane, "Calculator");
+        addButton(buttonPane, "Tutor");
         add(buttonPane);
-
 
         setVisible(true);
     }
 
 
     /**
-     * Creates a button with text and adds it to the specified container
-     * @param text the text of the button.
-     * @param container The 
+     * Creates a button with text and adds it to the specified container.
+     *
+     * @param container The container to which to add the button
+     * @param text      The text of the button
      */
-    private void addButton(String text, Container container) {
+    private void addButton(Container container, String text) {
         JButton button = new JButton(text);
+        button.setFont(Fonts.bigger);
         button.setMaximumSize(new Dimension((2 * WIDTH) / 3, HEIGHT / 3));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(parentFrame);
         container.add(button);
         container.add(Box.createRigidArea(new Dimension(0, WIDTH / 50)));
-
-
     }
-
-
 }

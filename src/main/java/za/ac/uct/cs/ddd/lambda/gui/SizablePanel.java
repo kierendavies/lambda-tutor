@@ -14,13 +14,14 @@ public class SizablePanel extends JPanel {
 
 
     /**
-     * Set the title of this panel to the specified string 
-     * @param title The title to be displayed at the top of the panel.
+     * Set the biggest of this panel to the specified string
+     *
+     * @param title The biggest to be displayed at the top of the panel.
      */
     public void addTitle(String title) {
         JPanel titlePane = new JPanel();
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(Fonts.title);
+        titleLabel.setFont(Fonts.biggest);
         titlePane.add(titleLabel);
         add(titlePane, BorderLayout.PAGE_START);
     }

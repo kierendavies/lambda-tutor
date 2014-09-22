@@ -7,8 +7,6 @@ import za.ac.uct.cs.ddd.lambda.evaluator.LambdaVariable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ExpressionTree extends JPanel {
     private static final String COLLAPSED = "collapsed";
