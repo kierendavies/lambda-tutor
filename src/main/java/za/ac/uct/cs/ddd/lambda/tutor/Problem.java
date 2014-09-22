@@ -17,7 +17,7 @@ import java.util.List;
 public abstract class Problem {
 
     protected LambdaExpression expression;
-    protected LambdaExpression firstExpression;
+    protected final LambdaExpression firstExpression;
     protected ReductionOrder reductionOrder;
     protected List<ReductionResult> reductions;
     protected List<String> messages;
