@@ -197,7 +197,7 @@ public abstract class Problem {
      * Returns the messages accumulated for this problem.
      * @return The list of messages this problem has accumulated.
      */
-    public List<String> getMessage(){
+    public List<String> getMessages(){
         return new ArrayList<>(messages);
     }
 
