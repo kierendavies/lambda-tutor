@@ -95,6 +95,20 @@ public abstract class Problem {
     }
 
     /**
+     * Copy constructor. Creates a deep copy of the other problem.
+     * @param other The Problem to copy.
+     */
+    public Problem(Problem other){
+        this.expression = other.expression.clone();
+        this.firstExpression = other.firstExpression.clone();
+        this.reductionOrder = other.reductionOrder;
+        this.reductions = new ArrayList<>(other.reductions);
+        this.messages = new ArrayList<>(other.messages);
+        this.mark = other.mark;
+        this.totalMark = other.totalMark;
+    }
+
+    /**
      * Checks that a given reduction is correct for this problem. If correct, the current reduction is set to the next
      * reduction. Note that the same ReductionOrder should be passed to this method each time, or the result might not
      * properly conform to either order.
