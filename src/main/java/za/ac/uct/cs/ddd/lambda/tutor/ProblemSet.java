@@ -78,7 +78,7 @@ public class ProblemSet {
      * @return A reference to the current problem. Returns null if the last problem has already been returned.
      */
     public Problem nextProblem(){
-        if(currentProblem > problems.size())
+        if(currentProblem >= problems.size())
             return null;
         else {
             Problem next = problems.get(currentProblem);
