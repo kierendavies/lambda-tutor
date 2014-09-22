@@ -120,7 +120,7 @@ public class ProblemSet {
         for (Problem problem : problems) {
             mark += problem.getMark();
         }
-        return mark/problems.size()*100;
+        return problems.size()>0 ? mark/problems.size()*100 : 0;
     }
 
     /**
