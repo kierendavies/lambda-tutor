@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,20 +32,16 @@ public class Marker {
     }
 
     /**
-     * Creates a ProblemSet (using the file at problemSetFilename) and parses the answer to each question (found in the
-     * file at answerFilename) as a list of LambdaExpressions. Each answer's LambdaExpressions are submitted to the
-     * corresponding problem, and the resulting mark is returned.
+     Marks the file at answerFilename according to the problems found in the problemset defined in problemSetFilename.
      * This assumes the answer file consists only of newline-separated paragraphs of reductions and that the answers are
      * in the same order as found in the ProblemSet.
      *
-     * @param problemSetFilename The path to the xml file containing the problems.
+     * @param problemSet The problemset containing the problems.
      * @param answerFilename The path to the file containing the lambda reductions to be marked.
      * @return The mark for the reductions in the answer file.
+     * @throws java.io.IOException If the file at answerFilename doesn't exist.
      */
-    public static double markReductionsFromFile(String problemSetFilename, String answerFilename) throws IOException {
-        // Read in the questions
-        ProblemSet problemSet = new ProblemSet(new File(problemSetFilename));
-
+    private static double markReductionsFromPSet(ProblemSet problemSet, String answerFilename) throws IOException{
         // Submit the answers to the problems
         Problem currentProblem = problemSet.nextProblem();
         BufferedReader answerReader = new BufferedReader(new FileReader(answerFilename));
@@ -55,18 +53,96 @@ public class Marker {
         }
 
         while (line != null) {
+            List<String> messages = currentProblem.getMessage();
+            System.out.println(messages.size() > 0 ? messages.get(messages.size()-1) : "");
             if (line.isEmpty()) {
                 currentProblem = problemSet.nextProblem();
                 while (line != null && line.isEmpty()) {
                     line = answerReader.readLine();
                 }
             } else {
+                System.out.println("*Line submitted: "+line);
                 currentProblem.submitStep(line);
                 line = answerReader.readLine();
+                System.out.println("*Line read: "+line);
             }
+
         }
 
         return problemSet.getMark();
+    }
+
+    /**
+     * Marks the file at answerFilename according to the problems found in the problemset defined in problemSetFilename.
+     * This assumes the answer file consists only of newline-separated paragraphs of reductions and that the answers are
+     * in the same order as found in the ProblemSet.
+     *
+     * @param problemSetFilename The path to the xml file containing the problemset with the problems.
+     * @param answerFilename The path to the file containing the lambda reductions to be marked.
+     * @return The mark for the reductions in the answer file.
+     * @throws java.io.IOException
+     */
+    public static double markReductionsFromFile(String problemSetFilename, String answerFilename) throws IOException {
+        ProblemSet problemSet = new ProblemSet(new File(problemSetFilename));
+
+        return markReductionsFromPSet(problemSet, answerFilename);
+    }
+
+    /**
+     * Marks all of the files in the answerFolder according to the problems found in the problemset defined in
+     * problemSetFilename.
+     * This assumes the answer file consists only of newline-separated paragraphs of reductions and that the answers are
+     * in the same order as found in the ProblemSet.
+     *
+     * @param problemSetFilename The path to the xml file containing the problemset with the problems.
+     * @param answerFolder Path to the directory containing answer files.
+     */
+    public static void markReductionsFromDir(String problemSetFilename, String answerFolder) {
+        // Read in the questions
+        ProblemSet problemSet = new ProblemSet(new File(problemSetFilename));
+
+        // Find all of the .lam files in answerFolder
+        if(!answerFolder.substring(answerFolder.length()-1).equals("/"))
+            answerFolder += "/";
+
+        ArrayList<String> filenames;
+        try {
+            filenames = new ArrayList<>(Arrays.asList(new File(answerFolder).list()));
+        } catch (NullPointerException e){
+            System.out.println("No such folder found. Please check that the folder "+answerFolder+" exists.");
+            return;
+        }
+
+        for (int i = 0; i < filenames.size(); i++) {
+            String filename = filenames.get(i);
+            if(filename.length()<4 || !filename.substring(filename.length()-4).equals(".lam")){
+                filenames.set(i, null);
+            }
+        }
+
+        // Check the answers
+        double mark;
+        StringBuilder markList = new StringBuilder();
+        for (String filename : filenames) {
+            mark = 0;
+            if(!(filename == null)){
+                try {
+                    problemSet.reset();
+                    mark = markReductionsFromPSet(problemSet, answerFolder+filename);
+                } catch (IOException e) {
+                    System.out.println("The file "+filename+" could not be found in folder "+answerFolder+".");
+                }
+
+                markList.append(filename.substring(0, filename.length()-4));
+                markList.append(" - ");
+                markList.append(mark);
+                markList.append("\n");
+                System.out.println(filename+" added to markList.");
+            }
+        }
+
+        System.out.println("\n"+markList);
+
     }
 
     /**
@@ -111,7 +187,11 @@ public class Marker {
             System.out.println("Error: expected problem set filename as the first argument and answer file name as " +
                     "the second argument.");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("File not found. Please check that the specified files exist and that the filenames " +
+                    "passed are correct.");;
         }
+
+        markReductionsFromDir("/home/dave/Projects/Capstone Project/lambda_test_pset.txt",
+                "/home/dave/Projects/Capstone Project");
     }
 }
