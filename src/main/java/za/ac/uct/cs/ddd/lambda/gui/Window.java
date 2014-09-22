@@ -16,7 +16,6 @@ public class Window extends JFrame implements ActionListener {
     MainMenu menu;
     CalcView calculator;
     TutView tutor;
-    MarkView marker;
     GraphicsDevice gd;
 
     public Window() {
@@ -31,7 +30,6 @@ public class Window extends JFrame implements ActionListener {
         menu = new MainMenu(this);
         calculator = new CalcView(this);
         tutor = new TutView(this);
-        marker = new MarkView(this);
         this.setContentPane(menu);
     }
 
