@@ -11,6 +11,7 @@ public class SimplificationProblem extends Problem{
      * Creates a simplification problem from a string by parsing the string into a LambdaExpression.
      * @param startExpression A string representing the starting expression of the problem.
      * @param order The order in which the expressions in this problem must be reduced.
+     * @throws InvalidExpressionException if startExpression is invalid.
      */
     public SimplificationProblem(String startExpression, ReductionOrder order) throws InvalidExpressionException{
         super(startExpression, order);
@@ -30,6 +31,7 @@ public class SimplificationProblem extends Problem{
      * @param startExpression A string representing the starting expression of the problem.
      * @param order The order in which the expressions in this problem must be reduced.
      * @param maxIterations The maximum number of iterations that should be done when reducing the expression.
+     * @throws InvalidExpressionException if startExpression is invalid.
      */
     public SimplificationProblem(String startExpression, ReductionOrder order, int maxIterations) throws InvalidExpressionException{
         super(startExpression, order, maxIterations);
