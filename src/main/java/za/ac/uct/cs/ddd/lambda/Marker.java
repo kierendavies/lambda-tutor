@@ -108,27 +108,27 @@ public class Marker {
         if(!answerFolder.substring(answerFolder.length()-1).equals("/"))
             answerFolder += "/";
 
-        ArrayList<String> filenames;
+        ArrayList<String> answerFiles;
         try {
-            filenames = new ArrayList<>(Arrays.asList(new File(answerFolder).list()));
+            answerFiles = new ArrayList<>(Arrays.asList(new File(answerFolder).list()));
         } catch (NullPointerException e){
             System.out.println("No such folder found. Please check that the folder "+answerFolder+" exists.");
             return;
         }
 
-        for (int i = 0; i < filenames.size(); i++) {
-            String filename = filenames.get(i);
+        for (int i = 0; i < answerFiles.size(); i++) {
+            String filename = answerFiles.get(i);
             if(filename.length()<4 || !filename.substring(filename.length()-4).equals(".lam")){
-                filenames.set(i, null);
+                answerFiles.set(i, null);
             }
         }
 
         // Check the answers
         double mark;
         StringBuilder markList = new StringBuilder();
-        for (String filename : filenames) {
-            mark = 0;
-            if(!(filename == null)){
+        for (String filename : answerFiles) {
+            if(filename != null){
+                mark = 0;
                 try {
                     problemSet.reset();
                     mark = markReductionsFromPSet(problemSet, answerFolder+filename);
