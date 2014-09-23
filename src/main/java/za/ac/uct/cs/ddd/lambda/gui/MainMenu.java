@@ -5,64 +5,48 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class MainMenu extends SizeablePanel {
-    ActionListener parentFrame;
+/**
+ * Creates
+ */
+public class MainMenu extends SizablePanel {
+    ActionListener actionListener;
 
+    public MainMenu(ActionListener actionListener) {
+        this.actionListener = actionListener;
 
-    public MainMenu(ActionListener l) {
+        // Add title
+        addTitle("\u03bbambda Tutor");
 
-        this.parentFrame = l;
+        // Add Border
+        setBorder(new EmptyBorder(0, WIDTH / 4, HEIGHT / 8, WIDTH / 4));
 
-        //Add title
-        addTitle("\u03bbambda");
-
-        //Add Border
-        setBorder(new EmptyBorder(0, width / 4, height / 8, width / 4));
-
-        //Create and add button pane:
+        // Create and add button pane
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.PAGE_AXIS));
 
+        buttonPane.add(Box.createRigidArea(new Dimension(0, WIDTH / 50)));
 
-        // System.out.println(();
-
-        //buttonPane.setBackground(Color.darkGray);
-
-        buttonPane.add(Box.createRigidArea(new Dimension(0, width / 50)));
-
-
-        //Adding  buttons to the pane
-        addButton("Calculator", buttonPane);
-        addButton("Tutor", buttonPane);
-        addButton("Marker", buttonPane);
+        // Add buttons to the pane
+        addButton(buttonPane, "Calculator");
+        addButton(buttonPane, "Problems");
         add(buttonPane);
-
 
         setVisible(true);
     }
 
-
-    private void addButton(String text, Container container) {
+    /**
+     * Creates a button with text and adds it to the specified container.
+     *
+     * @param container The container to which to add the button
+     * @param text      The text of the button
+     */
+    private void addButton(Container container, String text) {
         JButton button = new JButton(text);
-        button.setFont(new Font("Serif", Font.PLAIN, 20));
-        button.setMaximumSize(new Dimension((2 * width) / 3, height / 3));
+        button.setFont(Fonts.bigger);
+        button.setMaximumSize(new Dimension((2 * WIDTH) / 3, HEIGHT / 3));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.addActionListener(parentFrame);
+        button.addActionListener(actionListener);
         container.add(button);
-        container.add(Box.createRigidArea(new Dimension(0, width / 70)));
-
-
+        container.add(Box.createRigidArea(new Dimension(0, WIDTH / 50)));
     }
-
-
 }
-
-       /* addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                repaint();
-            }
-
-    });*/
-
-// setBorder(new EmptyBorder(0,width/4,height/6,width/4));

@@ -14,9 +14,10 @@ public class Parser {
     /**
      * Consumes tokens from a lexer until EOF is reached, and parses them into a semantically structured lambda
      * expression.
+     *
      * @param lexer The lexer from which to consume tokens
      * @return The lambda expression
-     * @throws IOException If the lexer encounters an IO error
+     * @throws IOException                If the lexer encounters an IO error
      * @throws InvalidExpressionException If the lexer does not produce a valid lambda expression
      */
     public static LambdaExpression parse(Lexer lexer) throws IOException, InvalidExpressionException {
@@ -38,6 +39,7 @@ public class Parser {
 
     /**
      * Parses a string into a semantically structured lambda expression.
+     *
      * @param expression The string to parse
      * @return The lambda expression
      * @throws InvalidExpressionException If the string is not a valid lambda expression
@@ -55,9 +57,10 @@ public class Parser {
      * Given a lexer, produces a bracketed expression by consuming tokens until the correct closing bracket is found or
      * end of stream is reached.  Assumes the opening bracket (if any) has already been consumed, and replaces the
      * closing bracket to be consumed by the caller.
+     *
      * @param lexer The lexer from which to consume tokens
      * @return A nested sequence of tokens
-     * @throws IOException If the lexer encounters an IO error
+     * @throws IOException                If the lexer encounters an IO error
      * @throws InvalidExpressionException If the lexer does not produce a correctly bracketed expression
      */
     private static BracketedExpression parseBrackets(Lexer lexer) throws IOException, InvalidExpressionException {
@@ -84,25 +87,13 @@ public class Parser {
             lexer.yypushback(1);
         }
 
-        // remove pointless nesting
-        if (be.getTokens().size() == 1 && be.getTokens().get(0) instanceof BracketedExpression) {
-            be.hoistOnlyChild();
-        }
-        for (int i = 0; i < be.getTokens().size(); i++) {
-            if (be.getTokens().get(i) instanceof BracketedExpression) {
-                BracketedExpression child = (BracketedExpression) be.getTokens().get(i);
-                if (child.getTokens().size() == 1) {
-                    be.hoistSingletonChild(i);
-                }
-            }
-        }
-
         return be;
     }
 
     /**
      * Parses a token, which may be a BracketedExpression, into a semantically structured lambda expression, where
      * variables are taken from the given scope.
+     *
      * @param token The token to parse
      * @param scope The variables which are currently in scope
      * @return The lambda expression
@@ -127,6 +118,7 @@ public class Parser {
 
     /**
      * Parses a token, which may be a BracketedExpression, into a semantically structured lambda expression.
+     *
      * @param token The token to parse
      * @return The lambda expression
      * @throws InvalidExpressionException If the token does not form a valid lambda expression
@@ -138,8 +130,9 @@ public class Parser {
     /**
      * Parses a list of tokens into a semantically structured lambda expression, where variables are taken from the
      * given scope.
+     *
      * @param tokens The list of tokens to parse
-     * @param scope The variables which are currently in scope
+     * @param scope  The variables which are currently in scope
      * @return The lambda expression
      * @throws InvalidExpressionException If the tokens do not form a valid lambda expression
      */
@@ -153,7 +146,7 @@ public class Parser {
 
         } else if (tokens.get(0).getType() == LAMBDA) {  // parse abstraction
             int arrowIndex = -1;
-            for (int i = 1; i < tokens.size()-1; i++) {
+            for (int i = 1; i < tokens.size() - 1; i++) {
                 Token token = tokens.get(i);
                 if (token.getType() == DOT) {
                     arrowIndex = i;
@@ -161,13 +154,13 @@ public class Parser {
                 }
             }
             if (arrowIndex == 1) {
-                Token token = tokens.get(1);
+                Token token = tokens.get(0);
                 throw new InvalidExpressionException("Missing variable binding",
                         token.getLine(), token.getColumn());
             } else if (arrowIndex == -1) {
-                Token token = tokens.get(tokens.size() - 1);
+                Token token = tokens.get(0);
                 throw new InvalidExpressionException("Missing abstraction body",
-                        token.getLine(), (token.getColumn() + token.getLength()));
+                        token.getLine(), token.getColumn());
             }
 
             List<LambdaVariable> variables = new LinkedList<LambdaVariable>();
@@ -208,6 +201,7 @@ public class Parser {
 
     /**
      * Parses a list of tokens into a semantically structured lambda expression.
+     *
      * @param tokens The list of tokens to parse
      * @return The lambda expression
      * @throws InvalidExpressionException If the tokens do not form a valid lambda expression

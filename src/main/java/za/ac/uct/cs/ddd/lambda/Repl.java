@@ -1,16 +1,18 @@
 package za.ac.uct.cs.ddd.lambda;
 
 import jline.console.ConsoleReader;
-import za.ac.uct.cs.ddd.lambda.evaluator.InvalidExpressionException;
-import za.ac.uct.cs.ddd.lambda.evaluator.LambdaExpression;
-import za.ac.uct.cs.ddd.lambda.evaluator.Parser;
+import za.ac.uct.cs.ddd.lambda.evaluator.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
-import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.APPLICATIVE;
+import static za.ac.uct.cs.ddd.lambda.evaluator.ReductionOrder.NORMAL;
 
 public class Repl {
+    private static final int maxReductions = 25;
+
     public static void main(String[] args) {
         HashMap<String, LambdaExpression> builtins = new HashMap<>();
         try {
@@ -23,6 +25,8 @@ public class Repl {
             builtins.put("ONE", Parser.parse("\\f.\\x.f x"));
             builtins.put("TWO", Parser.parse("\\f.\\x.f (f x)"));
             builtins.put("THREE", Parser.parse("\\f.\\x.f (f (f x))"));
+            builtins.put("FOUR", Parser.parse("\\f.\\x.f (f (f (f x)))"));
+            builtins.put("FIVE", Parser.parse("\\f.\\x.f (f (f (f (f x))))"));
 
             builtins.put("SUCC", Parser.parse("\\n.\\f.\\x.f (n f x)"));
             builtins.put("PLUS", Parser.parse("\\m.\\n.\\f.\\x.m f (n f x)"));
@@ -55,18 +59,14 @@ public class Repl {
                     expression = Parser.parse(line);
                     expression = expression.substituteAll(builtins);
                     System.out.println("Parsed expression: " + expression.toString());
-                    System.out.println("Fully bracketed:   " + expression.toStringBracketed());
+                    System.out.println("Fully bracketed:   " + expression.toString(true));
                     System.out.println("Free variables:    " + expression.getFreeVariables());
 
                     System.out.println("Applicative order reduction:");
-                    for (LambdaExpression reduction : expression.reductions(APPLICATIVE, 15)) {
-                        System.out.println(reduction);
-                    }
+                    printReductions(expression, APPLICATIVE);
 
                     System.out.println("Normal order reduction:");
-                    for (LambdaExpression reduction : expression.reductions(NORMAL, 15)) {
-                        System.out.println(reduction);
-                    }
+                    printReductions(expression, NORMAL);
 
                     LambdaExpression reduction = expression.reduce(NORMAL);
                     for (String builtin : builtins.keySet()) {
@@ -103,5 +103,24 @@ public class Repl {
             }
         }
         return opening > closing;
+    }
+
+    private static void printReductions(LambdaExpression expression, ReductionOrder order) {
+        List<ReductionResult> reductions = expression.reductions(order, maxReductions);
+
+        if (reductions.isEmpty()) {
+            System.out.println("None");
+            return;
+        }
+
+        System.out.println("    " + expression.toString(false, reductions.get(0).getRedex()));
+        int l = reductions.size();
+        for (int i = 0; i < l - 1; i++) {
+            ReductionResult reduction = reductions.get(i);
+            System.out.print(String.format("[%s] ", reductions.get(i).getType()));
+            System.out.println(reductions.get(i).getReducedExpression().toString(false, reductions.get(i + 1).getRedex()));
+        }
+        System.out.print(String.format("[%s] ", reductions.get(l - 1).getType()));
+        System.out.println(reductions.get(l - 1).getReducedExpression());
     }
 }

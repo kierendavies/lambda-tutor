@@ -1,6 +1,7 @@
 package za.ac.uct.cs.ddd.lambda.evaluator;
 
-import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.*;
+import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.BRACKETED_EXPRESSION;
+import static za.ac.uct.cs.ddd.lambda.evaluator.TokenType.IDENTIFIER;
 
 /**
  * A token which stores its type, string content, and line and column in the original input.
@@ -18,8 +19,9 @@ public class Token {
 
     /**
      * Creates a new token with no associated string.
-     * @param type The token type
-     * @param line The line it occurs at
+     *
+     * @param type   The token type
+     * @param line   The line it occurs at
      * @param column The column it occurs at
      */
     public Token(TokenType type, int line, int column) {
@@ -30,9 +32,10 @@ public class Token {
 
     /**
      * Creates a new token.
-     * @param type The token type
-     * @param line The line it occurs at
-     * @param column The column it occurs at
+     *
+     * @param type    The token type
+     * @param line    The line it occurs at
+     * @param column  The column it occurs at
      * @param content The string content
      */
     public Token(TokenType type, int line, int column, String content) {
@@ -42,6 +45,7 @@ public class Token {
 
     /**
      * Returns the type of the token.
+     *
      * @return The type of the token
      */
     public TokenType getType() {
@@ -50,6 +54,7 @@ public class Token {
 
     /**
      * Returns the line at which the token occurred in the original input.
+     *
      * @return The line number
      */
     public int getLine() {
@@ -58,6 +63,7 @@ public class Token {
 
     /**
      * Returns the column at which the token occurred in the original input.
+     *
      * @return the column number
      */
     public int getColumn() {
@@ -66,6 +72,7 @@ public class Token {
 
     /**
      * Returns the string contents of the token
+     *
      * @return The string contents
      */
     public String getContent() {
@@ -74,6 +81,7 @@ public class Token {
 
     /**
      * Returns the length of the token.
+     *
      * @return The length of the token
      */
     public int getLength() {
@@ -88,6 +96,7 @@ public class Token {
 
     /**
      * Returns a detailed string representation of the token.
+     *
      * @return The string representation
      */
     @Override

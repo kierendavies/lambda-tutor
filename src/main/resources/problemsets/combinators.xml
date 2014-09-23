@@ -1,0 +1,31 @@
+<problemset>
+        <name>Combinators</name>
+        <problems>
+                <problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start>(\x.x x) (\x.x x)</start>
+                        <steps>2</steps>
+                </problem>
+                <problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start></start>
+                </problem>
+                <problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start></start>
+                </problem>
+                <problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start></start>
+                </problem>
+                <problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start></start>
+                </problem>
+        </problems>
+</problemset>

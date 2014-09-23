@@ -1,4 +1,6 @@
 #!/bin/bash
 
-java -cp target/lambda-0.2-jar-with-dependencies.jar za.ac.uct.cs.ddd.lambda.Repl
+source $(dirname $0)/getversion.sh
+
+java -cp $(dirname $0)/target/lambda-${version}-jar-with-dependencies.jar za.ac.uct.cs.ddd.lambda.Repl
 

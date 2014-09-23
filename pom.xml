@@ -6,7 +6,7 @@
 
     <groupId>za.ac.uct.cs.ddd.lambda</groupId>
     <artifactId>lambda</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
     <packaging>jar</packaging>
 
     <name>CSC3003S Capstone Lambda Tutor</name>
@@ -23,6 +23,16 @@
             <groupId>jline</groupId>
             <artifactId>jline</artifactId>
             <version>2.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom2</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jopt-simple</groupId>
+            <artifactId>jopt-simple</artifactId>
+            <version>4.7</version>
         </dependency>
     </dependencies>
 
@@ -64,11 +74,11 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <!--<archive>-->
-                        <!--<manifest>-->
-                            <!--<mainClass>za.ac.uct.cs.ddd.lambda.Repl</mainClass>-->
-                        <!--</manifest>-->
-                    <!--</archive>-->
+                    <archive>
+                        <manifest>
+                            <mainClass>za.ac.uct.cs.ddd.lambda.gui.Driver</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,0 +1,30 @@
+<problemset>
+        <name>Order problems</name>
+        <problems>
+                <problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start>(\s.s s) ((\f.\a.f a) (\x.x) (\y.y))</start>
+                </problem>
+                <problem>
+                        <type>simplification</type>
+                        <order>applicative</order>
+                        <start>(\s.s s) ((\f.\a.f a) (\x.x) (\y.y))</start>
+                </problem>
+                <problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start></start>
+                </problem>
+                <problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start></start>
+                </problem>
+                <problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start></start>
+                </problem>
+        </problems>
+</problemset>
