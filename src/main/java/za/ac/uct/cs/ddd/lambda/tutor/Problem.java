@@ -101,9 +101,7 @@ public abstract class Problem {
     }
 
     /**
-     * Checks that a given reduction is correct for this problem. If correct, the current reduction is set to the next
-     * reduction. Note that the same ReductionOrder should be passed to this method each time, or the result might not
-     * properly conform to either order.
+     * Checks that a given submission is correct for this problem. Might change the underlying expression.
      * @param submission A LambdaExpression representing the attempted reduction.
      * @return true if the given reduction is correct, false otherwise.
      */
