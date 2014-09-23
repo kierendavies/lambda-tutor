@@ -110,6 +110,12 @@ public abstract class Problem {
     public abstract boolean submitStep(String submission);
 
     /**
+     * Checks whether this problem is complete.
+     * @return true if the problem finished, false otherwise.
+     */
+    public abstract boolean isComplete();
+
+    /**
      * Parses the text in an xml file into a problem. The general format for the file is as follows:
      * <problem>
      *     <type>simplification | conversion | reduction | bracketing | labelling</type>

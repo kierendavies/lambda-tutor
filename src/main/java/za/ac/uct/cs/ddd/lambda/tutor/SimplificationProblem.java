@@ -91,4 +91,13 @@ public class SimplificationProblem extends Problem{
             return userReduction.alphaEquivalentTo(expression);
         }
     }
+
+    /**
+     * The problem is complete when reducing the current expression no longer changes the expression.
+     * @return true if the problem's LambdaExpression can no longer be reduced.
+     */
+    @Override
+    public boolean isComplete() {
+        return expression.alphaEquivalentTo(expression.reduceOnce(this.reductionOrder).getReducedExpression());
+    }
 }
