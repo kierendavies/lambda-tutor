@@ -16,14 +16,10 @@ mvn package
 
 This will generate sources, compile, run all unit tests, and produce a JAR file named `target/lambda-VERSION.jar`.
 
-Run the graphical interface with
+Run the graphical interface, the REPL, or the marker with the following commands, respectively:
 
 ```sh
 ./gui
-```
-
-or the simple REPL with
-
-```sh
 ./repl
+./marker
 ```
