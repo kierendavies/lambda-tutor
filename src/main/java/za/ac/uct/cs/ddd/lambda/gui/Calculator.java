@@ -189,6 +189,12 @@ public class Calculator extends JPanel {
                 String reductionString = reduction.getReducedExpression().toString();
 
                 constraints.gridx = 0;
+                reductionPanel.add(new JLabel(reduction.getType().toString()), constraints);
+
+                constraints.gridx++;
+                reductionPanel.add(Box.createHorizontalStrut(0), constraints);
+
+                constraints.gridx++;
                 JButton button = new JButton(Icons.setInput);
                 button.setBorderPainted(false);
                 button.setContentAreaFilled(false);
@@ -196,7 +202,7 @@ public class Calculator extends JPanel {
                 button.addActionListener(event -> setInput(reductionString));
                 reductionPanel.add(button, constraints);
 
-                constraints.gridx = 1;
+                constraints.gridx++;
                 JLabel reductionLabel = new JLabel(reductionString);
                 reductionLabel.setFont(Fonts.mono);
                 reductionPanel.add(reductionLabel, constraints);
@@ -205,7 +211,7 @@ public class Calculator extends JPanel {
             }
         }
 
-        constraints.gridx = 2;
+        constraints.gridx = 4;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 1;
         constraints.weighty = 1;
