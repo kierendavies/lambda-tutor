@@ -15,7 +15,7 @@ public class MainMenu extends SizablePanel {
         this.actionListener = actionListener;
 
         // Add title
-        addTitle("\u03bbambda");
+        addTitle("\u03bbambda Tutor");
 
         // Add Border
         setBorder(new EmptyBorder(0, WIDTH / 4, HEIGHT / 8, WIDTH / 4));
@@ -28,7 +28,7 @@ public class MainMenu extends SizablePanel {
 
         // Add buttons to the pane
         addButton(buttonPane, "Calculator");
-        addButton(buttonPane, "Tutor");
+        addButton(buttonPane, "Problems");
         add(buttonPane);
 
         setVisible(true);

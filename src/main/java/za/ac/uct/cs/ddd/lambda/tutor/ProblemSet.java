@@ -7,6 +7,7 @@ import org.jdom2.input.SAXBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +66,29 @@ public class ProblemSet {
             }
         } catch (JDOMException e) {
             System.out.println("Error parsing xml file: "+xmlFile.getName());
+        } catch (NoSuchFieldException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public ProblemSet(URL xmlFile) throws IOException{
+        currentProblem = 0;
+
+        try {
+            SAXBuilder builder = new SAXBuilder();
+            Document doc = builder.build(xmlFile);
+            Element rootNode = doc.getRootElement();
+
+            title = rootNode.getChildText("name");
+
+            List<Element> problemNodes = rootNode.getChild("problems").getChildren();
+            problems = new ArrayList<>();
+            for (Element problemNode : problemNodes) {
+                Problem newProblem = Problem.parseProblemNode(problemNode);
+                if(newProblem != null) problems.add(newProblem);
+            }
+        } catch (JDOMException e) {
+            System.out.println("Error parsing xml file: "+xmlFile);
         } catch (NoSuchFieldException e){
             System.out.println(e.getMessage());
         }
@@ -151,5 +175,9 @@ public class ProblemSet {
     public static void main(String[] args) throws IOException{
         File psetFile = new File(args[0]);
         ProblemSet set = new ProblemSet(psetFile);
+    }
+
+    public String toString() {
+        return getTitle();
     }
 }

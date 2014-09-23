@@ -7,16 +7,16 @@ import java.awt.event.ActionListener;
 public class Window extends JFrame implements ActionListener {
     MainMenu menu;
     ContentWindow calculator;
-    ContentWindow tutor;
+    ContentWindow problems;
 
     public Window() {
         //Basic setup
-        setTitle("Lambda Calculus");
+        setTitle("Lambda Calculus Tutor");
         setLocation(50, 50);
 
         menu = new MainMenu(this);
         calculator = new ContentWindow(this, "Calculator", new Calculator());
-        tutor = new ContentWindow(this, "Problems", new JPanel());
+        problems = new ContentWindow(this, "Problems", new ProblemSets());
         this.setContentPane(menu);
     }
 
@@ -29,8 +29,8 @@ public class Window extends JFrame implements ActionListener {
             case "Calculator":
                 setPanel(calculator);
                 break;
-            case "Tutor":
-                setPanel(tutor);
+            case "Problems":
+                setPanel(problems);
                 break;
         }
     }

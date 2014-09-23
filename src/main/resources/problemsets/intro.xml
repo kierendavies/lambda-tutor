@@ -1,0 +1,30 @@
+<problemset>
+	<name>Intoductory problems</name>
+	<problems>
+		<problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start>x</start>
+                </problem>
+		<problem>
+			<type>simplification</type>
+			<order>normal</order>
+			<start>(\x.x x) y</start>
+		</problem>
+		<problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start>(\x.\y.x y) a b</start>
+                </problem>
+		<problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start>(\x.x) (\y.y) a</start>
+                </problem>
+		<problem>
+                        <type>simplification</type>
+                        <order>normal</order>
+                        <start>(\x.\y.\z.z y x) a b c</start>
+                </problem>
+	</problems>
+</problemset>

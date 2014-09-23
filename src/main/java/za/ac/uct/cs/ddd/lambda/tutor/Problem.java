@@ -178,9 +178,17 @@ public abstract class Problem {
                 throw new NoSuchFieldException("Invalid problem type supplied. Problem type must be simplification.");
             }
         } catch (InvalidExpressionException e){
-            System.out.println("Invalid starting lambda expression found: "+e.getMessage());
+//            System.out.println("Invalid starting lambda expression found: "+e.getMessage());
             return null;
         }
+    }
+
+    public LambdaExpression getExpression() {
+        return expression;
+    }
+
+    public ReductionOrder getReductionOrder() {
+        return reductionOrder;
     }
 
     /**
