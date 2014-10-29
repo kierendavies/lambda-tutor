@@ -1,3 +1,21 @@
+/*
+ * Lambda Tutor
+ * Copyright (C) 2014  Kieren Davies, David Dunn, Matthew Dunk
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package za.ac.uct.cs.ddd.lambda.gui;
 
 import za.ac.uct.cs.ddd.lambda.evaluator.*;
@@ -189,6 +207,12 @@ public class Calculator extends JPanel {
                 String reductionString = reduction.getReducedExpression().toString();
 
                 constraints.gridx = 0;
+                reductionPanel.add(new JLabel(reduction.getType().toString()), constraints);
+
+                constraints.gridx++;
+                reductionPanel.add(Box.createHorizontalStrut(0), constraints);
+
+                constraints.gridx++;
                 JButton button = new JButton(Icons.setInput);
                 button.setBorderPainted(false);
                 button.setContentAreaFilled(false);
@@ -196,7 +220,7 @@ public class Calculator extends JPanel {
                 button.addActionListener(event -> setInput(reductionString));
                 reductionPanel.add(button, constraints);
 
-                constraints.gridx = 1;
+                constraints.gridx++;
                 JLabel reductionLabel = new JLabel(reductionString);
                 reductionLabel.setFont(Fonts.mono);
                 reductionPanel.add(reductionLabel, constraints);
@@ -205,7 +229,7 @@ public class Calculator extends JPanel {
             }
         }
 
-        constraints.gridx = 2;
+        constraints.gridx = 4;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 1;
         constraints.weighty = 1;
